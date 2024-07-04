@@ -5,6 +5,9 @@ import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.KeyExchange;
 import app.ConfigurationTypes.SignatureScheme;
 import app.ConfigurationTypes.TlsVersion;
+import app.HandshakeStepping;
+import app.HandshakeStepping.HandshakeType;
+
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.OutboundConnection;
 import de.rub.nds.tlsattacker.core.constants.RunningModeType;
@@ -14,6 +17,8 @@ import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutor;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutorFactory;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 import de.rub.nds.tlsattacker.core.workflow.factory.WorkflowConfigurationFactory;
+
+import java.util.List;
 import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,22 +28,23 @@ public class App {
 
     public static void main(String[] args) {
         Config myConfig =
-                ConfigFactory.getConfig(
-                        TlsVersion.TLS12,
-                        KeyExchange.ECDHE,
-                        SignatureScheme.RSA_SHA384,
-                        BulkAlgo.AES_256_GCM,
-                        new Vector<Extension>());
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                SignatureScheme.RSA_SHA384,
+                BulkAlgo.AES_256_GCM,
+                new Vector<Extension>());
+
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
-        WorkflowTrace myWorkflowTrace =
-                new WorkflowConfigurationFactory(myConfig)
-                        .createWorkflowTrace(
-                                myConfig.getWorkflowTraceType(), RunningModeType.CLIENT);
+        
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENT_AUTH, myConfig, outboundCon);
 
-        App.startTlsClient(myConfig, myWorkflowTrace);
+        System.out.println("Merged WorkflowTrace: " + segmentedHandshake.get(0));
+
+        App.startTlsClient(myConfig, segmentedHandshake.get(0));
 
         System.out.println("Reached End");
 

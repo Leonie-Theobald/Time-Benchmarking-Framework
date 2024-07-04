@@ -1,0 +1,89 @@
+package app;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Vector;
+
+import app.ConfigurationTypes.BulkAlgo;
+import app.ConfigurationTypes.Extension;
+import app.ConfigurationTypes.KeyExchange;
+import app.ConfigurationTypes.SignatureScheme;
+import app.ConfigurationTypes.TlsVersion;
+import de.rub.nds.tlsattacker.core.config.Config;
+import de.rub.nds.tlsattacker.core.connection.AliasedConnection;
+import de.rub.nds.tlsattacker.core.protocol.ProtocolMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.CertificateMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.CertificateVerifyMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.ChangeCipherSpecMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.ClientHelloMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.ECDHEServerKeyExchangeMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.EncryptedExtensionsMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.HelloVerifyRequestMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.RSAServerKeyExchangeMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloDoneMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.ServerKeyExchangeMessage;
+import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
+import de.rub.nds.tlsattacker.core.workflow.action.MessageActionFactory;
+import de.rub.nds.tlsattacker.core.workflow.action.ReceiveAction;
+import de.rub.nds.tlsattacker.core.workflow.action.ReceiveTillAction;
+import de.rub.nds.tlsattacker.core.workflow.action.SendAction;
+import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicClientKeyExchangeAction;
+import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicServerCertificateAction;
+import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicServerKeyExchangeAction;
+import de.rub.nds.tlsattacker.transport.ConnectionEndType;
+
+public class HandshakeStepping {
+    public enum HandshakeType {
+        TLS12_EPHEMERAL_WITHOUT_CLIENT_AUTH,
+    }
+    
+    public static List<WorkflowTrace> getSegmentedHandshake(
+            HandshakeType handshakeType,
+            Config config,
+            AliasedConnection connection) {
+
+                //Vector<WorkflowTrace> segmentedHandshake = new Vector();
+                List<WorkflowTrace> segmentedHandshake = new ArrayList();
+
+                switch (handshakeType) {
+                    case TLS12_EPHEMERAL_WITHOUT_CLIENT_AUTH:
+                        System.out.println(handshakeType + " is supported.");
+
+                        WorkflowTrace trace = new WorkflowTrace();
+
+                        // Initiation
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(config, connection, ConnectionEndType.CLIENT, new ClientHelloMessage(config))
+                        );
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        //trace.addTlsAction(new ReceiveAction(new ServerHelloMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new CertificateMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new ECDHEServerKeyExchangeMessage()));
+                        trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        // key exchange
+                        trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        // finish
+                        trace.addTlsAction(
+                            new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        //trace.addTlsAction(new ReceiveAction(new ChangeCipherSpecMessage()));
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        return segmentedHandshake;
+                    default:
+                        System.out.println(handshakeType + " is NOT supported.");
+                        return segmentedHandshake;
+                }
+    }
+}
