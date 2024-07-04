@@ -39,6 +39,7 @@ import de.rub.nds.tlsattacker.transport.ConnectionEndType;
 public class HandshakeStepping {
     public enum HandshakeType {
         TLS12_EPHEMERAL_WITHOUT_CLIENT_AUTH,
+        TLS12_STATIC_WITHOUT_CLIENT_AUTH,
     }
     
     public static List<WorkflowTrace> getSegmentedHandshake(
@@ -47,13 +48,42 @@ public class HandshakeStepping {
             AliasedConnection connection) {
 
                 //Vector<WorkflowTrace> segmentedHandshake = new Vector();
+                WorkflowTrace trace = new WorkflowTrace();
                 List<WorkflowTrace> segmentedHandshake = new ArrayList();
 
                 switch (handshakeType) {
                     case TLS12_EPHEMERAL_WITHOUT_CLIENT_AUTH:
                         System.out.println(handshakeType + " is supported.");
 
-                        WorkflowTrace trace = new WorkflowTrace();
+                        // Initiation
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(config, connection, ConnectionEndType.CLIENT, new ClientHelloMessage(config))
+                        );
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        //trace.addTlsAction(new ReceiveAction(new ServerHelloMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new CertificateMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new ECDHEServerKeyExchangeMessage()));
+                        trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        // key exchange
+                        trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        // finish
+                        trace.addTlsAction(
+                            new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        //trace.addTlsAction(new ReceiveAction(new ChangeCipherSpecMessage()));
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        return segmentedHandshake;
+
+                    case TLS12_STATIC_WITHOUT_CLIENT_AUTH:
+                        System.out.println(handshakeType + " is supported.");
 
                         // Initiation
                         trace.addTlsAction(
