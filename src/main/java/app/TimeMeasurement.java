@@ -72,13 +72,19 @@ public class TimeMeasurement {
 
     public static void printStatisticAnalysisResults(List<LongSummaryStatistics> analysisList) {
         int cnt = 0;
+
+        System.out.println("\n");
+        System.out.println("Results over " + analysisList.get(0).getCount() + " repetitions for each handshake segment.");
+        System.out.println("\n");
+
         for (LongSummaryStatistics lss: analysisList) {
-            System.out.println("\n");
+            System.out.println("Handshake Segment " + cnt);
 
             System.out.println(cnt + " Min: " + lss.getMin()/1000000.0 + " ms");
             System.out.println(cnt + " Max: " + lss.getMax()/1000000.0 + " ms");
             System.out.println(cnt + " Average: " + lss.getAverage()/1000000.0 + " ms");  
-
+            System.out.println("\n");
+            
             cnt++;
         }
     }
