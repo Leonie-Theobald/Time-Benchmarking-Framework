@@ -75,8 +75,8 @@ public class TimeMeasurement {
         for (LongSummaryStatistics lss: analysisList) {
             System.out.println("\n");
 
-            System.out.println(cnt + " Min: " + lss.getAverage()/1000000.0 + " ms");
-            System.out.println(cnt + " Max: " + lss.getAverage()/1000000.0 + " ms");
+            System.out.println(cnt + " Min: " + lss.getMin()/1000000.0 + " ms");
+            System.out.println(cnt + " Max: " + lss.getMax()/1000000.0 + " ms");
             System.out.println(cnt + " Average: " + lss.getAverage()/1000000.0 + " ms");  
 
             cnt++;
