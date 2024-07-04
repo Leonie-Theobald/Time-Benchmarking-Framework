@@ -18,6 +18,7 @@ import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutorFactory;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 import de.rub.nds.tlsattacker.core.workflow.factory.WorkflowConfigurationFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
@@ -42,9 +43,9 @@ public class App {
         
         List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENT_AUTH, myConfig, outboundCon);
 
-        System.out.println("Merged WorkflowTrace: " + segmentedHandshake.get(0));
-
-        App.startTlsClient(myConfig, segmentedHandshake.get(0));
+        ArrayList<ArrayList<Long>> resultsMeasurement = TimeMeasurement.startTimeMeasurement(2, myConfig, segmentedHandshake);
+        System.out.println("Results time measurement: " + resultsMeasurement);
+        //App.startTlsClient(myConfig, segmentedHandshake.get(0));
 
         System.out.println("Reached End");
 
