@@ -3,6 +3,7 @@ package app;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -56,5 +57,29 @@ public class TimeMeasurement {
         }
 
         return durationForHandshakeSegments;
+    }
+
+    public static ArrayList<LongSummaryStatistics> runStatisticAnalysis(ArrayList<ArrayList<Long>> durationForHandshakeSegments) {
+        ArrayList<LongSummaryStatistics> analysisList = new ArrayList<LongSummaryStatistics>();
+
+        for (int i=0; i<durationForHandshakeSegments.size(); i++) {
+            LongSummaryStatistics lss = durationForHandshakeSegments.get(i).stream().mapToLong((a) -> a).summaryStatistics();  
+            analysisList.add(lss);
+        }
+
+        return analysisList;
+    }
+
+    public static void printStatisticAnalysisResults(List<LongSummaryStatistics> analysisList) {
+        int cnt = 0;
+        for (LongSummaryStatistics lss: analysisList) {
+            System.out.println("\n");
+
+            System.out.println(cnt + " Min: " + lss.getAverage()/1000000.0 + " ms");
+            System.out.println(cnt + " Max: " + lss.getAverage()/1000000.0 + " ms");
+            System.out.println(cnt + " Average: " + lss.getAverage()/1000000.0 + " ms");  
+
+            cnt++;
+        }
     }
 }
