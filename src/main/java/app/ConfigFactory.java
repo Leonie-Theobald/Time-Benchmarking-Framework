@@ -57,6 +57,15 @@ public class ConfigFactory {
                     new File(
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_dhe_ticket-resumption_short.config");
         } else if (version == TlsVersion.TLS12
+                && keyExchange == KeyExchange.ECDHE
+                && signatureScheme == SignatureScheme.RSA_SHA384
+                && bulkAlgo == BulkAlgo.AES_256_GCM
+                && extensions.size() == 1
+                && extensions.contains(Extension.SESSION_RESUMPTION)) {
+            configFile =
+                    new File(
+                            "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_ecdhe_ticket-resumption_short.config");
+        } else if (version == TlsVersion.TLS12
                 && keyExchange == KeyExchange.RSA
                 && signatureScheme == SignatureScheme.RSA_SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM
