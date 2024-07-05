@@ -52,12 +52,12 @@ public class ConfigFactory {
                     new File(
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_RSA_short.config");
         } else if (version == TlsVersion.TLS13
-                && keyExchange == KeyExchange.ECDHE
+                && keyExchange == KeyExchange.DHE
                 && signatureScheme == SignatureScheme.ECDSA_SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM) {
             configFile =
                     new File(
-                            "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls13_short.config");
+                            "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls13_DHE_ECDSA_short.config");
         } else if (version == TlsVersion.TLS13
                 && keyExchange == KeyExchange.ECDHE
                 && signatureScheme == SignatureScheme.ECDSA_SHA384

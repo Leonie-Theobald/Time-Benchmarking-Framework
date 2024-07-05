@@ -23,6 +23,7 @@ public class ConfigurationTypes {
         ECDSA_SHA256,
         RSA_SHA384,
         RSA_SHA256,
+        DSA_SHA384,
     }
 
     public enum Extension {

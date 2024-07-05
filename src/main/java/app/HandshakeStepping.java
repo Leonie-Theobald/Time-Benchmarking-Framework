@@ -40,6 +40,7 @@ public class HandshakeStepping {
     public enum HandshakeType {
         TLS12_EPHEMERAL_WITHOUT_CLIENT_AUTH,
         TLS12_STATIC_WITHOUT_CLIENT_AUTH,
+        TLS13_WITHOUT_CLIENT_AUTH,
     }
     
     public static List<WorkflowTrace> getSegmentedHandshake(
@@ -81,7 +82,7 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         return segmentedHandshake;
-
+                    
                     case TLS12_STATIC_WITHOUT_CLIENT_AUTH:
                         System.out.println(handshakeType + " is supported.");
 
@@ -111,6 +112,41 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         return segmentedHandshake;
+                            
+                    case TLS13_WITHOUT_CLIENT_AUTH:
+                        System.out.println(handshakeType + " is supported.");
+
+                        // Initiation
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(config, connection, ConnectionEndType.CLIENT, new ClientHelloMessage(config))
+                        );
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        //trace.addTlsAction(new ReceiveAction(new ServerHelloMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new EncryptedExtensionsMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new CertificateMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new CertificateVerifyMessage()));
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        List<ProtocolMessage> tls13Messages = new LinkedList<>();
+                        /*
+                        // would send ChangeCipherSpec
+                        if (Objects.equals(config.getTls13BackwardsCompatibilityMode(), Boolean.TRUE)) {
+                            ChangeCipherSpecMessage ccs = new ChangeCipherSpecMessage();
+                            ccs.setRequired(false);
+                            tls13Messages.add(ccs);
+                        }
+                        */
+                        tls13Messages.add(new FinishedMessage());
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(
+                                config, connection, ConnectionEndType.CLIENT, tls13Messages));
+
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        return segmentedHandshake;
+
                     default:
                         System.out.println(handshakeType + " is NOT supported.");
                         return segmentedHandshake;

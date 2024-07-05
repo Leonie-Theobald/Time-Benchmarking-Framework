@@ -93,8 +93,12 @@ public class TimeMeasurement {
             analysisList.add(lss);
         }
 
+        // TODO: Add standard deviation, median, variance, etc.
+
         return analysisList;
     }
+
+    // TODO: Add calculation of relevant server steps
 
     // creates text overview of statistical analysis
     public static String giveStatisticAnalysisResults(List<LongSummaryStatistics> analysisList) {
@@ -132,7 +136,7 @@ public class TimeMeasurement {
             String basePath = jarPath.substring(0, jarPath.lastIndexOf("target"));
             
             Date now = Calendar.getInstance().getTime();
-            String nowAsString = new SimpleDateFormat("yyyy-mm-dd_HH-mm-ss-mmmm").format(now);
+            String nowAsString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-mmmm").format(now);
             String logFileName = nowAsString + "_measurement-results";
 
             File logFile = new File(basePath + "logging/" + logFileName);
