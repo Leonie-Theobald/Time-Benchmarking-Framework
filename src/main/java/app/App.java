@@ -43,7 +43,7 @@ public class App {
         outboundCon.setPort(4433);
         myConfigEllipticCurve.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENT_AUTH, myConfigEllipticCurve, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigEllipticCurve, outboundCon);
         */
 
         /*
@@ -60,9 +60,10 @@ public class App {
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITHOUT_CLIENT_AUTH, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
         */
 
+        /*
         Config myConfig =
             ConfigFactory.getConfig(
                 TlsVersion.TLS13,
@@ -76,9 +77,26 @@ public class App {
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENT_AUTH, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
+        */
+        
+        Config myConfig =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                SignatureScheme.RSA_SHA384,
+                BulkAlgo.AES_256_GCM,
+                new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
 
-        String resultsMeasurement = TimeMeasurement.startTimeMeasurement(2, myConfig, segmentedHandshake, true);
+        OutboundConnection outboundCon = new OutboundConnection();
+        outboundCon.setHostname("localhost");
+        outboundCon.setPort(4433);
+        myConfig.setDefaultClientConnection(outboundCon);
+        
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION, myConfig, outboundCon);
+    
+
+        String resultsMeasurement = TimeMeasurement.startTimeMeasurement(1000, myConfig, segmentedHandshake, true);
         System.out.println(resultsMeasurement);
 
         System.out.println("Reached End");
