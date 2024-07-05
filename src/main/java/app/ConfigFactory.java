@@ -23,6 +23,16 @@ public class ConfigFactory {
             BulkAlgo bulkAlgo,
             Vector<Extension> extensions) {
 
+        ConfigError configValidity = validateConfigCombi(
+            version,
+            keyExchange,
+            serverAuth,
+            hashAlgo,
+            bulkAlgo);
+        if (configValidity != ConfigError.NO_ERROR) {
+                throw new Error("Configuration is invalid (" + configValidity + "):\n\tversion: " + version + "\n\tkey ex: " + keyExchange + "\n\tserver auth: " + serverAuth + "\n\thash: " + hashAlgo + "\n\tbulk: " + bulkAlgo);
+            }
+
         File configFile = new File("");
 
         if (version == TlsVersion.TLS12
@@ -37,7 +47,7 @@ public class ConfigFactory {
         } else if (version == TlsVersion.TLS12
                 && keyExchange == KeyExchange.ECDHE
                 && serverAuth == ServerAuth.RSA
-                && hashAlgo == HashAlgo.SHA384
+                && hashAlgo == HashAlgo.SHA256
                 && bulkAlgo == BulkAlgo.AES_128_GCM
                 && extensions.isEmpty()) {
             configFile =
@@ -114,4 +124,38 @@ public class ConfigFactory {
         System.out.println("ConfigFile: " + configFile);
         return Config.createConfig(configFile);
     }
+
+    private enum ConfigError {
+        NO_ERROR,
+        TLS13_WITH_STATIC_KX,
+        HASH_MISMATCHING_BULK,
+    }
+
+    public static ConfigError validateConfigCombi(
+        TlsVersion version,
+        KeyExchange keyExchange,
+        ServerAuth serverAuth,
+        HashAlgo hashAlgo,
+        BulkAlgo bulkAlgo
+    ) {
+        if (
+            version == TlsVersion.TLS13 && keyExchange == KeyExchange.RSA
+            || version == TlsVersion.TLS13 && keyExchange == KeyExchange.DH) {
+                return ConfigError.TLS13_WITH_STATIC_KX;
+            }
+        
+        if (
+            bulkAlgo == BulkAlgo.AES_256_GCM && hashAlgo != HashAlgo.SHA384) {
+                return ConfigError.HASH_MISMATCHING_BULK;
+            }
+
+        if (
+            bulkAlgo == BulkAlgo.AES_128_GCM && hashAlgo != HashAlgo.SHA256) {
+                return ConfigError.HASH_MISMATCHING_BULK;
+            }
+
+        return ConfigError.NO_ERROR;
+    }
 }
+
+
