@@ -9,7 +9,6 @@ import java.util.Vector;
 import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.KeyExchange;
-import app.ConfigurationTypes.SignatureScheme;
 import app.ConfigurationTypes.TlsVersion;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.AliasedConnection;

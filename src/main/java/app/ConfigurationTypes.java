@@ -18,12 +18,15 @@ public class ConfigurationTypes {
         RSA,
     }
 
-    public enum SignatureScheme {
-        ECDSA_SHA384,
-        ECDSA_SHA256,
-        RSA_SHA384,
-        RSA_SHA256,
-        DSA_SHA384,
+    public enum ServerAuth {
+        DSA,
+        ECDSA,
+        RSA,
+    }
+
+    public enum HashAlgo {
+        SHA256,
+        SHA384,
     }
 
     public enum Extension {

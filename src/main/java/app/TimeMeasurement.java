@@ -22,7 +22,6 @@ import com.google.common.io.Files;
 import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.KeyExchange;
-import app.ConfigurationTypes.SignatureScheme;
 import app.ConfigurationTypes.TlsVersion;
 import app.HandshakeStepping.HandshakeType;
 import de.rub.nds.tlsattacker.core.config.Config;

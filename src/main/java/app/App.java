@@ -2,8 +2,9 @@ package app;
 
 import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.Extension;
+import app.ConfigurationTypes.HashAlgo;
 import app.ConfigurationTypes.KeyExchange;
-import app.ConfigurationTypes.SignatureScheme;
+import app.ConfigurationTypes.ServerAuth;
 import app.ConfigurationTypes.TlsVersion;
 import app.HandshakeStepping;
 import app.HandshakeStepping.HandshakeType;
@@ -101,7 +102,8 @@ public class App {
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
                 KeyExchange.RSA,
-                SignatureScheme.RSA_SHA384,
+                ServerAuth.RSA,
+                HashAlgo.SHA384,
                 BulkAlgo.AES_256_GCM,
                 new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
 

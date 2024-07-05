@@ -2,8 +2,9 @@ package app;
 
 import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.Extension;
+import app.ConfigurationTypes.HashAlgo;
 import app.ConfigurationTypes.KeyExchange;
-import app.ConfigurationTypes.SignatureScheme;
+import app.ConfigurationTypes.ServerAuth;
 import app.ConfigurationTypes.TlsVersion;
 import de.rub.nds.tlsattacker.core.config.Config;
 import java.io.File;
@@ -17,7 +18,8 @@ public class ConfigFactory {
     public static Config getConfig(
             TlsVersion version,
             KeyExchange keyExchange,
-            SignatureScheme signatureScheme,
+            ServerAuth serverAuth,
+            HashAlgo hashAlgo,
             BulkAlgo bulkAlgo,
             Vector<Extension> extensions) {
 
@@ -25,7 +27,8 @@ public class ConfigFactory {
 
         if (version == TlsVersion.TLS12
                 && keyExchange == KeyExchange.ECDHE
-                && signatureScheme == SignatureScheme.RSA_SHA384
+                && serverAuth == ServerAuth.RSA
+                && hashAlgo == HashAlgo.SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM
                 && extensions.isEmpty()) {
             configFile =
@@ -33,7 +36,8 @@ public class ConfigFactory {
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_ECDHE_short.config");
         } else if (version == TlsVersion.TLS12
                 && keyExchange == KeyExchange.ECDHE
-                && signatureScheme == SignatureScheme.RSA_SHA384
+                && serverAuth == ServerAuth.RSA
+                && hashAlgo == HashAlgo.SHA384
                 && bulkAlgo == BulkAlgo.AES_128_GCM
                 && extensions.isEmpty()) {
             configFile =
@@ -41,7 +45,8 @@ public class ConfigFactory {
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_ECDHE_RSA_SHA256_short.config");
         } else if (version == TlsVersion.TLS12
                 && keyExchange == KeyExchange.DHE
-                && signatureScheme == SignatureScheme.RSA_SHA384
+                && serverAuth == ServerAuth.RSA
+                && hashAlgo == HashAlgo.SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM
                 && extensions.isEmpty()) {
             configFile =
@@ -49,7 +54,8 @@ public class ConfigFactory {
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_DHE_short.config");
         } else if (version == TlsVersion.TLS12
                 && keyExchange == KeyExchange.DHE
-                && signatureScheme == SignatureScheme.RSA_SHA384
+                && serverAuth == ServerAuth.RSA
+                && hashAlgo == HashAlgo.SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM
                 && extensions.size() == 1
                 && extensions.contains(Extension.SESSION_RESUMPTION)) {
@@ -58,7 +64,8 @@ public class ConfigFactory {
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_dhe_ticket-resumption_short.config");
         } else if (version == TlsVersion.TLS12
                 && keyExchange == KeyExchange.ECDHE
-                && signatureScheme == SignatureScheme.RSA_SHA384
+                && serverAuth == ServerAuth.RSA
+                && hashAlgo == HashAlgo.SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM
                 && extensions.size() == 1
                 && extensions.contains(Extension.SESSION_RESUMPTION)) {
@@ -67,7 +74,8 @@ public class ConfigFactory {
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_ecdhe_ticket-resumption_short.config");
         } else if (version == TlsVersion.TLS12
                 && keyExchange == KeyExchange.RSA
-                && signatureScheme == SignatureScheme.RSA_SHA384
+                && serverAuth == ServerAuth.RSA
+                && hashAlgo == HashAlgo.SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM
                 && extensions.size() == 1
                 && extensions.contains(Extension.SESSION_RESUMPTION)) {
@@ -76,7 +84,8 @@ public class ConfigFactory {
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_resumption_short.config");
         } else if (version == TlsVersion.TLS12
                 && keyExchange == KeyExchange.RSA
-                && signatureScheme == SignatureScheme.RSA_SHA384
+                && serverAuth == ServerAuth.RSA
+                && hashAlgo == HashAlgo.SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM
                 && extensions.isEmpty()) {
             configFile =
@@ -84,7 +93,8 @@ public class ConfigFactory {
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_RSA_short.config");
         } else if (version == TlsVersion.TLS13
                 && keyExchange == KeyExchange.DHE
-                && signatureScheme == SignatureScheme.ECDSA_SHA384
+                && serverAuth == ServerAuth.ECDSA
+                && hashAlgo == HashAlgo.SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM
                 && extensions.isEmpty()) {
             configFile =
@@ -92,7 +102,8 @@ public class ConfigFactory {
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls13_DHE_ECDSA_short.config");
         } else if (version == TlsVersion.TLS13
                 && keyExchange == KeyExchange.ECDHE
-                && signatureScheme == SignatureScheme.ECDSA_SHA384
+                && serverAuth == ServerAuth.ECDSA
+                && hashAlgo == HashAlgo.SHA384
                 && bulkAlgo == BulkAlgo.AES_128_GCM
                 && extensions.isEmpty()) {
             configFile =
