@@ -69,6 +69,15 @@ public class ConfigFactory {
                 && keyExchange == KeyExchange.RSA
                 && signatureScheme == SignatureScheme.RSA_SHA384
                 && bulkAlgo == BulkAlgo.AES_256_GCM
+                && extensions.size() == 1
+                && extensions.contains(Extension.SESSION_RESUMPTION)) {
+            configFile =
+                    new File(
+                            "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls12_resumption_short.config");
+        } else if (version == TlsVersion.TLS12
+                && keyExchange == KeyExchange.RSA
+                && signatureScheme == SignatureScheme.RSA_SHA384
+                && bulkAlgo == BulkAlgo.AES_256_GCM
                 && extensions.isEmpty()) {
             configFile =
                     new File(
@@ -91,6 +100,7 @@ public class ConfigFactory {
                             "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/tls13_ECDHE_ECDSA-SHA256_short.config");
         }
 
+        System.out.println("ConfigFile: " + configFile);
         return Config.createConfig(configFile);
     }
 }

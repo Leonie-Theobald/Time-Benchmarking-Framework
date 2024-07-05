@@ -44,6 +44,7 @@ public class HandshakeStepping {
         TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH,
         TLS12_STATIC_WITHOUT_CLIENTAUTH,
         TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION,
+        TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION,
         TLS13_WITHOUT_CLIENTAUTH,
     }
     
@@ -189,6 +190,79 @@ public class HandshakeStepping {
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
+                        return segmentedHandshake;
+
+                    case TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION:
+                        System.out.println(handshakeType + " is supported.");
+
+                        // First handshake
+                        // Initiation
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(config, connection, ConnectionEndType.CLIENT, new ClientHelloMessage(config))
+                        );
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        //trace.addTlsAction(new ReceiveAction(new ServerHelloMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new CertificateMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new ECDHEServerKeyExchangeMessage()));
+                        trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        // key exchange
+                        trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        // finish
+                        trace.addTlsAction(
+                            new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        //trace.addTlsAction(new ReceiveAction(new ChangeCipherSpecMessage()));
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        // Reset connection and start with session resumption
+                        trace.addTlsAction(new ResetConnectionAction());
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        // Initiation
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(
+                                    config,
+                                    connection,
+                                    ConnectionEndType.CLIENT,
+                                    new ClientHelloMessage(config)));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        /*
+                        trace.addTlsAction(
+                                MessageActionFactory.createTLSAction(
+                                        config,
+                                        connection,
+                                        ConnectionEndType.SERVER,
+                                        new ServerHelloMessage(config),
+                                        new ChangeCipherSpecMessage(),
+                                        new FinishedMessage()));
+                        */
+                        //trace.addTlsAction(new ReceiveAction(new ServerHelloMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new ChChangeCipherSpecMessagea()));
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        /*
+                        trace.addTlsAction(
+                                MessageActionFactory.createTLSAction(
+                                        config,
+                                        connection,
+                                        ConnectionEndType.CLIENT,
+                                        new ChangeCipherSpecMessage(),
+                                        new FinishedMessage()));
+                        */
+                        // finish
+                        trace.addTlsAction(
+                            new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
                         return segmentedHandshake;
                             
                     case TLS13_WITHOUT_CLIENTAUTH:
