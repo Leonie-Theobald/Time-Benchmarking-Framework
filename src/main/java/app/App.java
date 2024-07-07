@@ -33,74 +33,9 @@ public class App {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static void main(String[] args) {
-        /*
-        Config myConfigEllipticCurve =
-            ConfigFactory.getConfig(
-                TlsVersion.TLS12,
-                KeyExchange.ECDHE,
-                SignatureScheme.RSA_SHA384,
-                BulkAlgo.AES_256_GCM,
-                new Vector<Extension>());
-
-        OutboundConnection outboundCon = new OutboundConnection();
-        outboundCon.setHostname("localhost");
-        outboundCon.setPort(4433);
-        myConfigEllipticCurve.setDefaultClientConnection(outboundCon);
-        
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigEllipticCurve, outboundCon);
-        */
-
-        /*
-        Config myConfig =
-            ConfigFactory.getConfig(
-                TlsVersion.TLS12,
-                KeyExchange.RSA,
-                SignatureScheme.RSA_SHA384,
-                BulkAlgo.AES_256_GCM,
-                new Vector<Extension>());
-
-        OutboundConnection outboundCon = new OutboundConnection();
-        outboundCon.setHostname("localhost");
-        outboundCon.setPort(4433);
-        myConfig.setDefaultClientConnection(outboundCon);
-        
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        */
-
-        /*
-        Config myConfig =
-            ConfigFactory.getConfig(
-                TlsVersion.TLS13,
-                KeyExchange.DHE,
-                SignatureScheme.ECDSA_SHA384,
-                BulkAlgo.AES_256_GCM,
-                new Vector<Extension>());
-
-        OutboundConnection outboundCon = new OutboundConnection();
-        outboundCon.setHostname("localhost");
-        outboundCon.setPort(4433);
-        myConfig.setDefaultClientConnection(outboundCon);
-        
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        */
-        
-        /*
-        Config myConfig =
-            ConfigFactory.getConfig(
-                TlsVersion.TLS12,
-                KeyExchange.ECDHE,
-                SignatureScheme.RSA_SHA384,
-                BulkAlgo.AES_256_GCM,
-                new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
-
-        OutboundConnection outboundCon = new OutboundConnection();
-        outboundCon.setHostname("localhost");
-        outboundCon.setPort(4433);
-        myConfig.setDefaultClientConnection(outboundCon);
-        
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION, myConfig, outboundCon);
-        */
-
+        // TODOs
+        // with DHE.FFDHE2048 ClientHello includes Secp256r1 as supported groups
+        // with TLS1.2 ECDHE OCSP => decryption failed or bad Record MAC
         Config myConfig =
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
@@ -125,12 +60,6 @@ public class App {
     }
 
     public static long startTlsClient(Config config, WorkflowTrace trace) {
-        /*State state;
-        if (trace == null) {
-            state = new State(config);
-        } else {
-            state = new State(config, trace);
-        }*/
         State state = new State(config, trace);
         WorkflowExecutor workflowExecutor =
                 WorkflowExecutorFactory.createWorkflowExecutor(
@@ -147,7 +76,6 @@ public class App {
                     "The TLS protocol flow was not executed completely, follow the debug messages for more information.");
             LOGGER.warn(
                     "The TLS protocol flow was not executed completely, follow the debug messages for more information.");
-            // LOGGER.debug(ex.getLocalizedMessage(), ex);
         }
         return timeElapsed;
     }
