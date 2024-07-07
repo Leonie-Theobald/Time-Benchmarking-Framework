@@ -8,22 +8,12 @@ import app.ConfigurationTypes.KeyExchangeGroup;
 import app.ConfigurationTypes.ServerAuth;
 import app.ConfigurationTypes.TlsVersion;
 import de.rub.nds.tlsattacker.core.config.Config;
-import de.rub.nds.tlsattacker.core.connection.InboundConnection;
-import de.rub.nds.tlsattacker.core.constants.ChooserType;
 import de.rub.nds.tlsattacker.core.constants.CipherSuite;
-import de.rub.nds.tlsattacker.core.constants.CompressionMethod;
 import de.rub.nds.tlsattacker.core.constants.NamedGroup;
-import de.rub.nds.tlsattacker.core.constants.PRFAlgorithm;
 import de.rub.nds.tlsattacker.core.constants.ProtocolVersion;
 import de.rub.nds.tlsattacker.core.constants.PskKeyExchangeMode;
-import de.rub.nds.tlsattacker.core.constants.RunningModeType;
 import de.rub.nds.tlsattacker.core.constants.SignatureAndHashAlgorithm;
-import de.rub.nds.tlsattacker.core.layer.constant.LayerConfiguration;
-import de.rub.nds.tlsattacker.core.workflow.action.executor.WorkflowExecutorType;
-import de.rub.nds.tlsattacker.core.workflow.factory.WorkflowTraceType;
 
-import java.io.File;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -58,7 +48,8 @@ public class ConfigFactory {
                 + "\n\tbulk: " + bulkAlgo);
         }
     
-        Config myConfig = Config.createEmptyConfig();
+        //Config myConfig = Config.createEmptyConfig();
+        Config myConfig = Config.createConfig();
         
         // set TLS version
         switch (version) {
@@ -85,27 +76,21 @@ public class ConfigFactory {
         switch (ConfigurationTypes.combineAuthWithHash(serverAuth, hashAlgo)) {
             case DSA_SHA256:
                 myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.DSA_SHA256);
-                myConfig.setDefaultServerSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.DSA_SHA256);
                 break;
             case DSA_SHA384:
                 myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.DSA_SHA384);
-                myConfig.setDefaultServerSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.DSA_SHA384);
                 break;
             case ECDSA_SHA256:
                 myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA256);
-                myConfig.setDefaultServerSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA256);
                 break;
             case ECDSA_SHA384:
                 myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA384);
-                myConfig.setDefaultServerSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA384);
                 break;
             case RSA_SHA256:
                 myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.RSA_SHA256);
-                myConfig.setDefaultServerSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.RSA_SHA256);
                 break;
             case RSA_SHA384:
                 myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.RSA_SHA384);
-                myConfig.setDefaultServerSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.RSA_SHA384);
                 break;
             default:
                 throw new Error("SignatureAndHashAlgorithm Scheme is not supported.");
@@ -153,15 +138,6 @@ public class ConfigFactory {
             myConfig.setDefaultClientKeyShareNamedGroups(namedGroup);
         }
 
-        if (keyExchange == KeyExchange.RSA) {
-            // TODO FIX MODULUS
-            //BigInteger rsaModulus = BigInteger.valueOf(25311792238044219946174684693224603884785773358330971609415825404567987089738069857630011723336937795827963868604847118759739071441983186580158833210553280838765514351236797316564714837320618887805126341832834827826790060810763662161735652692660340953325435378344445537136408926502767545150207605087601783216982476527090447255508303291994973748877217756699811604529317375418362425978959405980207726316912995165050065189202729278788324244413992973017231054259638764128689366135764356716715140925548909967670376902528818677308871053953559814432449223427664069339511214707847837366043835739060653160903099571514118172541);
-            BigInteger rsaModulus = new BigInteger(new byte[]{0b100});
-            
-            myConfig.setDefaultServerRSAModulus(rsaModulus);
-            myConfig.setDefaultServerRSAPublicKey(BigInteger.valueOf(65537));
-        }
-
         // add needed extensions
         // session resumption
         if (extensions.contains(Extension.SESSION_RESUMPTION)) {
@@ -206,7 +182,7 @@ public class ConfigFactory {
         }
         
         // OCSP
-        if (extensions.contains(Extension.SESSION_RESUMPTION)) {
+        if (extensions.contains(Extension.OCSP)) {
             myConfig.setAddCertificateStatusRequestExtension(true);
         } else {
             myConfig.setAddCertificateStatusRequestExtension(false);
@@ -216,6 +192,7 @@ public class ConfigFactory {
         // TODO: tls12_resumption_short.config hat addRenegotiationInfoExtension auf true // diese Config wurde irgendwie nie verwendet
         myConfig.setAddRenegotiationInfoExtension(false);
 
+        /*
         myConfig.setFiltersKeepUserSettings(false);
         myConfig.setDefaultServerConnection(new InboundConnection(443, "localhost"));
         myConfig.setDefaultRunningMode(RunningModeType.CLIENT);
@@ -247,9 +224,19 @@ public class ConfigFactory {
         myConfig.setResetWorkflowTracesBeforeSaving(false);
         myConfig.setDefaultServerSessionId(new byte[]{});
         myConfig.setDefaultPRFAlgorithm(PRFAlgorithm.TLS_PRF_LEGACY);
-        myConfig.setWorkflowTraceType(WorkflowTraceType.DYNAMIC_HANDSHAKE);
         myConfig.setPreserveMessageRecordRelation(false);
 
+        if (keyExchange == KeyExchange.RSA) {
+            // TODO FIX MODULUS
+            BigInteger rsaModulus = new BigInteger(
+                    1,
+                    ArrayConverter.hexStringToByteArray(
+                            "00c8820d6c3ce84c8430f6835abfc7d7a912e1664f44578751f376501a8c68476c3072d919c5d39bd0dbe080e71db83bd4ab2f2f9bde3dffb0080f510a5f6929c196551f2b3c369be051054c877573195558fd282035934dc86edab8d4b1b7f555e5b2fee7275384a756ef86cb86793b5d1333f0973203cb96966766e655cd2cccae1940e4494b8e9fb5279593b75afd0b378243e51a88f6eb88def522a8cd5c6c082286a04269a2879760fcba45005d7f2672dd228809d47274f0fe0ea5531c2bd95366c05bf69edc0f3c3189866edca0c57adcca93250ae78d9eaca0393a95ff9952fc47fb7679dd3803e6a7a6fa771861e3d99e4b551a4084668b111b7eef7d"));
+            myConfig.setDefaultServerRSAModulus(rsaModulus);
+            myConfig.setDefaultServerRSAPublicKey(new BigInteger("65537"));
+        }
+
+        */
         // TODO: tls12_resumption_short.config hat auch noch addCachedInfoExtension auf true // diese Config wurde nie verwendet
 
         System.out.println("Config:\n"
