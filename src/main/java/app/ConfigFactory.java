@@ -225,7 +225,7 @@ public class ConfigFactory {
         myConfig.setChooserType(ChooserType.DEFAULT);
         myConfig.setWorkflowExecutorType(WorkflowExecutorType.DEFAULT);
         myConfig.setWorkflowExecutorShouldOpen(true);
-        myConfig.setWorkflowExecutorShouldClose(false);
+        myConfig.setWorkflowExecutorShouldClose(true);
         myConfig.setStopActionsAfterFatal(true);
         myConfig.setStopReceivingAfterFatal(true);
         myConfig.setStopActionsAfterWarning(false);
@@ -248,6 +248,7 @@ public class ConfigFactory {
         myConfig.setDefaultServerSessionId(new byte[]{});
         myConfig.setDefaultPRFAlgorithm(PRFAlgorithm.TLS_PRF_LEGACY);
         myConfig.setWorkflowTraceType(WorkflowTraceType.DYNAMIC_HANDSHAKE);
+        myConfig.setPreserveMessageRecordRelation(false);
 
         // TODO: tls12_resumption_short.config hat auch noch addCachedInfoExtension auf true // diese Config wurde nie verwendet
 
