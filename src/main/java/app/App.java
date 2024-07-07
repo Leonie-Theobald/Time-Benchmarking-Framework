@@ -4,6 +4,7 @@ import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.HashAlgo;
 import app.ConfigurationTypes.KeyExchange;
+import app.ConfigurationTypes.KeyExchangeGroup;
 import app.ConfigurationTypes.ServerAuth;
 import app.ConfigurationTypes.TlsVersion;
 import app.HandshakeStepping;
@@ -18,7 +19,9 @@ import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutor;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutorFactory;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 import de.rub.nds.tlsattacker.core.workflow.factory.WorkflowConfigurationFactory;
+import de.rub.nds.tlsattacker.core.workflow.factory.WorkflowTraceType;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LongSummaryStatistics;
@@ -102,19 +105,20 @@ public class App {
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
                 KeyExchange.RSA,
+                KeyExchangeGroup.NONE,
                 ServerAuth.RSA,
                 HashAlgo.SHA384,
                 BulkAlgo.AES_256_GCM,
-                new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
+                //new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
+                new Vector<>());
 
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION, myConfig, outboundCon);
-
-        String resultsMeasurement = TimeMeasurement.startTimeMeasurement(2, myConfig, segmentedHandshake, true);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
+        String resultsMeasurement = TimeMeasurement.startTimeMeasurement(1, myConfig, segmentedHandshake, true);
         System.out.println(resultsMeasurement);
 
         System.out.println("Reached End");
