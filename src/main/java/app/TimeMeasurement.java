@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -16,6 +17,7 @@ import java.util.LongSummaryStatistics;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Vector;
+import java.util.stream.Stream;
 
 import com.google.common.io.Files;
 
@@ -83,7 +85,23 @@ public class TimeMeasurement {
         return analysisOverview;
     }
 
-    // performs statistical analysis for each handshake segment including all the repititons
+    public static class StatisticResult {
+        Long min;
+        Long max;
+        Long mean;
+        Long median;
+        Long quantil25;
+        Long quantil75;
+        //Long variance;
+        Long standardDeviation;
+        //Long confidenceInterval95Min;
+        //Long confidenceInterval95Max;
+        //Long confidenceInterval99Min;
+        //Long confidenceInterval99Max;
+    }
+
+
+    // performs statistical analysis for each handshake segment including all the repetitions
     public static ArrayList<LongSummaryStatistics> runStatisticAnalysis(ArrayList<ArrayList<Long>> durationForHandshakeSegments) {
         ArrayList<LongSummaryStatistics> analysisList = new ArrayList<LongSummaryStatistics>();
 
@@ -95,6 +113,67 @@ public class TimeMeasurement {
         // TODO: Add standard deviation, median, variance, etc.
 
         return analysisList;
+    }
+    
+    // performs statistical analysis for one data set
+    public static StatisticResult runStatisticAnalysisOnSingleDataset(Long[] durations) {
+        StatisticResult statisticResult = new StatisticResult();
+
+        // get few statistic values
+        //new ArrayList<>(Arrays.asList(array));
+        LongSummaryStatistics lss = new ArrayList<>(Arrays.asList(durations)).stream().mapToLong((a) -> a).summaryStatistics();
+        statisticResult.min = lss.getMin();
+        statisticResult.max = lss.getMax();
+        statisticResult.mean = (long) lss.getAverage(); // rounding is fine as those numbers are in nano second range while results are only interesting in millisecond area
+
+        // get more advanced statistic values
+        // Median, 25 and 75 % percentil (https://studyflix.de/statistik/quantile-1040)
+        statisticResult.median = calcQuantil(durations, 0.5);
+        statisticResult.quantil25 = calcQuantil(durations, 0.25);
+        statisticResult.quantil75 = calcQuantil(durations, 0.75);
+
+        // variance (https://studyflix.de/statistik/empirische-varianz-2016)
+        Long tempSum = (long)0;
+        for (Long dataPoint: durations) {
+            tempSum += ((dataPoint - statisticResult.mean) * (dataPoint - statisticResult.mean));
+        }
+        Long variance = tempSum / (durations.length - 1);
+
+        // standard deviation (https://studyflix.de/statistik/standardabweichung-1042)
+        // TODO: Problem dass hier Wurzel aus double??
+        statisticResult.standardDeviation = (long) Math.sqrt(variance);
+
+        return statisticResult;
+    }
+
+    public static Long calcQuantil(Long[] dataSet, Double quantil) {
+        //System.out.println("\nQuantil: " + quantil);
+        
+        //System.out.println("Unsorted Data: " + Arrays.toString(dataSet));
+        Arrays.sort(dataSet);
+        //System.out.println("Sorted Data: " + Arrays.toString(dataSet));
+        
+        int countDataPoints = dataSet.length;
+        //System.out.println("Length: " + countDataPoints);
+
+        if (((countDataPoints * quantil) - (int)(countDataPoints * quantil)) == 0) {
+            /*
+            System.out.println("if TRUE");
+            System.out.println("n*p = " + countDataPoints * quantil);
+            System.out.println("runtergerundet n*p = " + (int)(countDataPoints * quantil));
+            System.out.println("Selected element: " + (dataSet[(int)(countDataPoints * quantil) - 1] + dataSet[(int)(countDataPoints * quantil)]) / 2);
+            */
+            // number of data points times quantil is a whole number
+            return (dataSet[(int)(countDataPoints * quantil) - 1] + dataSet[(int)(countDataPoints * quantil)]) / 2;
+        } else {
+            /*
+            System.out.println("if FALSE");
+            System.out.println("n*p = " + countDataPoints * quantil);
+            System.out.println("runtergerundet n*p = " + (int)(countDataPoints * quantil));
+            System.out.println("Selected element: " + dataSet[(int)(countDataPoints * quantil)]);
+            */
+            return dataSet[(int)(countDataPoints * quantil)];
+        }
     }
 
     // TODO: Add calculation of relevant server steps
@@ -182,5 +261,5 @@ public class TimeMeasurement {
 
         return configDescription;
     }
-
+  
 }
