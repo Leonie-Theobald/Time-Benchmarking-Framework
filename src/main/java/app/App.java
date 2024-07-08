@@ -39,11 +39,11 @@ public class App {
         Config myConfig =
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
-                KeyExchange.RSA,
-                KeyExchangeGroup.NONE,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
                 ServerAuth.RSA,
-                HashAlgo.SHA384,
-                BulkAlgo.AES_256_GCM,
+                HashAlgo.SHA256,
+                BulkAlgo.AES_128_CBC,
                 //new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
                 new Vector<>());
 

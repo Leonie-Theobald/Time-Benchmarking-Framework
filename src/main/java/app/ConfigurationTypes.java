@@ -58,8 +58,10 @@ public class ConfigurationTypes {
     }
 
     public enum BulkAlgo {
-        AES_256_GCM,
         AES_128_GCM,
+        AES_256_GCM,
+        AES_256_CBC,
+        AES_128_CBC,
     }
 
     public enum SignatureScheme {

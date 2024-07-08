@@ -267,11 +267,12 @@ public class ConfigFactory {
             return ConfigError.TLS13_WITH_STATIC_KX;
         }
 
-        if (bulkAlgo == BulkAlgo.AES_256_GCM && hashAlgo != HashAlgo.SHA384) {
-            return ConfigError.HASH_MISMATCHING_BULK;
-        }
-
-        if (bulkAlgo == BulkAlgo.AES_128_GCM && hashAlgo != HashAlgo.SHA256) {
+        if (
+            (bulkAlgo == BulkAlgo.AES_256_GCM && hashAlgo != HashAlgo.SHA384)
+            || (bulkAlgo == BulkAlgo.AES_128_GCM && hashAlgo != HashAlgo.SHA256)
+            || (bulkAlgo == BulkAlgo.AES_256_CBC && hashAlgo != HashAlgo.SHA384)
+            || (bulkAlgo == BulkAlgo.AES_128_CBC && hashAlgo != HashAlgo.SHA256))
+        {
             return ConfigError.HASH_MISMATCHING_BULK;
         }
 
@@ -357,6 +358,8 @@ public class ConfigFactory {
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.DHE, ServerAuth.RSA, BulkAlgo.AES_256_GCM, HashAlgo.SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_GCM, HashAlgo.SHA256));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_GCM, HashAlgo.SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_CBC, HashAlgo.SHA256));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_CBC, HashAlgo.SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.AES_256_GCM, HashAlgo.SHA384));
         
         // TLS1.3 ciphers
