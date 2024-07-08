@@ -34,16 +34,15 @@ public class App {
 
     public static void main(String[] args) {
         // TODOs
-        // with DHE.FFDHE2048 ClientHello includes Secp256r1 as supported groups
         // with TLS1.2 ECDHE OCSP => decryption failed or bad Record MAC
         Config myConfig =
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
-                KeyExchange.ECDHE,
-                KeyExchangeGroup.SECP384R1,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
                 ServerAuth.RSA,
-                HashAlgo.SHA256,
-                BulkAlgo.AES_128_CBC,
+                HashAlgo.SHA384,
+                BulkAlgo.AES_256_GCM,
                 //new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
                 new Vector<>());
 

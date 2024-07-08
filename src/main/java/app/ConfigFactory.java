@@ -137,7 +137,7 @@ public class ConfigFactory {
             myConfig.setDefaultSelectedNamedGroup(namedGroup);
             myConfig.setDefaultClientKeyShareNamedGroups(namedGroup);
         }
-
+        
         // add needed extensions
         // session resumption
         if (extensions.contains(Extension.SESSION_RESUMPTION)) {
@@ -310,23 +310,23 @@ public class ConfigFactory {
             case SECP256R1:
                 return NamedGroup.SECP256R1;
             case SECP384R1:
-                return NamedGroup.SECP256R1;
+                return NamedGroup.SECP384R1;
             case SECP521R1:
-                return NamedGroup.SECP256R1;
+                return NamedGroup.SECP521R1;
             case X25519:
-                return NamedGroup.SECP256R1;
+                return NamedGroup.ECDH_X25519;
             case X448:
-                return NamedGroup.SECP256R1;
+                return NamedGroup.ECDH_X448;
             case FFDHE2048:
-                return NamedGroup.SECP256R1;
+                return NamedGroup.FFDHE2048;
             case FFDHE3072:
-                return NamedGroup.SECP256R1;
+                return NamedGroup.FFDHE3072;
             case FFDHE4096:
-                return NamedGroup.SECP256R1;
+                return NamedGroup.FFDHE4096;
             case FFDHE6144:
-                return NamedGroup.SECP256R1;
+                return NamedGroup.FFDHE6144;
             case FFDHE8192:
-                return NamedGroup.SECP256R1;
+                return NamedGroup.FFDHE8192;
              default:
                 throw new Error("There is no corresponding NamedGroup for the KeyExchangeGroup: " + keyExchangeGroup);
         }
