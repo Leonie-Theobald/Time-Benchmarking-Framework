@@ -21,8 +21,8 @@ public class TimeMeasurementTest
         //expectedStatisticResult.variance = (long)55833;
         expectedStatisticResult.standardDeviation = (long)236;
 
-        StatisticResult actualStatisticResult = TimeMeasurement.runStatisticAnalysisOnSingleDataset(dataSet);
-
+        StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
+        
         assertThat(actualStatisticResult).usingRecursiveComparison().isEqualTo(expectedStatisticResult);
     }
 
@@ -40,7 +40,7 @@ public class TimeMeasurementTest
         //expectedStatisticResult.variance = (long)90330;
         expectedStatisticResult.standardDeviation = (long)300;
         
-        StatisticResult actualStatisticResult = TimeMeasurement.runStatisticAnalysisOnSingleDataset(dataSet);
+        StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
         
         assertThat(actualStatisticResult).usingRecursiveComparison().isEqualTo(expectedStatisticResult);
     }
@@ -59,7 +59,7 @@ public class TimeMeasurementTest
         //expectedStatisticResult.variance = (long)3326464;
         expectedStatisticResult.standardDeviation = (long)1823;
 
-        StatisticResult actualStatisticResult = TimeMeasurement.runStatisticAnalysisOnSingleDataset(dataSet);
+        StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
 
         assertThat(actualStatisticResult).usingRecursiveComparison().isEqualTo(expectedStatisticResult);
     }
@@ -78,7 +78,7 @@ public class TimeMeasurementTest
         //expectedStatisticResult.variance = (long)48830;
         expectedStatisticResult.standardDeviation = (long)220;
 
-        StatisticResult actualStatisticResult = TimeMeasurement.runStatisticAnalysisOnSingleDataset(dataSet);
+        StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
 
         assertThat(actualStatisticResult).usingRecursiveComparison().isEqualTo(expectedStatisticResult);
     }
@@ -97,7 +97,7 @@ public class TimeMeasurementTest
         //expectedStatisticResult.variance = (long)1119223;
         expectedStatisticResult.standardDeviation = (long)1057;
         
-        StatisticResult actualStatisticResult = TimeMeasurement.runStatisticAnalysisOnSingleDataset(dataSet);
+        StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
         
         assertThat(actualStatisticResult).usingRecursiveComparison().isEqualTo(expectedStatisticResult);
     }

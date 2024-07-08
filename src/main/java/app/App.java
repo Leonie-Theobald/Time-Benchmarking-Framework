@@ -52,8 +52,8 @@ public class App {
         myConfig.setDefaultClientConnection(outboundCon);
         
         List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        String resultsMeasurement = TimeMeasurement.startTimeMeasurement(1, myConfig, segmentedHandshake, true);
-        System.out.println(resultsMeasurement);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(2, myConfig, segmentedHandshake, true);
+        //System.out.println(resultsMeasurement);
 
         System.out.println("Reached End");
     }
