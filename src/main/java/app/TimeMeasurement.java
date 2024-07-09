@@ -19,6 +19,8 @@ import java.util.Optional;
 import java.util.Vector;
 import java.util.stream.Stream;
 
+import org.checkerframework.checker.signedness.qual.Unsigned;
+
 import com.google.common.io.Files;
 
 import app.ConfigurationTypes.BulkAlgo;
@@ -58,36 +60,71 @@ public class TimeMeasurement {
         int repetition,
         Config config,
         List<WorkflowTrace> segmentedHandshake,
-        Boolean shouldDocument
+        Boolean shouldDocument,
+        int cleanPercentageOutliner
     ) {
         // run repeatedly through handshake segments
         Long[][] durationForHandshakeSegments = new Long[segmentedHandshake.size()][repetition];
             
         int segCnt = 0;
         for (WorkflowTrace partialTrace: segmentedHandshake) {
-            //durationForHandshakeSegments.add(new ArrayList<Long>());
-
             for (int i = 0; i < repetition; i++) {
                 long timeElapsed = App.startTlsClient(config, partialTrace);
-                //durationForHandshakeSegments.get(segCnt).add(timeElapsed);
                 durationForHandshakeSegments[segCnt][i] = timeElapsed;
             }
             segCnt++;
         }
-        
+
+        // run statistical analysis
+        // for the data set of each handshake segment (always measured from 0.00ms to end of handshake segment)
         StatisticResult[] analysisListHandshake = new StatisticResult[segmentedHandshake.size()];
         segCnt = 0;
         for (Long[] dataSetOneHandshakeSegment: durationForHandshakeSegments) {
             analysisListHandshake[segCnt] = StatisticResult.runStatisticAnalysis(dataSetOneHandshakeSegment);
             segCnt++;
         }
-
-        //StatisticResultHandshakeSegment[] analysisListSegments = new StatisticResultHandshakeSegment[segmentedHandshake.size()];
+        // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
         StatisticResultHandshakeSegment[] analysisListSegments = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshake);
 
-        // log results if wished
-        if (shouldDocument == true) {
-            logMeasurement(config, segmentedHandshake, durationForHandshakeSegments, analysisListHandshake, analysisListSegments);
+        // tells us how many percentage of the longest durations for each handshake segment should be removed (those values are considered outliners)
+        if (cleanPercentageOutliner > 0) {
+            // calculate how many values should be removed
+            int cntRemovedValues = (int) (cleanPercentageOutliner * repetition / 100);
+
+            Long[][] durationForHandshakeSegmentsClean = new Long[segmentedHandshake.size()][repetition  - cntRemovedValues];
+            // sort each data set of the handshake and cut the highest values
+            segCnt = 0;
+            for (Long[] segment: durationForHandshakeSegments) {
+                Arrays.sort(segment);
+                List<Long> segmentList = Arrays.asList(segment);
+                List<Long> segmentListClean = segmentList.subList(0, segmentList.size() - cntRemovedValues);
+
+                Long[] tempArray = new Long[segmentList.size() - cntRemovedValues];
+                tempArray = segmentListClean.toArray(tempArray);
+                durationForHandshakeSegmentsClean[segCnt] = tempArray;
+
+                segCnt++;
+            }
+
+            // do same analysis steps as for raw data
+            StatisticResult[] analysisListHandshakeClean = new StatisticResult[segmentedHandshake.size()];
+            segCnt = 0;
+            for (Long[] dataSetOneHandshakeSegmenClean: durationForHandshakeSegmentsClean) {
+                analysisListHandshakeClean[segCnt] = StatisticResult.runStatisticAnalysis(dataSetOneHandshakeSegmenClean);
+                segCnt++;
+            }
+            // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
+            StatisticResultHandshakeSegment[] analysisListSegmentsClean = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshakeClean);
+
+            // log results if wished
+            if (shouldDocument == true) {
+                logRawAndCleanMeasurement(config, segmentedHandshake, durationForHandshakeSegments, analysisListHandshake, analysisListSegments, cleanPercentageOutliner, durationForHandshakeSegmentsClean, analysisListHandshakeClean, analysisListSegmentsClean);
+            }
+        } else {
+            // log results if wished
+            if (shouldDocument == true) {
+                logRawMeasurement(config, segmentedHandshake, durationForHandshakeSegments, analysisListHandshake, analysisListSegments);
+            }
         }
 
         return durationForHandshakeSegments;
@@ -102,6 +139,7 @@ public class TimeMeasurement {
         Long quantil75;
         //Long variance;
         Long standardDeviation;
+        Float variationCoefficient;
         //Long confidenceInterval95Min;
         //Long confidenceInterval95Max;
         //Long confidenceInterval99Min;
@@ -135,6 +173,9 @@ public class TimeMeasurement {
             // standard deviation (https://studyflix.de/statistik/standardabweichung-1042)
             // TODO: Problem dass hier Wurzel aus double??
             statisticResult.standardDeviation = (long) Math.sqrt(variance);
+
+            // coefficient of variation (https://studyflix.de/statistik/variationskoeffizient-1043)
+            statisticResult.variationCoefficient = (float)statisticResult.standardDeviation / (float)statisticResult.mean;
 
             return statisticResult;
         }
@@ -181,6 +222,7 @@ public class TimeMeasurement {
             analysisResultsString += " 25% Quantil: " + statisticResult.quantil25/1000000.0 + " ms\n";
             analysisResultsString += " 75% Quantil: " + statisticResult.quantil75/1000000.0 + " ms\n";
             analysisResultsString += " Std Deviation: " + statisticResult.standardDeviation/1000000.0 + " ms\n";
+            analysisResultsString += " Variant Coef: " + String.format("%.3f", statisticResult.variationCoefficient*100.0) + " %\n";
 
             return analysisResultsString;
         }
@@ -189,7 +231,7 @@ public class TimeMeasurement {
     // TODO: Add calculation of relevant server steps
 
     // logs raw data and statistical analysis results into file
-    public static void logMeasurement(
+    public static void logRawMeasurement(
         Config config,
         List<WorkflowTrace> segmentedHandshake,
         Long[][] durationForHandshakeSegments,
@@ -245,9 +287,115 @@ public class TimeMeasurement {
                     segmentCount++;
                 }
                 
-                out.println("\n\n##################################################################");
+                out.println("\n\n#################################");
                 out.println("Detailed Measurement Results");
                 out.print(Arrays.deepToString(durationForHandshakeSegments));
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // logs raw data and statistical analysis as well as the cleaned results into file
+    public static void logRawAndCleanMeasurement(
+        Config config,
+        List<WorkflowTrace> segmentedHandshake,
+        Long[][] durationForHandshakeSegmentsRaw,
+        StatisticResult[] analysisListHandshakeRaw,
+        StatisticResultHandshakeSegment[] analysisListSegmentsRaw,
+        int removedPercentage,
+        Long[][] durationForHandshakeSegmentsClean,
+        StatisticResult[] analysisListHandshakeClean,
+        StatisticResultHandshakeSegment[] analysisListSegmentsClean
+    ) {
+        try {
+            // Get path of the JAR file and strip unnecessary folders
+            String jarPath = App.class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .toURI()
+                    .getPath();
+            String basePath = jarPath.substring(0, jarPath.lastIndexOf("target"));
+            
+            Date now = Calendar.getInstance().getTime();
+            String nowAsString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-mmmm").format(now);
+            String logFileName = nowAsString + "_measurement-results";
+
+            File logFile = new File(basePath + "logging/" + logFileName);
+
+            try (PrintWriter out = new PrintWriter(logFile)) {
+                out.println("TIME MEASUREMENT RESULTS\n" + nowAsString);
+                
+                out.println("\n\n#################################");
+                out.println("Used Configuration\n");
+                out.print(ConfigFactory.getConfigOverview(config));
+
+                out.println("\n\n#################################");
+                out.println("Used Handshake Segments\n");
+                out.print(segmentedHandshake);
+
+                out.println("\n\n#################################");
+                out.println("Used Repititions\n");
+                out.print(durationForHandshakeSegmentsRaw[0].length);
+                
+                out.println("\n\n##################################################################");
+                out.println("\n\nRAW RESULTS");
+            
+                out.println("\n\n#################################");
+                out.println("Raw Results: Complete duration to the end of each handshake segment.");
+                int segmentCount = 0;
+                for (StatisticResult oneResult: analysisListHandshakeRaw) {
+                    out.println("\nHandshake Segment " + segmentCount);
+                    out.print(StatisticResult.textualRepresentation(oneResult));
+                    segmentCount++;
+                }
+
+                out.println("\n\n#################################");
+                out.println("Raw Results: Actual duration for each handshake segment.");
+                segmentCount = 0;
+                for (StatisticResultHandshakeSegment oneResult: analysisListSegmentsRaw) {
+                    out.println("\nHandshake Segment " + segmentCount);
+                    out.print(StatisticResultHandshakeSegment.textualRepresentation(oneResult));
+                    segmentCount++;
+                }
+
+                out.println("\n\n##################################################################");
+                out.println("\n\nCLEANED RESULTS (removed top " + String.valueOf(removedPercentage) + "% of longest durations)");
+            
+                out.println("\n\n#################################");
+                out.println("Cleaned Results: Complete duration to the end of each handshake segment.");
+                segmentCount = 0;
+                for (StatisticResult oneResult: analysisListHandshakeClean) {
+                    out.println("\nHandshake Segment " + segmentCount);
+                    out.print(StatisticResult.textualRepresentation(oneResult));
+                    segmentCount++;
+                }
+
+                out.println("\n\n#################################");
+                out.println("Cleaned Results: Actual duration for each handshake segment.");
+                segmentCount = 0;
+                for (StatisticResultHandshakeSegment oneResult: analysisListSegmentsClean) {
+                    out.println("\nHandshake Segment " + segmentCount);
+                    out.print(StatisticResultHandshakeSegment.textualRepresentation(oneResult));
+                    segmentCount++;
+                }
+                
+                out.println("\n\n##################################################################");
+                out.println("Detailed Measurement Results");
+
+                out.println("\n\n#################################");
+                out.println("Raw Detailed Measurement Results");
+                out.print(Arrays.deepToString(durationForHandshakeSegmentsRaw));
+
+                out.println("\n\n#################################");
+                out.println("Cleaned Detailed Measurement Results");
+                out.print(Arrays.deepToString(durationForHandshakeSegmentsClean));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
