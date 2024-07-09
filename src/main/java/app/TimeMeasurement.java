@@ -217,7 +217,7 @@ public class TimeMeasurement {
                 
                 out.println("\n\n#################################");
                 out.println("Used Configuration\n");
-                out.print(getConfigOverview(config));
+                out.print(ConfigFactory.getConfigOverview(config));
 
                 out.println("\n\n#################################");
                 out.println("Used Handshake Segments\n");
@@ -258,16 +258,4 @@ public class TimeMeasurement {
             e.printStackTrace();
         }
     }
-
-    private static String getConfigOverview(Config config) {
-        String configDescription = new String();
-
-        configDescription = "Config\n";
-        configDescription += "\nHighest TLS Version: " + config.getHighestProtocolVersion();
-        configDescription += "\nDefault Selected Cipher Suite: " + config.getDefaultClientConnection();
-        // TODO: add more content
-
-        return configDescription;
-    }
-  
 }

@@ -15,6 +15,7 @@ import de.rub.nds.tlsattacker.core.constants.PskKeyExchangeMode;
 import de.rub.nds.tlsattacker.core.constants.SignatureAndHashAlgorithm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
@@ -137,7 +138,7 @@ public class ConfigFactory {
             myConfig.setDefaultSelectedNamedGroup(namedGroup);
             myConfig.setDefaultClientKeyShareNamedGroups(namedGroup);
         }
-        
+
         // add needed extensions
         // session resumption
         if (extensions.contains(Extension.SESSION_RESUMPTION)) {
@@ -393,5 +394,43 @@ public class ConfigFactory {
             + "\n\tHashAlgo: " + hashAlgo);
     }
 
+    public static String getConfigOverview(Config config) {
+        String configDescription = new String();
 
+        configDescription = "Config\n";
+        configDescription += "\nHighest TLS Version: " + config.getHighestProtocolVersion();
+        configDescription += "\nCipher Suite: " + config.getDefaultSelectedCipherSuite();
+        // TODO: ggf. deepstring nutzen, falls mehrere einträge möglich
+        configDescription += "\nSig and Hash Algo: " + config.getDefaultClientSupportedSignatureAndHashAlgorithms();
+
+        configDescription += "\nEC Point Extension: " + config.isAddECPointFormatExtension();
+        configDescription += "\nEC Extension: " + config.isAddEllipticCurveExtension();
+        
+        configDescription += "\nNamed Group: " + config.getDefaultSelectedNamedGroup();
+        configDescription += "\nKey Share: " + config.getDefaultClientKeyShareNamedGroups();
+        
+        configDescription += "\nOCSP: " + config.isAddCertificateStatusRequestExtension();
+
+        switch (config.getHighestProtocolVersion()) {
+            case TLS12:
+                configDescription += "\nSession Ticket Extension (TLS1.2): " + config.isAddSessionTicketTLSExtension();    
+                break;
+        
+            case TLS13:
+                configDescription += "\nPSK Extension (TLS1.3): " + config.isAddPSKKeyExchangeModesExtension();
+                configDescription += "\nPSK Extension (TLS1.3): " + config.isAddPreSharedKeyExtension();
+                if (config.isAddPSKKeyExchangeModesExtension()) {
+                    configDescription += "\nPSK Exchange Modes (TLS1.3): " + config.getPSKKeyExchangeModes();
+                }
+                
+                configDescription += "\nEarly Data Extension (TLS1.3): " + config.isAddEarlyDataExtension();
+                if (config.isAddEarlyDataExtension()) {
+                    configDescription += "\nEarly Data (TLS1.3): " + Arrays.toString(config.getEarlyData());
+                }
+                break;
+            default:
+        }
+
+        return configDescription;
+    }
 }
