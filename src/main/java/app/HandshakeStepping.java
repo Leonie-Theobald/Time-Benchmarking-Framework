@@ -1,6 +1,7 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -10,6 +11,7 @@ import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.KeyExchange;
 import app.ConfigurationTypes.TlsVersion;
+import app.TimeMeasurement.StatisticResult;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.AliasedConnection;
 import de.rub.nds.tlsattacker.core.protocol.ProtocolMessage;
@@ -302,5 +304,44 @@ public class HandshakeStepping {
                         System.out.println(handshakeType + " is NOT supported.");
                         return segmentedHandshake;
                 }
+    }
+
+    public static class StatisticResultHandshakeSegment {
+        Long durationMean;
+        Long durationMax;
+        Long durationMin;
+
+        public static StatisticResultHandshakeSegment[] runStatisticAnalysis(StatisticResult[] statisticResultHandshake) {
+            StatisticResultHandshakeSegment[] resultSegments = new StatisticResultHandshakeSegment[statisticResultHandshake.length];
+
+            // first segment is measured against zero time
+            StatisticResultHandshakeSegment firstSegment = new StatisticResultHandshakeSegment();
+            firstSegment.durationMean = statisticResultHandshake[0].mean;
+            firstSegment.durationMin = statisticResultHandshake[0].mean - statisticResultHandshake[0].standardDeviation;
+            firstSegment.durationMax = statisticResultHandshake[0].mean + statisticResultHandshake[0].standardDeviation;
+            resultSegments[0] = firstSegment;
+
+            // all other segments depend on the previous segment as well
+            for (int segmentCount = 1; segmentCount < statisticResultHandshake.length; segmentCount++) {
+                StatisticResultHandshakeSegment segment = new StatisticResultHandshakeSegment();
+                segment.durationMean = statisticResultHandshake[segmentCount].mean - statisticResultHandshake[segmentCount-1].mean;
+                segment.durationMin = (statisticResultHandshake[segmentCount].mean - statisticResultHandshake[segmentCount].standardDeviation) - (statisticResultHandshake[segmentCount-1].mean + statisticResultHandshake[segmentCount-1].standardDeviation);
+                segment.durationMax = (statisticResultHandshake[segmentCount].mean + statisticResultHandshake[segmentCount].standardDeviation) - (statisticResultHandshake[segmentCount-1].mean - statisticResultHandshake[segmentCount-1].standardDeviation);
+                resultSegments[segmentCount] = segment;
+            }
+
+            return resultSegments;
+        }
+
+        // creates text overview of statistical analysis
+        public static String textualRepresentation(StatisticResultHandshakeSegment statisticResultSegments) {
+            String analysisResultsString = new String();
+
+            analysisResultsString = " Duration Average: " + statisticResultSegments.durationMean/1000000.0 + " ms\n";
+            analysisResultsString += " Duration Min: " + statisticResultSegments.durationMin/1000000.0 + " ms\n";
+            analysisResultsString += " Duration Max: " + statisticResultSegments.durationMax/1000000.0 + " ms\n";
+            
+            return analysisResultsString;
+        }
     }
 }

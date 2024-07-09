@@ -26,6 +26,7 @@ import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.KeyExchange;
 import app.ConfigurationTypes.TlsVersion;
 import app.HandshakeStepping.HandshakeType;
+import app.HandshakeStepping.StatisticResultHandshakeSegment;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.AliasedConnection;
 import de.rub.nds.tlsattacker.core.protocol.ProtocolMessage;
@@ -74,16 +75,19 @@ public class TimeMeasurement {
             segCnt++;
         }
         
-        StatisticResult[] analysisResults = new StatisticResult[segmentedHandshake.size()];
+        StatisticResult[] analysisListHandshake = new StatisticResult[segmentedHandshake.size()];
         segCnt = 0;
         for (Long[] dataSetOneHandshakeSegment: durationForHandshakeSegments) {
-            analysisResults[segCnt] = StatisticResult.runStatisticAnalysis(dataSetOneHandshakeSegment);
+            analysisListHandshake[segCnt] = StatisticResult.runStatisticAnalysis(dataSetOneHandshakeSegment);
             segCnt++;
         }
 
+        //StatisticResultHandshakeSegment[] analysisListSegments = new StatisticResultHandshakeSegment[segmentedHandshake.size()];
+        StatisticResultHandshakeSegment[] analysisListSegments = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshake);
+
         // log results if wished
         if (shouldDocument == true) {
-            logMeasurement(config, segmentedHandshake, durationForHandshakeSegments, analysisResults);
+            logMeasurement(config, segmentedHandshake, durationForHandshakeSegments, analysisListHandshake, analysisListSegments);
         }
 
         return durationForHandshakeSegments;
@@ -189,7 +193,8 @@ public class TimeMeasurement {
         Config config,
         List<WorkflowTrace> segmentedHandshake,
         Long[][] durationForHandshakeSegments,
-        StatisticResult[] analysisList
+        StatisticResult[] analysisListHandshake,
+        StatisticResultHandshakeSegment[] analysisListSegments
     ) {
         try {
             // Get path of the JAR file and strip unnecessary folders
@@ -223,12 +228,20 @@ public class TimeMeasurement {
                 out.print(durationForHandshakeSegments[0].length);
                 
                 out.println("\n\n#################################");
-                out.println("Results for each handshake segment.");
-
+                out.println("Results: Complete duration to the end of each handshake segment.");
                 int segmentCount = 0;
-                for (StatisticResult oneResult: analysisList) {
+                for (StatisticResult oneResult: analysisListHandshake) {
                     out.println("\nHandshake Segment " + segmentCount);
                     out.print(StatisticResult.textualRepresentation(oneResult));
+                    segmentCount++;
+                }
+
+                out.println("\n\n#################################");
+                out.println("Results: Actual duration for each handshake segment.");
+                segmentCount = 0;
+                for (StatisticResultHandshakeSegment oneResult: analysisListSegments) {
+                    out.println("\nHandshake Segment " + segmentCount);
+                    out.print(StatisticResultHandshakeSegment.textualRepresentation(oneResult));
                     segmentCount++;
                 }
                 
