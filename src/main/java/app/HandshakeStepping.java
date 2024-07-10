@@ -1,43 +1,23 @@
 package app;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Vector;
 
-import app.ConfigurationTypes.BulkAlgo;
-import app.ConfigurationTypes.Extension;
-import app.ConfigurationTypes.KeyExchange;
-import app.ConfigurationTypes.TlsVersion;
 import app.TimeMeasurement.StatisticResult;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.AliasedConnection;
 import de.rub.nds.tlsattacker.core.protocol.ProtocolMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.AlertMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.CertificateMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.CertificateVerifyMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ChangeCipherSpecMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ClientHelloMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.ECDHEServerKeyExchangeMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.EncryptedExtensionsMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.HelloVerifyRequestMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.RSAServerKeyExchangeMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloDoneMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.ServerKeyExchangeMessage;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 import de.rub.nds.tlsattacker.core.workflow.action.MessageActionFactory;
-import de.rub.nds.tlsattacker.core.workflow.action.ReceiveAction;
 import de.rub.nds.tlsattacker.core.workflow.action.ReceiveTillAction;
 import de.rub.nds.tlsattacker.core.workflow.action.ResetConnectionAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicClientKeyExchangeAction;
-import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicServerCertificateAction;
-import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicServerKeyExchangeAction;
-import de.rub.nds.tlsattacker.core.workflow.action.TlsAction;
 import de.rub.nds.tlsattacker.transport.ConnectionEndType;
 
 public class HandshakeStepping {
@@ -308,7 +288,8 @@ public class HandshakeStepping {
 
     public static class StatisticResultHandshakeSegment {
         Long durationMean;
-        Long durationMax;
+        Long durationStdDevMin;
+        Long durationStdDevMax;
         Long durationMin;
 
         public static StatisticResultHandshakeSegment[] runStatisticAnalysis(StatisticResult[] statisticResultHandshake) {
@@ -317,16 +298,18 @@ public class HandshakeStepping {
             // first segment is measured against zero time
             StatisticResultHandshakeSegment firstSegment = new StatisticResultHandshakeSegment();
             firstSegment.durationMean = statisticResultHandshake[0].mean;
-            firstSegment.durationMin = statisticResultHandshake[0].mean - statisticResultHandshake[0].standardDeviation;
-            firstSegment.durationMax = statisticResultHandshake[0].mean + statisticResultHandshake[0].standardDeviation;
+            firstSegment.durationStdDevMin = statisticResultHandshake[0].mean - statisticResultHandshake[0].standardDeviation;
+            firstSegment.durationStdDevMax = statisticResultHandshake[0].mean + statisticResultHandshake[0].standardDeviation;
+            firstSegment.durationMin = statisticResultHandshake[0].min;
             resultSegments[0] = firstSegment;
 
             // all other segments depend on the previous segment as well
             for (int segmentCount = 1; segmentCount < statisticResultHandshake.length; segmentCount++) {
                 StatisticResultHandshakeSegment segment = new StatisticResultHandshakeSegment();
                 segment.durationMean = statisticResultHandshake[segmentCount].mean - statisticResultHandshake[segmentCount-1].mean;
-                segment.durationMin = (statisticResultHandshake[segmentCount].mean - statisticResultHandshake[segmentCount].standardDeviation) - (statisticResultHandshake[segmentCount-1].mean + statisticResultHandshake[segmentCount-1].standardDeviation);
-                segment.durationMax = (statisticResultHandshake[segmentCount].mean + statisticResultHandshake[segmentCount].standardDeviation) - (statisticResultHandshake[segmentCount-1].mean - statisticResultHandshake[segmentCount-1].standardDeviation);
+                segment.durationStdDevMin = (statisticResultHandshake[segmentCount].mean - statisticResultHandshake[segmentCount].standardDeviation) - (statisticResultHandshake[segmentCount-1].mean + statisticResultHandshake[segmentCount-1].standardDeviation);
+                segment.durationStdDevMax = (statisticResultHandshake[segmentCount].mean + statisticResultHandshake[segmentCount].standardDeviation) - (statisticResultHandshake[segmentCount-1].mean - statisticResultHandshake[segmentCount-1].standardDeviation);
+                segment.durationMin = statisticResultHandshake[segmentCount].min - statisticResultHandshake[segmentCount-1].min;
                 resultSegments[segmentCount] = segment;
             }
 
@@ -335,11 +318,10 @@ public class HandshakeStepping {
 
         // creates text overview of statistical analysis
         public static String textualRepresentation(StatisticResultHandshakeSegment statisticResultSegments) {
-            String analysisResultsString = new String();
-
-            analysisResultsString = " Duration Average: " + statisticResultSegments.durationMean/1000000.0 + " ms\n";
-            analysisResultsString += " Duration Min: " + statisticResultSegments.durationMin/1000000.0 + " ms\n";
-            analysisResultsString += " Duration Max: " + statisticResultSegments.durationMax/1000000.0 + " ms\n";
+            String analysisResultsString = " Duration considering Average: " + statisticResultSegments.durationMean/1000000.0 + " ms\n";
+            analysisResultsString += " Duration Min considering StdDev: " + statisticResultSegments.durationStdDevMin/1000000.0 + " ms\n";
+            analysisResultsString += " Duration Max considering StdDev: " + statisticResultSegments.durationStdDevMax/1000000.0 + " ms\n";
+            analysisResultsString += " Duration considering Min: " + statisticResultSegments.durationMin/1000000.0 + " ms\n";
             
             return analysisResultsString;
         }
