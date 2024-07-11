@@ -30,13 +30,13 @@ public class App {
         // with TLS1.2 ECDHE OCSP => decryption failed or bad Record MAC
         Config myConfig =
             ConfigFactory.getConfig(
-                TlsVersion.TLS13,
-                KeyExchange.ECDHE,
-                KeyExchangeGroup.X25519,
-                ServerAuth.ECDSA,
+                TlsVersion.TLS12,
+                KeyExchange.RSA,
+                KeyExchangeGroup.NONE,
+                ServerAuth.RSA,
                 HashAlgo.SHA384,
                 BulkAlgo.AES_256_GCM,
-                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET); add(Extension.OCSP);}});
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
                 //new Vector<>());
                 
         OutboundConnection outboundCon = new OutboundConnection();
@@ -44,7 +44,7 @@ public class App {
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
         Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(2, myConfig, segmentedHandshake, true, 1);
         //System.out.println(resultsMeasurement);
 

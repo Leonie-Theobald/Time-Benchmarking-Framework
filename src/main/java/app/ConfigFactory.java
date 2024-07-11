@@ -182,53 +182,6 @@ public class ConfigFactory {
         // TODO: tls12_resumption_short.config hat addRenegotiationInfoExtension auf true // diese Config wurde irgendwie nie verwendet
         myConfig.setAddRenegotiationInfoExtension(false);
 
-        /*
-        myConfig.setFiltersKeepUserSettings(false);
-        myConfig.setDefaultServerConnection(new InboundConnection(443, "localhost"));
-        myConfig.setDefaultRunningMode(RunningModeType.CLIENT);
-        myConfig.setStealthMode(false);
-        myConfig.setWriteKeylogFile(false);
-        myConfig.setDefaultLayerConfiguration(LayerConfiguration.TLS);
-        myConfig.setChooserType(ChooserType.DEFAULT);
-        myConfig.setWorkflowExecutorType(WorkflowExecutorType.DEFAULT);
-        myConfig.setWorkflowExecutorShouldOpen(true);
-        myConfig.setWorkflowExecutorShouldClose(true);
-        myConfig.setStopActionsAfterFatal(true);
-        myConfig.setStopReceivingAfterFatal(true);
-        myConfig.setStopActionsAfterWarning(false);
-        myConfig.setStopActionsAfterIOException(true);
-        myConfig.setUseFreshRandom(true);
-        myConfig.setDefaultSelectedCompressionMethod(CompressionMethod.NULL);
-        List<CompressionMethod> compressionList = new ArrayList<>();
-        compressionList.add(CompressionMethod.NULL);
-        myConfig.setDefaultClientSupportedCompressionMethods(compressionList);
-        myConfig.setDefaultClientSessionId(new byte[]{});
-        myConfig.setSendHandshakeMessagesWithinSingleRecord(false);
-        myConfig.setDefaultMaxRecordData(16384);
-        myConfig.setCreateRecordsDynamically(true);
-        myConfig.setResetClientSourcePort(true);
-        myConfig.setRetryFailedClientTcpSocketInitialization(false);
-        myConfig.setStopTraceAfterUnexpected(false); // TODO maybe true makes more sense?
-        myConfig.setFinishWithCloseNotify(false); // TODO maybe true makes more sense?
-        myConfig.setReceiveFinalTcpSocketStateWithTimeout(false);
-        myConfig.setResetWorkflowTracesBeforeSaving(false);
-        myConfig.setDefaultServerSessionId(new byte[]{});
-        myConfig.setDefaultPRFAlgorithm(PRFAlgorithm.TLS_PRF_LEGACY);
-        myConfig.setPreserveMessageRecordRelation(false);
-
-        if (keyExchange == KeyExchange.RSA) {
-            // TODO FIX MODULUS
-            BigInteger rsaModulus = new BigInteger(
-                    1,
-                    ArrayConverter.hexStringToByteArray(
-                            "00c8820d6c3ce84c8430f6835abfc7d7a912e1664f44578751f376501a8c68476c3072d919c5d39bd0dbe080e71db83bd4ab2f2f9bde3dffb0080f510a5f6929c196551f2b3c369be051054c877573195558fd282035934dc86edab8d4b1b7f555e5b2fee7275384a756ef86cb86793b5d1333f0973203cb96966766e655cd2cccae1940e4494b8e9fb5279593b75afd0b378243e51a88f6eb88def522a8cd5c6c082286a04269a2879760fcba45005d7f2672dd228809d47274f0fe0ea5531c2bd95366c05bf69edc0f3c3189866edca0c57adcca93250ae78d9eaca0393a95ff9952fc47fb7679dd3803e6a7a6fa771861e3d99e4b551a4084668b111b7eef7d"));
-            myConfig.setDefaultServerRSAModulus(rsaModulus);
-            myConfig.setDefaultServerRSAPublicKey(new BigInteger("65537"));
-        }
-
-        */
-        // TODO: tls12_resumption_short.config hat auch noch addCachedInfoExtension auf true // diese Config wurde nie verwendet
-
         System.out.println(getConfigOverview(myConfig));
 
         return myConfig;
