@@ -54,7 +54,8 @@ public class ConfigurationTypes {
     public enum Extension {
         OCSP,
         ZERO_RTT,
-        SESSION_RESUMPTION,
+        RESUMPTION_SESSION_ID,
+        RESUMPTION_SESSION_TICKET,
     }
 
     public enum BulkAlgo {

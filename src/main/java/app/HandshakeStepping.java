@@ -7,26 +7,35 @@ import java.util.List;
 import app.TimeMeasurement.StatisticResult;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.AliasedConnection;
+import de.rub.nds.tlsattacker.core.constants.HandshakeMessageType;
 import de.rub.nds.tlsattacker.core.protocol.ProtocolMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ChangeCipherSpecMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ClientHelloMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.HelloMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.NewSessionTicketMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloDoneMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.extension.PreSharedKeyExtensionMessage;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
+import static de.rub.nds.tlsattacker.core.workflow.WorkflowTraceUtil.getFirstSendMessage;
+import de.rub.nds.tlsattacker.core.workflow.action.MessageAction;
 import de.rub.nds.tlsattacker.core.workflow.action.MessageActionFactory;
+import de.rub.nds.tlsattacker.core.workflow.action.ReceiveAction;
 import de.rub.nds.tlsattacker.core.workflow.action.ReceiveTillAction;
 import de.rub.nds.tlsattacker.core.workflow.action.ResetConnectionAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicClientKeyExchangeAction;
+import de.rub.nds.tlsattacker.core.workflow.action.executor.ActionOption;
 import de.rub.nds.tlsattacker.transport.ConnectionEndType;
 
 public class HandshakeStepping {
     public enum HandshakeType {
         TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH,
         TLS12_STATIC_WITHOUT_CLIENTAUTH,
-        TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION,
-        TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION,
+        TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
+        TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
         TLS13_WITHOUT_CLIENTAUTH,
+        TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
     }
     
     public static List<WorkflowTrace> getSegmentedHandshake(
@@ -70,7 +79,7 @@ public class HandshakeStepping {
 
                         return segmentedHandshake;
 
-                    case TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION:
+                    case TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
                         // First handshake
@@ -174,7 +183,7 @@ public class HandshakeStepping {
 
                         return segmentedHandshake;
 
-                    case TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_SESSIONRESUMPTION:
+                    case TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
                         // First handshake
@@ -281,12 +290,120 @@ public class HandshakeStepping {
 
                         return segmentedHandshake;
 
+                    case TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION:
+                        System.out.println(handshakeType + " is supported.");
+
+                        // First handshake
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(config, connection, ConnectionEndType.CLIENT, new ClientHelloMessage(config))
+                        );
+                        
+                        
+                        // remove extensions only needed in second handshake flow
+                        HelloMessage<?> initialHello;
+                        initialHello =
+                                (HelloMessage)
+                                        getFirstSendMessage(
+                                                HandshakeMessageType.CLIENT_HELLO, trace);
+                        if (initialHello.getExtensions() != null) {
+                            PreSharedKeyExtensionMessage pskExtension =
+                                    initialHello.getExtension(PreSharedKeyExtensionMessage.class);
+                            initialHello.getExtensions().remove(pskExtension);
+                        }
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+
+                        List<ProtocolMessage> tls13MessagesResumption = new LinkedList<>();
+                        tls13MessagesResumption.add(new FinishedMessage());
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(
+                                config, connection, ConnectionEndType.CLIENT, tls13MessagesResumption));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+
+                        MessageAction newSessionTicketAction =
+                                MessageActionFactory.createTLSAction(
+                                        config,
+                                        connection,
+                                        ConnectionEndType.SERVER,
+                                        new NewSessionTicketMessage(config, false));
+                        if (newSessionTicketAction instanceof ReceiveAction) {
+                            newSessionTicketAction
+                                    .getActionOptions()
+                                    .add(ActionOption.IGNORE_UNEXPECTED_NEW_SESSION_TICKETS);
+                        }
+                        trace.addTlsAction(newSessionTicketAction);
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+
+                        // Reset connection and start with session resumption
+                        trace.addTlsAction(new ResetConnectionAction());
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        // Second Handshake
+                        /*
+                        List<ProtocolMessage> clientHelloMessages = new LinkedList<>();                        
+                        ClientHelloMessage clientHello;
+                        clientHello = new ClientHelloMessage(config);
+                        clientHelloMessages.add(clientHello);
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(
+                                    config, connection, ConnectionEndType.CLIENT, clientHelloMessages));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        */
+                        trace.addTlsAction(
+                            MessageActionFactory.createTLSAction(config, connection, ConnectionEndType.CLIENT, new ClientHelloMessage(config))
+                        );
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+
+                        /*
+                        List<ProtocolMessage> serverMessages = new LinkedList<>();
+                        FinishedMessage serverFin = new FinishedMessage();
+                        
+                        ServerHelloMessage serverHello;
+                        serverHello = new ServerHelloMessage();
+                        serverMessages.add(serverHello);
+                        ChangeCipherSpecMessage ccsServer = new ChangeCipherSpecMessage();
+                        ccsServer.setRequired(false);
+                        if (Objects.equals(config.getTls13BackwardsCompatibilityMode(), Boolean.TRUE)) {
+                            serverMessages.add(ccsServer);
+                        }
+                        
+
+                        //EncryptedExtensionsMessage encExtMsg;
+                        //encExtMsg = new EncryptedExtensionsMessage(config);
+                        //serverMessages.add(encExtMsg);
+                        serverMessages.add(serverFin);
+
+                        trace.addTlsAction(
+                        MessageActionFactory.createTLSAction(
+                                config, connection, ConnectionEndType.SERVER, serverMessages));
+                        */
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+
+
+                        List<ProtocolMessage> clientMessages = new LinkedList<>();
+                        clientMessages.add(new FinishedMessage());
+                        trace.addTlsAction(
+                                MessageActionFactory.createTLSAction(
+                                        config, connection, ConnectionEndType.CLIENT, clientMessages));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        return segmentedHandshake;
+
                     default:
                         System.out.println(handshakeType + " is NOT supported.");
                         return segmentedHandshake;
                 }
     }
-
+    
     public static class StatisticResultHandshakeSegment {
         Long durationMean;
         Long durationStdDevMin;

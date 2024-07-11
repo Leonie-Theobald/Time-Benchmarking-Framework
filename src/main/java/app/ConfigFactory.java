@@ -41,14 +41,16 @@ public class ConfigFactory {
                 keyExchangeGroup,
                 serverAuth,
                 hashAlgo,
-                bulkAlgo);
+                bulkAlgo,
+                extensions);
         if (configValidity != ConfigError.NO_ERROR) {
             throw new Error("Configuration is invalid (" + configValidity 
-                + "):\n\tversion: " + version 
-                + "\n\tkey ex: " + keyExchange 
-                + "\n\tserver auth: " + serverAuth 
-                + "\n\thash: " + hashAlgo 
-                + "\n\tbulk: " + bulkAlgo);
+                + "):\n\tVersion: " + version 
+                + "\n\tKey ex: " + keyExchange 
+                + "\n\tServer auth: " + serverAuth 
+                + "\n\tHash: " + hashAlgo 
+                + "\n\tBulk: " + bulkAlgo
+                + "\n\tExtensions: " + extensions.toString());
         }
     
         //Config myConfig = Config.createEmptyConfig();
@@ -104,29 +106,12 @@ public class ConfigFactory {
         myConfig.setDefaultClientSupportedCipherSuites(cipherSuite);
         myConfig.setDefaultSelectedCipherSuite(cipherSuite);
 
-        // set elliptic curve extensions
-        // TODO tls13.config mit ECDH_X25519 hat AddECPointFormatExtension auf false
-        // TODO tls13_ocsp_short.config mit ECDH_X25519 hat AddECPointFormatExtension auf false
-        // TODO tls13_ticket-resumption_short.config mit ECDH_X25519 hat AddECPointFormatExtension auf false
-        // TODO tls13_short.config mit ECDH_X25519 hat AddECPointFormatExtension auf false
-        // TODO tls13_ocsp.config mit ECDH_X25519 hat AddECPointFormatExtension auf false
-        // TODO tls13_ECDHE_ECDSA-SHA256_short.config mit ECDH_X25519 hat AddECPointFormatExtension auf false
-        // TODO tls13_0rtt_short.config mit ECDH_X25519 hat AddECPointFormatExtension auf false
-        // TODO tls13_0rtt_copy.config mit ECDH_X25519 hat AddECPointFormatExtension auf false
-
-        // TODO tls13_DHE_ECDSA_short.config mit FFDHE2048 hat AddECPointFormatExtension auf false
-        // TODO tls12_rasa_ticket-resumption_short.config RSA hat AddECPointFormatExtension auf false
-        // TODO tls12_RSA_short.config RSA hat AddECPointFormatExtension auf false
-        // TODO tls12_rsa_short_ocsp.config RSA hat AddECPointFormatExtension auf false
-        // TODO tls12_resumption_short.config RSA hat AddECPointFormatExtension auf false
-        // TODO tls12_dhe_ticket-resumption_short.config RSA hat AddECPointFormatExtension auf false
         if (keyExchange == KeyExchange.ECDHE) {
             myConfig.setAddECPointFormatExtension(true);
         } else {
             myConfig.setAddECPointFormatExtension(false);
         }
 
-        // TODO tls12_DHE_short.config hat addEllipticCurveExtension auf false
         if (keyExchange == KeyExchange.ECDHE || keyExchange == KeyExchange.DHE) {
             myConfig.setAddEllipticCurveExtension(true);
         } else {
@@ -142,20 +127,20 @@ public class ConfigFactory {
         }
 
         // add needed extensions
-        // session resumption
-        if (extensions.contains(Extension.SESSION_RESUMPTION)) {
-            switch (version) {
-                case TLS12:
-                    myConfig.setAddSessionTicketTLSExtension(true);
-                    break;            
-                case TLS13:
-                    List<PskKeyExchangeMode> pskList = new ArrayList<>();
-                    pskList.add(PskKeyExchangeMode.PSK_KE);
+        // session resumption with ticket
+        if (extensions.contains(Extension.RESUMPTION_SESSION_TICKET)) {
+            myConfig.setAddSessionTicketTLSExtension(true);
+            if (version == TlsVersion.TLS13) {
+                List<PskKeyExchangeMode> pskList = new ArrayList<>();
+                    pskList.add(PskKeyExchangeMode.PSK_DHE_KE);
                     myConfig.setPSKKeyExchangeModes(pskList);
                     myConfig.setAddPSKKeyExchangeModesExtension(true);
                     myConfig.setAddPreSharedKeyExtension(true);
-                    break;
             }
+        }
+        // session resumption based on session id
+        else if (extensions.contains(Extension.RESUMPTION_SESSION_ID)) {
+            myConfig.setAddSessionTicketTLSExtension(false);
         } else {
             myConfig.setAddSessionTicketTLSExtension(false);
             myConfig.setAddPSKKeyExchangeModesExtension(false);
@@ -252,6 +237,8 @@ public class ConfigFactory {
     private enum ConfigError {
         NO_ERROR,
         TLS13_WITH_STATIC_KX,
+        TLS13_WITH_SESSION_ID_RESUMPTION,
+        AMBIGIOUS_RESUMPTION,
         HASH_MISMATCHING_BULK,
     }
 
@@ -261,11 +248,20 @@ public class ConfigFactory {
             KeyExchangeGroup keyExchangeGroup,
             ServerAuth serverAuth,
             HashAlgo hashAlgo,
-            BulkAlgo bulkAlgo) {
+            BulkAlgo bulkAlgo,
+            Vector<Extension> extensions) {
         if (version == TlsVersion.TLS13 && keyExchange == KeyExchange.RSA
                 || version == TlsVersion.TLS13 && keyExchange == KeyExchange.DH) {
             return ConfigError.TLS13_WITH_STATIC_KX;
         }
+
+        if (version == TlsVersion.TLS13 && extensions.contains(Extension.RESUMPTION_SESSION_ID)){
+            return ConfigError.TLS13_WITH_SESSION_ID_RESUMPTION;
+        }
+
+        if (extensions.contains(Extension.RESUMPTION_SESSION_ID) && extensions.contains(Extension.RESUMPTION_SESSION_TICKET)){
+            return ConfigError.AMBIGIOUS_RESUMPTION;
+        }          
 
         if (
             (bulkAlgo == BulkAlgo.AES_256_GCM && hashAlgo != HashAlgo.SHA384)
@@ -411,24 +407,18 @@ public class ConfigFactory {
         
         configDescription += "\nOCSP: " + config.isAddCertificateStatusRequestExtension();
 
-        switch (config.getHighestProtocolVersion()) {
-            case TLS12:
-                configDescription += "\nSession Ticket Extension (TLS1.2): " + config.isAddSessionTicketTLSExtension();    
-                break;
-        
-            case TLS13:
-                configDescription += "\nPSK Extension (TLS1.3): " + config.isAddPSKKeyExchangeModesExtension();
-                configDescription += "\nPSK Extension (TLS1.3): " + config.isAddPreSharedKeyExtension();
-                if (config.isAddPSKKeyExchangeModesExtension()) {
-                    configDescription += "\nPSK Exchange Modes (TLS1.3): " + config.getPSKKeyExchangeModes();
-                }
-                
-                configDescription += "\nEarly Data Extension (TLS1.3): " + config.isAddEarlyDataExtension();
-                if (config.isAddEarlyDataExtension()) {
-                    configDescription += "\nEarly Data (TLS1.3): " + Arrays.toString(config.getEarlyData());
-                }
-                break;
-            default:
+        configDescription += "\nSession Ticket Extension: " + config.isAddSessionTicketTLSExtension(); 
+        if (config.getHighestProtocolVersion() == ProtocolVersion.TLS13) {
+            configDescription += "\nPSK Extension (TLS1.3): " + config.isAddPSKKeyExchangeModesExtension();
+            configDescription += "\nPSK Extension (TLS1.3): " + config.isAddPreSharedKeyExtension();
+            if (config.isAddPSKKeyExchangeModesExtension()) {
+                configDescription += "\nPSK Exchange Modes (TLS1.3): " + config.getPSKKeyExchangeModes();
+            }
+            
+            configDescription += "\nEarly Data Extension (TLS1.3): " + config.isAddEarlyDataExtension();
+            if (config.isAddEarlyDataExtension()) {
+                configDescription += "\nEarly Data (TLS1.3): " + Arrays.toString(config.getEarlyData());
+            }
         }
 
         return configDescription;

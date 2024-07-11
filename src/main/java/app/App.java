@@ -32,20 +32,20 @@ public class App {
             ConfigFactory.getConfig(
                 TlsVersion.TLS13,
                 KeyExchange.ECDHE,
-                KeyExchangeGroup.SECP256R1,
+                KeyExchangeGroup.X25519,
                 ServerAuth.ECDSA,
-                HashAlgo.SHA256,
-                BulkAlgo.AES_128_GCM,
-                new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
+                HashAlgo.SHA384,
+                BulkAlgo.AES_256_GCM,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET); add(Extension.OCSP);}});
                 //new Vector<>());
-
+                
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(2, myConfig, segmentedHandshake, false, 1);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(2, myConfig, segmentedHandshake, true, 1);
         //System.out.println(resultsMeasurement);
 
         System.out.println("Reached End");
