@@ -47,9 +47,10 @@ public class HandshakeStepping {
                             MessageActionFactory.createTLSAction(config, connection, ConnectionEndType.CLIENT, new ClientHelloMessage(config))
                         );
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
+
                         //trace.addTlsAction(new ReceiveAction(new ServerHelloMessage()));
                         //trace.addTlsAction(new ReceiveAction(new CertificateMessage()));
+                        //trace.addTlsAction(new ReceiveAction(new CertificateStatusMessage()));
                         //trace.addTlsAction(new ReceiveAction(new ECDHEServerKeyExchangeMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));

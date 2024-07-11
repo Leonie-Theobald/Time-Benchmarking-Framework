@@ -1,5 +1,13 @@
 package app;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.HashAlgo;
@@ -8,18 +16,12 @@ import app.ConfigurationTypes.KeyExchangeGroup;
 import app.ConfigurationTypes.ServerAuth;
 import app.ConfigurationTypes.TlsVersion;
 import de.rub.nds.tlsattacker.core.config.Config;
+import de.rub.nds.tlsattacker.core.constants.CertificateStatusRequestType;
 import de.rub.nds.tlsattacker.core.constants.CipherSuite;
 import de.rub.nds.tlsattacker.core.constants.NamedGroup;
 import de.rub.nds.tlsattacker.core.constants.ProtocolVersion;
 import de.rub.nds.tlsattacker.core.constants.PskKeyExchangeMode;
 import de.rub.nds.tlsattacker.core.constants.SignatureAndHashAlgorithm;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class ConfigFactory {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -185,6 +187,8 @@ public class ConfigFactory {
         // OCSP
         if (extensions.contains(Extension.OCSP)) {
             myConfig.setAddCertificateStatusRequestExtension(true);
+            myConfig.setCertificateStatusRequestExtensionRequestType(CertificateStatusRequestType.OCSP);
+            //<certificateStatusRequestExtensionRequestType>OCSP</certificateStatusRequestExtensionRequestType>
         } else {
             myConfig.setAddCertificateStatusRequestExtension(false);
         }
@@ -240,12 +244,7 @@ public class ConfigFactory {
         */
         // TODO: tls12_resumption_short.config hat auch noch addCachedInfoExtension auf true // diese Config wurde nie verwendet
 
-        System.out.println("Config:\n"
-            + "\nsupported versions: " + myConfig.getSupportedVersions()
-            + "\nhighest version: " + myConfig.getHighestProtocolVersion()
-            + "\nSig and Hash Algos: " + myConfig.getDefaultClientSupportedSignatureAndHashAlgorithms()
-            + "\nSupported Ciphers: " + myConfig.getDefaultClientSupportedCipherSuites()
-        );
+        System.out.println(getConfigOverview(myConfig));
 
         return myConfig;
     }
@@ -362,6 +361,7 @@ public class ConfigFactory {
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_CBC, HashAlgo.SHA256));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_CBC, HashAlgo.SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.AES_256_GCM, HashAlgo.SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.AES_128_GCM, HashAlgo.SHA256));
         
         // TLS1.3 ciphers
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_AES_128_GCM_SHA256, TlsVersion.TLS13, null, null, BulkAlgo.AES_128_GCM, HashAlgo.SHA256));

@@ -1,5 +1,11 @@
 package app;
 
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.HashAlgo;
@@ -7,27 +13,14 @@ import app.ConfigurationTypes.KeyExchange;
 import app.ConfigurationTypes.KeyExchangeGroup;
 import app.ConfigurationTypes.ServerAuth;
 import app.ConfigurationTypes.TlsVersion;
-import app.HandshakeStepping;
 import app.HandshakeStepping.HandshakeType;
-
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.OutboundConnection;
-import de.rub.nds.tlsattacker.core.constants.RunningModeType;
 import de.rub.nds.tlsattacker.core.exceptions.WorkflowExecutionException;
 import de.rub.nds.tlsattacker.core.state.State;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutor;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutorFactory;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
-import de.rub.nds.tlsattacker.core.workflow.factory.WorkflowConfigurationFactory;
-import de.rub.nds.tlsattacker.core.workflow.factory.WorkflowTraceType;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.LongSummaryStatistics;
-import java.util.Vector;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class App {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -37,22 +30,22 @@ public class App {
         // with TLS1.2 ECDHE OCSP => decryption failed or bad Record MAC
         Config myConfig =
             ConfigFactory.getConfig(
-                TlsVersion.TLS12,
-                KeyExchange.DHE,
-                KeyExchangeGroup.FFDHE3072,
-                ServerAuth.RSA,
-                HashAlgo.SHA384,
-                BulkAlgo.AES_256_GCM,
-                //new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
-                new Vector<>());
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP256R1,
+                ServerAuth.ECDSA,
+                HashAlgo.SHA256,
+                BulkAlgo.AES_128_GCM,
+                new Vector<Extension>(){{add(Extension.SESSION_RESUMPTION);}});
+                //new Vector<>());
 
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(10000, myConfig, segmentedHandshake, true, 1);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(2, myConfig, segmentedHandshake, false, 1);
         //System.out.println(resultsMeasurement);
 
         System.out.println("Reached End");
