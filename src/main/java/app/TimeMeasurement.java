@@ -4,55 +4,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.LongSummaryStatistics;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Vector;
-import java.util.stream.Stream;
 
-import org.checkerframework.checker.signedness.qual.Unsigned;
-
-import com.google.common.io.Files;
-
-import app.ConfigurationTypes.BulkAlgo;
-import app.ConfigurationTypes.Extension;
-import app.ConfigurationTypes.KeyExchange;
-import app.ConfigurationTypes.TlsVersion;
-import app.HandshakeStepping.HandshakeType;
 import app.HandshakeStepping.StatisticResultHandshakeSegment;
 import de.rub.nds.tlsattacker.core.config.Config;
-import de.rub.nds.tlsattacker.core.connection.AliasedConnection;
-import de.rub.nds.tlsattacker.core.protocol.ProtocolMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.CertificateMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.CertificateVerifyMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.ChangeCipherSpecMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.ClientHelloMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.ECDHEServerKeyExchangeMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.EncryptedExtensionsMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.HelloVerifyRequestMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.RSAServerKeyExchangeMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloDoneMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloMessage;
-import de.rub.nds.tlsattacker.core.protocol.message.ServerKeyExchangeMessage;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
-import de.rub.nds.tlsattacker.core.workflow.action.MessageActionFactory;
-import de.rub.nds.tlsattacker.core.workflow.action.ReceiveAction;
-import de.rub.nds.tlsattacker.core.workflow.action.ReceiveTillAction;
-import de.rub.nds.tlsattacker.core.workflow.action.SendAction;
-import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicClientKeyExchangeAction;
-import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicServerCertificateAction;
-import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicServerKeyExchangeAction;
-import de.rub.nds.tlsattacker.transport.ConnectionEndType;
 
 public class TimeMeasurement {
     // perform measurement for one config and one segmented handshake collection
@@ -181,7 +143,7 @@ public class TimeMeasurement {
         }
 
         // helper function for quantils
-        public static Long calcQuantil(Long[] dataSet, Double quantil) {
+        private static Long calcQuantil(Long[] dataSet, Double quantil) {
             //System.out.println("\nQuantil: " + quantil);
             
             //System.out.println("Unsorted Data: " + Arrays.toString(dataSet));
@@ -231,7 +193,7 @@ public class TimeMeasurement {
     // TODO: Add calculation of relevant server steps
 
     // logs raw data and statistical analysis results into file
-    public static void logRawMeasurement(
+    private static void logRawMeasurement(
         Config config,
         List<WorkflowTrace> segmentedHandshake,
         Long[][] durationForHandshakeSegments,
@@ -302,7 +264,7 @@ public class TimeMeasurement {
     }
 
     // logs raw data and statistical analysis as well as the cleaned results into file
-    public static void logRawAndCleanMeasurement(
+    private static void logRawAndCleanMeasurement(
         Config config,
         List<WorkflowTrace> segmentedHandshake,
         Long[][] durationForHandshakeSegmentsRaw,

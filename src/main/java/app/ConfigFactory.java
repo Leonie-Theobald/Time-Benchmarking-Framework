@@ -179,11 +179,9 @@ public class ConfigFactory {
         }
 
         // Misc
-        // TODO: tls12_resumption_short.config hat addRenegotiationInfoExtension auf true // diese Config wurde irgendwie nie verwendet
         myConfig.setAddRenegotiationInfoExtension(false);
 
         System.out.println(getConfigOverview(myConfig));
-
         return myConfig;
     }
 
@@ -195,7 +193,7 @@ public class ConfigFactory {
         HASH_MISMATCHING_BULK,
     }
 
-    public static ConfigError validateConfigCombi(
+    private static ConfigError validateConfigCombi(
             TlsVersion version,
             KeyExchange keyExchange,
             KeyExchangeGroup keyExchangeGroup,
@@ -254,7 +252,7 @@ public class ConfigFactory {
         return ConfigError.NO_ERROR;
     }
 
-    public static NamedGroup getNamedGroup(KeyExchangeGroup keyExchangeGroup) {
+    private static NamedGroup getNamedGroup(KeyExchangeGroup keyExchangeGroup) {
         switch (keyExchangeGroup) {
             case SECP256R1:
                 return NamedGroup.SECP256R1;
@@ -281,15 +279,15 @@ public class ConfigFactory {
         }
     }
 
-    public static class CipherDetails {
-        public CipherSuite cipher;
-        public TlsVersion version;
-        public KeyExchange keyExchange;
-        public ServerAuth serverAuth;
-        public BulkAlgo bulkAlgo;
-        public HashAlgo hashAlgo;
+    private static class CipherDetails {
+        CipherSuite cipher;
+        TlsVersion version;
+        KeyExchange keyExchange;
+        ServerAuth serverAuth;
+        BulkAlgo bulkAlgo;
+        HashAlgo hashAlgo;
         
-        public CipherDetails(CipherSuite myCipher, TlsVersion myVersion, KeyExchange myKeyExchange, ServerAuth myServerAuth, BulkAlgo myBulkAlgo, HashAlgo myHashAlgo) {
+        CipherDetails(CipherSuite myCipher, TlsVersion myVersion, KeyExchange myKeyExchange, ServerAuth myServerAuth, BulkAlgo myBulkAlgo, HashAlgo myHashAlgo) {
             cipher = myCipher;
             version = myVersion;
             keyExchange = myKeyExchange;
@@ -299,7 +297,7 @@ public class ConfigFactory {
         }
     }
 
-    public static CipherSuite matchCipher(TlsVersion version, KeyExchange keyExchange, ServerAuth serverAuth, BulkAlgo bulkAlgo, HashAlgo hashAlgo) {
+    private static CipherSuite matchCipher(TlsVersion version, KeyExchange keyExchange, ServerAuth serverAuth, BulkAlgo bulkAlgo, HashAlgo hashAlgo) {
         ArrayList<CipherDetails> ciphersOverview = new ArrayList<CipherDetails>();
 
         // TLS1.2 ciphers

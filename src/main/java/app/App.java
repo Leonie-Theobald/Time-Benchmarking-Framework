@@ -26,8 +26,6 @@ public class App {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static void main(String[] args) {
-        // TODOs
-        // with TLS1.2 ECDHE OCSP => decryption failed or bad Record MAC
         Config myConfig =
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
