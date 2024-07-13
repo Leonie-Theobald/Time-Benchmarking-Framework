@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import app.ConfigurationTypes.BulkAlgo;
-import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.HashAlgo;
 import app.ConfigurationTypes.KeyExchange;
 import app.ConfigurationTypes.KeyExchangeGroup;
@@ -29,21 +28,21 @@ public class App {
         Config myConfig =
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
-                KeyExchange.RSA,
-                KeyExchangeGroup.NONE,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
                 ServerAuth.RSA,
                 HashAlgo.SHA384,
                 BulkAlgo.AES_256_GCM,
-                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
-                //new Vector<>());
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
                 
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(2, myConfig, segmentedHandshake, true, 1);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(10000, myConfig, segmentedHandshake, true, 1);
         //System.out.println(resultsMeasurement);
 
         System.out.println("Reached End");

@@ -102,6 +102,8 @@ public class TimeMeasurement {
         //Long variance;
         Long standardDeviation;
         Float variationCoefficient;
+        double skewness;
+        double pearsonSkewness;
         //Long confidenceInterval95Min;
         //Long confidenceInterval95Max;
         //Long confidenceInterval99Min;
@@ -138,6 +140,17 @@ public class TimeMeasurement {
 
             // coefficient of variation (https://studyflix.de/statistik/variationskoeffizient-1043)
             statisticResult.variationCoefficient = (float)statisticResult.standardDeviation / (float)statisticResult.mean;
+
+            // TODO: check skewness and pearson formula
+            // skewness
+            double tempSumFloat = 0.0;
+            for (Long dataPoint: dataSet) {
+                tempSumFloat += Math.pow((double)dataPoint - (double)statisticResult.mean, 3.0);
+            }
+            statisticResult.skewness = tempSumFloat / ((double)dataSet.length * Math.pow((double)statisticResult.standardDeviation, 3.0));
+
+            // pearson skewness
+            statisticResult.pearsonSkewness = 3.0 * (double)(statisticResult.mean - (double)statisticResult.median) / (double)statisticResult.standardDeviation;
 
             return statisticResult;
         }
@@ -185,6 +198,8 @@ public class TimeMeasurement {
             analysisResultsString += " 75% Quantil: " + statisticResult.quantil75/1000000.0 + " ms\n";
             analysisResultsString += " Std Deviation: " + statisticResult.standardDeviation/1000000.0 + " ms\n";
             analysisResultsString += " Variant Coef: " + String.format("%.3f", statisticResult.variationCoefficient*100.0) + " %\n";
+            analysisResultsString += " Skewness: " + String.format("%.3f", statisticResult.skewness) + "\n";
+            analysisResultsString += " Pearson's Skewness: " + String.format("%.3f", statisticResult.pearsonSkewness) + "\n";
 
             return analysisResultsString;
         }
