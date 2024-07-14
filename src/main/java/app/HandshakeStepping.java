@@ -50,7 +50,7 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
@@ -71,7 +71,7 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
@@ -107,7 +107,7 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
@@ -128,7 +128,7 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
