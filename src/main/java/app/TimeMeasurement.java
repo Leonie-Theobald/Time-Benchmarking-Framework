@@ -95,13 +95,13 @@ public class TimeMeasurement {
     public static class StatisticResult {
         Long min;
         Long max;
-        Long mean;
-        Long median;
-        Long quantil25;
-        Long quantil75;
+        double mean;
+        double median;
+        double quantil25;
+        double quantil75;
         //Long variance;
-        Long standardDeviation;
-        Float variationCoefficient;
+        double standardDeviation;
+        double variationCoefficient;
         double skewness;
         double pearsonSkewness;
         //Long confidenceInterval95Min;
@@ -119,7 +119,7 @@ public class TimeMeasurement {
             LongSummaryStatistics lss = new ArrayList<>(Arrays.asList(dataSet)).stream().mapToLong((a) -> a).summaryStatistics();
             statisticResult.min = lss.getMin();
             statisticResult.max = lss.getMax();
-            statisticResult.mean = (long) lss.getAverage(); // rounding is fine as those numbers are in nano second range while results are only interesting in millisecond area
+            statisticResult.mean = lss.getAverage();
 
             // get more advanced statistic values
             // Median, 25 and 75 % percentil (https://studyflix.de/statistik/quantile-1040)
@@ -128,35 +128,35 @@ public class TimeMeasurement {
             statisticResult.quantil75 = calcQuantil(dataSet, 0.75);
 
             // variance (https://studyflix.de/statistik/empirische-varianz-2016)
-            Long tempSum = (long)0;
+            double tempSum = 0.0;
             for (Long dataPoint: dataSet) {
-                tempSum += ((dataPoint - statisticResult.mean) * (dataPoint - statisticResult.mean));
+                tempSum += (((double)dataPoint - statisticResult.mean) * ((double)dataPoint - statisticResult.mean));
             }
-            Long variance = tempSum / (dataSet.length - 1);
+            double variance = tempSum / (double)(dataSet.length - 1);
 
             // standard deviation (https://studyflix.de/statistik/standardabweichung-1042)
             // TODO: Problem dass hier Wurzel aus double??
-            statisticResult.standardDeviation = (long) Math.sqrt(variance);
+            statisticResult.standardDeviation = Math.sqrt(variance);
 
             // coefficient of variation (https://studyflix.de/statistik/variationskoeffizient-1043)
-            statisticResult.variationCoefficient = (float)statisticResult.standardDeviation / (float)statisticResult.mean;
+            statisticResult.variationCoefficient = statisticResult.standardDeviation / statisticResult.mean;
 
             // TODO: check skewness and pearson formula
             // skewness
             double tempSumFloat = 0.0;
             for (Long dataPoint: dataSet) {
-                tempSumFloat += Math.pow((double)dataPoint - (double)statisticResult.mean, 3.0);
+                tempSumFloat += Math.pow(((double)dataPoint - statisticResult.mean) / statisticResult.standardDeviation, 3.0);
             }
-            statisticResult.skewness = tempSumFloat / ((double)dataSet.length * Math.pow((double)statisticResult.standardDeviation, 3.0));
+            statisticResult.skewness = tempSumFloat * (double)dataSet.length / (double)((dataSet.length - 1) * (dataSet.length - 2));
 
             // pearson skewness
-            statisticResult.pearsonSkewness = 3.0 * (double)(statisticResult.mean - (double)statisticResult.median) / (double)statisticResult.standardDeviation;
+            statisticResult.pearsonSkewness = 3.0 * (statisticResult.mean - statisticResult.median) / statisticResult.standardDeviation;
 
             return statisticResult;
         }
 
         // helper function for quantils
-        private static Long calcQuantil(Long[] dataSet, Double quantil) {
+        private static double calcQuantil(Long[] dataSet, Double quantil) {
             //System.out.println("\nQuantil: " + quantil);
             
             //System.out.println("Unsorted Data: " + Arrays.toString(dataSet));
@@ -174,7 +174,7 @@ public class TimeMeasurement {
                 System.out.println("Selected element: " + (dataSet[(int)(countDataPoints * quantil) - 1] + dataSet[(int)(countDataPoints * quantil)]) / 2);
                 */
                 // number of data points times quantil is a whole number
-                return (dataSet[(int)(countDataPoints * quantil) - 1] + dataSet[(int)(countDataPoints * quantil)]) / 2;
+                return (dataSet[(int)(countDataPoints * quantil - 1)] + dataSet[(int)(countDataPoints * quantil)]) / 2.0;
             } else {
                 /*
                 System.out.println("if FALSE");

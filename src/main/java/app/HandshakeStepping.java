@@ -217,11 +217,11 @@ public class HandshakeStepping {
     }
     
     public static class StatisticResultHandshakeSegment {
-        private Long durationMean;
-        private Long durationMedian;
-        private Long durationStdDevMin;
-        private Long durationStdDevMax;
-        private Long durationMin;
+        private double durationMean;
+        private double durationMedian;
+        private double durationStdDevMin;
+        private double durationStdDevMax;
+        private double durationMin;
 
         public static StatisticResultHandshakeSegment[] runStatisticAnalysis(StatisticResult[] statisticResultHandshake) {
             StatisticResultHandshakeSegment[] resultSegments = new StatisticResultHandshakeSegment[statisticResultHandshake.length];
