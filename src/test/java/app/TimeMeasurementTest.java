@@ -6,6 +6,13 @@ import app.TimeMeasurement.StatisticResult;
 
 public class TimeMeasurementTest 
 {
+    // Notes on vector creation
+    // min, max, mean, median, stddev with numbers
+    // variation coef: https://www.google.com/search?client=firefox-b-d&q=kurtosis
+    // skewness: https://365datascience.com/calculators/skewness-calculator/
+    // pearson skewness: https://www.google.com/search?client=firefox-b-d&q=kurtosis
+    // quartil: excel and own calc
+    
     @Test
     public void staticResultsDataSet0()
     {
