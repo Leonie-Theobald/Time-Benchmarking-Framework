@@ -49,7 +49,7 @@ public class TimeMeasurement {
         // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
         StatisticResultHandshakeSegment[] analysisListSegments = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshake);
 
-        // tells us how many percentage of the longest durations for each handshake segment should be removed (those values are considered outliners)
+        // check whether data should also be cleaned from outliers
         if (cleanTopOutlier > 0 || cleanDeviationOutlier > 0) {
             // ## remove outliers by deleting the top end durations ##
             // calculate how many values should be removed
