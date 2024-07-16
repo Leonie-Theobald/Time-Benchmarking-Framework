@@ -163,6 +163,7 @@ public class TimeMeasurement {
     }
 
     public static class StatisticResult {
+        Long count;
         Long min;
         Long max;
         double mean;
@@ -183,6 +184,8 @@ public class TimeMeasurement {
         // performs statistical analysis for one data set
         public static StatisticResult runStatisticAnalysis(Long[] dataSet) {
             StatisticResult statisticResult = new StatisticResult();
+
+            statisticResult.count = (long)dataSet.length;
 
             // get few statistic values
             //new ArrayList<>(Arrays.asList(array));
@@ -243,6 +246,7 @@ public class TimeMeasurement {
         public static String textualRepresentation(StatisticResult statisticResult) {
             String analysisResultsString = new String();
 
+            analysisResultsString = " Elements: " + statisticResult.count + " \n";
             analysisResultsString = " Min: " + statisticResult.min/1000000.0 + " ms\n";
             analysisResultsString += " Max: " + statisticResult.max/1000000.0 + " ms\n";
             analysisResultsString += " Average: " + statisticResult.mean/1000000.0 + " ms\n";

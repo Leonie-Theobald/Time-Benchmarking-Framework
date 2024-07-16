@@ -20,6 +20,7 @@ public class TimeMeasurementTest
 
         StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
         
+        junit.framework.Assert.assertEquals((long)4, (long)actualStatisticResult.count);
         junit.framework.Assert.assertEquals((long)100, (long)actualStatisticResult.min);
         junit.framework.Assert.assertEquals((long)600, (long)actualStatisticResult.max);
         junit.framework.Assert.assertEquals(275.0, actualStatisticResult.mean);
@@ -39,6 +40,7 @@ public class TimeMeasurementTest
 
         StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
         
+        junit.framework.Assert.assertEquals((long)6, (long)actualStatisticResult.count);
         junit.framework.Assert.assertEquals((long)178, (long)actualStatisticResult.min);
         junit.framework.Assert.assertEquals((long)1000, (long)actualStatisticResult.max);
         junit.framework.Assert.assertEquals(404.67, Math.round(actualStatisticResult.mean*100)/100.00);
@@ -58,6 +60,7 @@ public class TimeMeasurementTest
 
         StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
 
+        junit.framework.Assert.assertEquals((long)5, (long)actualStatisticResult.count);
         junit.framework.Assert.assertEquals((long)23, (long)actualStatisticResult.min);
         junit.framework.Assert.assertEquals((long)4321, (long)actualStatisticResult.max);
         junit.framework.Assert.assertEquals(1133.0, actualStatisticResult.mean);
@@ -77,6 +80,7 @@ public class TimeMeasurementTest
 
         StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
 
+        junit.framework.Assert.assertEquals((long)5, (long)actualStatisticResult.count);
         junit.framework.Assert.assertEquals((long)120, (long)actualStatisticResult.min);
         junit.framework.Assert.assertEquals((long)630, (long)actualStatisticResult.max);
         junit.framework.Assert.assertEquals(306.0, actualStatisticResult.mean);
@@ -96,6 +100,7 @@ public class TimeMeasurementTest
         
         StatisticResult actualStatisticResult = StatisticResult.runStatisticAnalysis(dataSet);
         
+        junit.framework.Assert.assertEquals((long)7, (long)actualStatisticResult.count);
         junit.framework.Assert.assertEquals((long)70, (long)actualStatisticResult.min);
         junit.framework.Assert.assertEquals((long)3000, (long)actualStatisticResult.max);
         junit.framework.Assert.assertEquals(767.14, Math.round(actualStatisticResult.mean*100)/100.0);
