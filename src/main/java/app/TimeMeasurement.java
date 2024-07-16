@@ -24,7 +24,8 @@ public class TimeMeasurement {
         List<WorkflowTrace> segmentedHandshake,
         Boolean shouldDocument,
         int cleanTopOutlier,
-        int cleanDeviationOutlier
+        int cleanDeviationOutlier,
+        double cleanIqrOutlier
     ) {
         // run repeatedly through handshake segments
         Long[][] durationForHandshakeSegments = new Long[segmentedHandshake.size()][repetition];
@@ -110,9 +111,46 @@ public class TimeMeasurement {
             // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
             StatisticResultHandshakeSegment[] analysisListSegmentsDeviationClean = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshakeDeviationClean);
 
+
+            // ## remove outliers by deleting everything outside a multiple of interquartil range (iqr) ##
+            ArrayList<ArrayList<Long>> durationForHandshakeSegmentsIqrClean = new ArrayList<>();
+            // go through each element for each handshake segment and only copy it if it's within the valid range
+            segCnt = 0;
+            double iqr = analysisListHandshake[segCnt].quantil75 - analysisListHandshake[segCnt].quantil25;
+            for (Long[] segment: durationForHandshakeSegments) {
+                ArrayList<Long> segmentClean = new ArrayList<>();
+                for (Long val: segment) {
+                    // check whether value lies within (q_25-factor*iqr, q_75+factor*iqr) range
+                    if (val >= (analysisListHandshake[segCnt].quantil25 - cleanIqrOutlier * iqr)
+                    && val <= (analysisListHandshake[segCnt].quantil75 + cleanIqrOutlier * iqr)) {
+                        segmentClean.add(val);
+                    }
+                }
+                durationForHandshakeSegmentsIqrClean.add(segmentClean);
+                segCnt++;
+            }
+
+            // transform ArrayList to Array
+            Long[][] durationForHandshakeSegmentsIqrCleanArray = durationForHandshakeSegmentsIqrClean.stream().map(u -> u.toArray(new Long[0])).toArray(Long[][]::new);
+
+            // do same analysis steps as for raw data
+            StatisticResult[] analysisListHandshakeIqrClean = new StatisticResult[segmentedHandshake.size()];
+            segCnt = 0;
+            for (Long[] dataSetOneHandshakeSegmentIqrClean: durationForHandshakeSegmentsIqrCleanArray) {
+                analysisListHandshakeIqrClean[segCnt] = StatisticResult.runStatisticAnalysis(dataSetOneHandshakeSegmentIqrClean);
+                segCnt++;
+            }
+            // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
+            StatisticResultHandshakeSegment[] analysisListSegmentsIqrClean = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshakeIqrClean);
+
             // log results if wished
             if (shouldDocument == true) {
-                logRawAndCleanMeasurement(config, segmentedHandshake, durationForHandshakeSegments, analysisListHandshake, analysisListSegments, cleanTopOutlier, durationForHandshakeSegmentsTopClean, analysisListHandshakeTopClean, analysisListSegmentsTopClean, cleanDeviationOutlier, durationForHandshakeSegmentsDeviationCleanArray, analysisListHandshakeDeviationClean, analysisListSegmentsDeviationClean);
+                logRawAndCleanMeasurement(config, segmentedHandshake, 
+                    durationForHandshakeSegments, analysisListHandshake, analysisListSegments, 
+                    cleanTopOutlier, durationForHandshakeSegmentsTopClean, analysisListHandshakeTopClean, analysisListSegmentsTopClean,
+                    cleanDeviationOutlier, durationForHandshakeSegmentsDeviationCleanArray, analysisListHandshakeDeviationClean, analysisListSegmentsDeviationClean,
+                    cleanIqrOutlier, durationForHandshakeSegmentsIqrCleanArray, analysisListHandshakeIqrClean, analysisListSegmentsIqrClean)
+                ;
             }
         } else {
             // log results if wished
@@ -309,7 +347,12 @@ public class TimeMeasurement {
         int removedStdDevRange,
         Long[][] durationForHandshakeSegmentsDeviationClean,
         StatisticResult[] analysisListHandshakeDeviationClean,
-        StatisticResultHandshakeSegment[] analysisListSegmentsDeviationClean
+        StatisticResultHandshakeSegment[] analysisListSegmentsDeviationClean,
+
+        double removedIqrRange,
+        Long[][] durationForHandshakeSegmentsIqrClean,
+        StatisticResult[] analysisListHandshakeIqrClean,
+        StatisticResultHandshakeSegment[] analysisListSegmentsIqrClean
     ) {
         try {
             // Get path of the JAR file and strip unnecessary folders
@@ -410,6 +453,28 @@ public class TimeMeasurement {
 
 
                 out.println("\n\n##################################################################");
+                out.println("\n\nCLEANED RESULTS (by removing everything outside (Q_25 - " + String.valueOf(removedIqrRange) + "*IQR, Q_75 + " + String.valueOf(removedIqrRange) + "*IQR)");
+            
+                out.println("\n\n#################################");
+                out.println("Cleaned Results (IQR): Complete duration to the end of each handshake segment.");
+                segmentCount = 0;
+                for (StatisticResult oneResult: analysisListHandshakeIqrClean) {
+                    out.println("\nHandshake Segment " + segmentCount);
+                    out.print(StatisticResult.textualRepresentation(oneResult));
+                    segmentCount++;
+                }
+
+                out.println("\n\n#################################");
+                out.println("Cleaned Results (IQR): Actual duration for each handshake segment.");
+                segmentCount = 0;
+                for (StatisticResultHandshakeSegment oneResult: analysisListSegmentsIqrClean) {
+                    out.println("\nHandshake Segment " + segmentCount);
+                    out.print(StatisticResultHandshakeSegment.textualRepresentation(oneResult));
+                    segmentCount++;
+                }
+
+
+                out.println("\n\n##################################################################");
                 out.println("Detailed Measurement Results");
 
                 out.println("\n\n#################################");
@@ -423,6 +488,10 @@ public class TimeMeasurement {
                 out.println("\n\n#################################");
                 out.println("Deviation Cleaned Detailed Measurement Results");
                 out.print(Arrays.deepToString(durationForHandshakeSegmentsDeviationClean));
+
+                out.println("\n\n#################################");
+                out.println("IQR Cleaned Detailed Measurement Results");
+                out.print(Arrays.deepToString(durationForHandshakeSegmentsIqrClean));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
