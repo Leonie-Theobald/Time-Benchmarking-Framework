@@ -247,7 +247,7 @@ public class TimeMeasurement {
             String analysisResultsString = new String();
 
             analysisResultsString = " Elements: " + statisticResult.count + " \n";
-            analysisResultsString = " Min: " + statisticResult.min/1000000.0 + " ms\n";
+            analysisResultsString += " Min: " + statisticResult.min/1000000.0 + " ms\n";
             analysisResultsString += " Max: " + statisticResult.max/1000000.0 + " ms\n";
             analysisResultsString += " Average: " + statisticResult.mean/1000000.0 + " ms\n";
             analysisResultsString += " Median: " + statisticResult.median/1000000.0 + " ms\n";
