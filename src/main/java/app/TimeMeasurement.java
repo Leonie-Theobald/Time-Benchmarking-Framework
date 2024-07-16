@@ -81,16 +81,18 @@ public class TimeMeasurement {
             // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
             StatisticResultHandshakeSegment[] analysisListSegmentsTopClean = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshakeTopClean);
 
-            // ## remove outliers by deleting everything outside a multiple of standard deviation ##
+
+            // ## remove outliers by deleting everything with z-score above/below +/- factor ##
             ArrayList<ArrayList<Long>> durationForHandshakeSegmentsDeviationClean = new ArrayList<>();
             // go through each element for each handshake segment and only copy it if it's within the valid range
             segCnt = 0;
             for (Long[] segment: durationForHandshakeSegments) {
                 ArrayList<Long> segmentClean = new ArrayList<>();
                 for (Long val: segment) {
-                    // check whether value lies within avg +- cleanDeviationOutlier*stddev range
-                    if (val >= (analysisListHandshake[segCnt].mean - cleanDeviationOutlier * analysisListHandshake[segCnt].standardDeviation)
-                    && val <= (analysisListHandshake[segCnt].mean + cleanDeviationOutlier * analysisListHandshake[segCnt].standardDeviation)) {
+                    // calculate z-score
+                    double zScore = (val - analysisListHandshake[segCnt].mean) / analysisListHandshake[segCnt].standardDeviation;
+                    // check whether z score lies within +/- range
+                    if (zScore >= -3.0 && zScore <= 3.0) {
                         segmentClean.add(val);
                     }
                 }
@@ -435,7 +437,7 @@ public class TimeMeasurement {
                 
 
                 out.println("\n\n##################################################################");
-                out.println("\n\nCLEANED RESULTS (by removing everything outside " + String.valueOf(removedStdDevRange) + " +/- stddev the average)");
+                out.println("\n\nCLEANED RESULTS (by removing everything with z-score above/below +/-" + String.valueOf(removedStdDevRange) + ")");
             
                 out.println("\n\n#################################");
                 out.println("Cleaned Results (deviation): Complete duration to the end of each handshake segment.");
