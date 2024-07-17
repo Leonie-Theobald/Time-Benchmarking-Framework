@@ -21,10 +21,12 @@ import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutor;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutorFactory;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 
+
 public class App {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static void main(String[] args) {
+
         Config myConfig =
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
@@ -33,16 +35,16 @@ public class App {
                 ServerAuth.RSA,
                 HashAlgo.SHA384,
                 BulkAlgo.AES_256_GCM,
-                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET); add(Extension.OCSP);}});
                 new Vector<>());
-                
+
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(20, myConfig, segmentedHandshake, true, 1, 3, 1.5);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfig, outboundCon);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(3, myConfig, segmentedHandshake, true, 1, 3, 1.5);
         //System.out.println(resultsMeasurement);
 
         System.out.println("Reached End");
