@@ -231,6 +231,7 @@ public class ConfigFactory {
         TLS13_WITH_STATIC_KX,
         TLS13_WITH_SESSION_ID_RESUMPTION,
         AMBIGUOUS_RESUMPTION,
+        KX_MISMATCHING_GROUP,
     }
 
     private static ConfigError validateConfigCombi(
@@ -261,7 +262,8 @@ public class ConfigFactory {
                 && keyExchangeGroup != KeyExchangeGroup.SECP521R1
                 && keyExchangeGroup != KeyExchangeGroup.X25519
                 && keyExchangeGroup != KeyExchangeGroup.X448) {
-                    throw new Error("KeyExchange is ECDHE but KeyExchangeGroup is non elliptic: " + keyExchangeGroup);
+                    return ConfigError.KX_MISMATCHING_GROUP;
+                    //throw new Error("KeyExchange is ECDHE but KeyExchangeGroup is non elliptic: " + keyExchangeGroup);
                 }
         }
         if ((keyExchange == KeyExchange.DH) || (keyExchange == KeyExchange.DHE)) {
@@ -271,12 +273,14 @@ public class ConfigFactory {
                 && keyExchangeGroup != KeyExchangeGroup.FFDHE4096
                 && keyExchangeGroup != KeyExchangeGroup.FFDHE6144
                 && keyExchangeGroup != KeyExchangeGroup.FFDHE8192) {
-                    throw new Error("KeyExchange is DH(E) but KeyExchangeGroup is non finite group: " + keyExchangeGroup);
+                    return ConfigError.KX_MISMATCHING_GROUP;
+                    //throw new Error("KeyExchange is DH(E) but KeyExchangeGroup is non finite group: " + keyExchangeGroup);
                 }
         }
         if (keyExchange == KeyExchange.RSA) {
             if (keyExchangeGroup != KeyExchangeGroup.NONE) {
-                    throw new Error("KeyExchange is RSA but KeyExchangeGroup is set: " + keyExchangeGroup);
+                    return ConfigError.KX_MISMATCHING_GROUP;
+                    //throw new Error("KeyExchange is RSA but KeyExchangeGroup is set: " + keyExchangeGroup);
                 }
         }
 
