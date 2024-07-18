@@ -19,8 +19,7 @@ import app.ConfigurationTypes.TlsVersion;
 import app.HandshakeStepping.HandshakeType;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.OutboundConnection;
-import de.rub.nds.tlsattacker.core.constants.NamedGroup;
-import de.rub.nds.tlsattacker.core.crypto.keys.CustomECPrivateKey;
+import de.rub.nds.tlsattacker.core.crypto.keys.CustomRSAPrivateKey;
 import de.rub.nds.tlsattacker.core.exceptions.WorkflowExecutionException;
 import de.rub.nds.tlsattacker.core.state.State;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutor;
@@ -32,7 +31,6 @@ public class App {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static void main(String[] args) {  
-        /*
         // openssl s_server -cert ./TLS-Core/src/main/resources/certs/rsa2048_rsa_cert.pem -key ./TLS-Core/src/main/resources/certs/rsa2048_key.pem -tls1_2 -Verify 3 -CAfile ./Zusatzzeug/keyGen/rsa2048_cert.pem -trace
         CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
             new BigInteger("22680894355213276814068604237379515326692913667424423179105887452289906651381282343803736135056197131595363416117766447222033440405148554595150495098954618784791409846721078014631997901600818192748951260294724453863786822963457535714201456929910107294028887630816463336166663178044202436591458723765695469483323295740091515251848862253753967572511917223940594872506608243732478287780716299338656301737923256700355562820768458403307832462075060029877854803131864443444034500618089480396072963994147799521776599695622459322293973138939514112920721100797951815691387710738229293066991665386400046197146008454129381303013"),
@@ -42,8 +40,8 @@ public class App {
                     ClientAuthCert.RSA,
                     "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/keyGen/rsa2048_cert.pem",
                     privKey
-        );*/
-
+        );
+        /*
         //EC Certificate
         byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xE3, (byte)0x17, (byte)0x0C, (byte)0x60, (byte)0xC7, (byte)0x2E, (byte)0x6F, (byte)0xDD, (byte)0x09, (byte)0x89, (byte)0x5F, (byte)0xAA, (byte)0x26, (byte)0xED, (byte)0x2F, (byte)0x58, (byte)0x72, (byte)0x99, (byte)0xA7, (byte)0xA8, (byte)0x17, (byte)0x0A, (byte)0x2A, (byte)0x6D, (byte)0xED, (byte)0x23, (byte)0x89, (byte)0x84, (byte)0x8A, (byte)0xF7, (byte)0xCB, (byte)0xBF, (byte)0xA8, (byte)0x2C, (byte)0xED, (byte)0x84, (byte)0xBE, (byte)0x99, (byte)0x15, (byte)0xB3, (byte)0xDF, (byte)0x62, (byte)0x93, (byte)0xD5, (byte)0x3D, (byte)0x55, (byte)0xC3, (byte)0x25};
         CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
@@ -52,13 +50,14 @@ public class App {
                     "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/keyGen/ec_secp384r1_cert.pem",
                     privKey
         );
+        */
 
         Config myConfig =
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
-                KeyExchange.ECDHE,
-                KeyExchangeGroup.SECP384R1,
-                ServerAuth.ECDSA,
+                KeyExchange.RSA,
+                KeyExchangeGroup.NONE,
+                ServerAuth.RSA,
                 clientAuthConfig,
                 new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
                 BulkAlgo.AES_256_GCM_SHA384,
@@ -70,7 +69,7 @@ public class App {
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITH_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
         Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(3, myConfig, segmentedHandshake, true, 1, 3, 1.5);
         //System.out.println(resultsMeasurement);
 
