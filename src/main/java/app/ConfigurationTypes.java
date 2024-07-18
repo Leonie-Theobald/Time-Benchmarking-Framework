@@ -11,9 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.tls.TlsUtils;
 
-import app.ConfigurationTypes.HashAlgo;
-import app.ConfigurationTypes.ServerAuth;
-import app.ConfigurationTypes.SignatureScheme;
 import de.rub.nds.tlsattacker.core.crypto.keys.CustomPrivateKey;
 
 public class ConfigurationTypes {
@@ -96,11 +93,6 @@ public class ConfigurationTypes {
         }
     }
 
-    public enum HashAlgo {
-        SHA256,
-        SHA384,
-    }
-
     public enum Extension {
         OCSP,
         ZERO_RTT,
@@ -109,10 +101,10 @@ public class ConfigurationTypes {
     }
 
     public enum BulkAlgo {
-        AES_128_GCM,
-        AES_256_GCM,
-        AES_256_CBC,
-        AES_128_CBC,
+        AES_128_GCM_SHA256,
+        AES_256_GCM_SHA384,
+        AES_128_CBC_SHA256,
+        AES_256_CBC_SHA384,
     }
 
     public enum SignatureScheme {
@@ -123,28 +115,4 @@ public class ConfigurationTypes {
         RSA_SHA256,
         RSA_SHA384,
     }
-
-    public static SignatureScheme combineAuthWithHash(ServerAuth serverAuth, HashAlgo hashAlgo) {
-        switch (hashAlgo) {
-            case SHA256:
-                switch (serverAuth) {
-                    case DSA:
-                        return SignatureScheme.DSA_SHA256;
-                    case ECDSA:
-                        return SignatureScheme.ECDSA_SHA256;
-                    case RSA:
-                        return SignatureScheme.RSA_SHA256;
-                }
-            case SHA384:
-                switch (serverAuth) {
-                    case DSA:
-                        return SignatureScheme.DSA_SHA384;
-                    case ECDSA:
-                        return SignatureScheme.ECDSA_SHA384;
-                    case RSA:
-                        return SignatureScheme.RSA_SHA384;
-                }
-        }
-        throw new Error("No matching SignatureScheme found for: " + serverAuth + ", " + hashAlgo);
-    }
-    }
+}

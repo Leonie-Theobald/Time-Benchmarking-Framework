@@ -10,10 +10,10 @@ import org.apache.logging.log4j.Logger;
 import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.ClientAuthCert;
 import app.ConfigurationTypes.ClientAuthConfig;
-import app.ConfigurationTypes.HashAlgo;
 import app.ConfigurationTypes.KeyExchange;
 import app.ConfigurationTypes.KeyExchangeGroup;
 import app.ConfigurationTypes.ServerAuth;
+import app.ConfigurationTypes.SignatureScheme;
 import app.ConfigurationTypes.TlsVersion;
 import app.HandshakeStepping.HandshakeType;
 import de.rub.nds.tlsattacker.core.config.Config;
@@ -59,9 +59,9 @@ public class App {
                 KeyExchange.ECDHE,
                 KeyExchangeGroup.SECP384R1,
                 ServerAuth.RSA,
-                clientAuthConfig,
-                HashAlgo.SHA384,
-                BulkAlgo.AES_256_GCM,
+                null,//clientAuthConfig,
+                SignatureScheme.RSA_SHA256,
+                BulkAlgo.AES_256_GCM_SHA384,
                 //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET); add(Extension.OCSP);}});
                 new Vector<>());
 
@@ -70,7 +70,7 @@ public class App {
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
         Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(3, myConfig, segmentedHandshake, true, 1, 3, 1.5);
         //System.out.println(resultsMeasurement);
 

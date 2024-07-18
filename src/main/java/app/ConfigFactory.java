@@ -21,7 +21,7 @@ import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.ServerAuth;
 import app.ConfigurationTypes.ClientAuthConfig;
 import app.ConfigurationTypes.Extension;
-import app.ConfigurationTypes.HashAlgo;
+import app.ConfigurationTypes.SignatureScheme;
 import app.ConfigurationTypes.KeyExchange;
 import app.ConfigurationTypes.KeyExchangeGroup;
 import app.ConfigurationTypes.ServerAuth;
@@ -47,24 +47,23 @@ public class ConfigFactory {
             KeyExchangeGroup keyExchangeGroup,
             ServerAuth serverAuth,
             ClientAuthConfig clientAuth,
-            HashAlgo hashAlgo,
+            SignatureScheme sigScheme,
             BulkAlgo bulkAlgo,
             Vector<Extension> extensions) {
 
-        ConfigError configValidity = validateConfigCombi(
-                version,
+        ConfigError configValidity = validateConfigCombi(version,
                 keyExchange,
                 keyExchangeGroup,
                 serverAuth,
-                hashAlgo,
+                sigScheme,
                 bulkAlgo,
                 extensions);
         if (configValidity != ConfigError.NO_ERROR) {
             throw new Error("Configuration is invalid (" + configValidity 
                 + "):\n\tVersion: " + version 
                 + "\n\tKey ex: " + keyExchange 
-                + "\n\tServer auth: " + serverAuth 
-                + "\n\tHash: " + hashAlgo 
+                + "\n\tServer auth: " + serverAuth
+                + "\n\tSignature scheme: " + sigScheme 
                 + "\n\tBulk: " + bulkAlgo
                 + "\n\tExtensions: " + extensions.toString());
         }
@@ -94,7 +93,7 @@ public class ConfigFactory {
         }
 
         // set signature and hash algorithm
-        switch (ConfigurationTypes.combineAuthWithHash(serverAuth, hashAlgo)) {
+        switch (sigScheme) {
             case DSA_SHA256:
                 myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.DSA_SHA256);
                 break;
@@ -118,7 +117,7 @@ public class ConfigFactory {
         }
 
         // set cipher suite
-        CipherSuite cipherSuite = matchCipher(version, keyExchange, serverAuth, bulkAlgo, hashAlgo);
+        CipherSuite cipherSuite = matchCipher(version, keyExchange, serverAuth, bulkAlgo);
         myConfig.setDefaultClientSupportedCipherSuites(cipherSuite);
         myConfig.setDefaultSelectedCipherSuite(cipherSuite);
 
@@ -228,8 +227,7 @@ public class ConfigFactory {
         NO_ERROR,
         TLS13_WITH_STATIC_KX,
         TLS13_WITH_SESSION_ID_RESUMPTION,
-        AMBIGIOUS_RESUMPTION,
-        HASH_MISMATCHING_BULK,
+        AMBIGUOUS_RESUMPTION,
     }
 
     private static ConfigError validateConfigCombi(
@@ -237,7 +235,7 @@ public class ConfigFactory {
             KeyExchange keyExchange,
             KeyExchangeGroup keyExchangeGroup,
             ServerAuth serverAuth,
-            HashAlgo hashAlgo,
+            SignatureScheme sigScheme,
             BulkAlgo bulkAlgo,
             Vector<Extension> extensions) {
         if (version == TlsVersion.TLS13 && keyExchange == KeyExchange.RSA
@@ -250,17 +248,8 @@ public class ConfigFactory {
         }
 
         if (extensions.contains(Extension.RESUMPTION_SESSION_ID) && extensions.contains(Extension.RESUMPTION_SESSION_TICKET)){
-            return ConfigError.AMBIGIOUS_RESUMPTION;
+            return ConfigError.AMBIGUOUS_RESUMPTION;
         }          
-
-        if (
-            (bulkAlgo == BulkAlgo.AES_256_GCM && hashAlgo != HashAlgo.SHA384)
-            || (bulkAlgo == BulkAlgo.AES_128_GCM && hashAlgo != HashAlgo.SHA256)
-            || (bulkAlgo == BulkAlgo.AES_256_CBC && hashAlgo != HashAlgo.SHA384)
-            || (bulkAlgo == BulkAlgo.AES_128_CBC && hashAlgo != HashAlgo.SHA256))
-        {
-            return ConfigError.HASH_MISMATCHING_BULK;
-        }
 
         if (keyExchange == KeyExchange.ECDHE) {
             if (
@@ -324,40 +313,37 @@ public class ConfigFactory {
         KeyExchange keyExchange;
         ServerAuth serverAuth;
         BulkAlgo bulkAlgo;
-        HashAlgo hashAlgo;
         
-        CipherDetails(CipherSuite myCipher, TlsVersion myVersion, KeyExchange myKeyExchange, ServerAuth myServerAuth, BulkAlgo myBulkAlgo, HashAlgo myHashAlgo) {
+        CipherDetails(CipherSuite myCipher, TlsVersion myVersion, KeyExchange myKeyExchange, ServerAuth myServerAuth, BulkAlgo myBulkAlgo) {
             cipher = myCipher;
             version = myVersion;
             keyExchange = myKeyExchange;
             serverAuth = myServerAuth;
             bulkAlgo = myBulkAlgo;
-            hashAlgo = myHashAlgo;
         }
     }
 
-    private static CipherSuite matchCipher(TlsVersion version, KeyExchange keyExchange, ServerAuth serverAuth, BulkAlgo bulkAlgo, HashAlgo hashAlgo) {
+    private static CipherSuite matchCipher(TlsVersion version, KeyExchange keyExchange, ServerAuth serverAuth, BulkAlgo bulkAlgo) {
         ArrayList<CipherDetails> ciphersOverview = new ArrayList<CipherDetails>();
 
         // TLS1.2 ciphers
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.RSA, ServerAuth.RSA, BulkAlgo.AES_256_GCM, HashAlgo.SHA384));
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.DHE, ServerAuth.RSA, BulkAlgo.AES_256_GCM, HashAlgo.SHA384));
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_GCM, HashAlgo.SHA256));
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_GCM, HashAlgo.SHA384));
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_CBC, HashAlgo.SHA256));
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_CBC, HashAlgo.SHA384));
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.AES_256_GCM, HashAlgo.SHA384));
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.AES_128_GCM, HashAlgo.SHA256));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.RSA, ServerAuth.RSA, BulkAlgo.AES_256_GCM_SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.DHE, ServerAuth.RSA, BulkAlgo.AES_256_GCM_SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_GCM_SHA256));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_GCM_SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_CBC_SHA256));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_CBC_SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.AES_256_GCM_SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.AES_128_GCM_SHA256));
         
         // TLS1.3 ciphers
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_AES_128_GCM_SHA256, TlsVersion.TLS13, null, null, BulkAlgo.AES_128_GCM, HashAlgo.SHA256));
-        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_AES_256_GCM_SHA384, TlsVersion.TLS13, null, null, BulkAlgo.AES_256_GCM, HashAlgo.SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_AES_128_GCM_SHA256, TlsVersion.TLS13, null, null, BulkAlgo.AES_128_GCM_SHA256));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_AES_256_GCM_SHA384, TlsVersion.TLS13, null, null, BulkAlgo.AES_256_GCM_SHA384));
         
         for (CipherDetails cipherOverview: ciphersOverview) {
             // shared checks between TLS1.2 and TLS1.3
             if (cipherOverview.version != version) { continue; }
-            if (cipherOverview.bulkAlgo != bulkAlgo) { continue; }
-            if (cipherOverview.hashAlgo != hashAlgo) { continue; }        
+            if (cipherOverview.bulkAlgo != bulkAlgo) { continue; }      
 
             // differentiated checks for TLS1.2 and TLS1.3
             switch (cipherOverview.version) {
@@ -376,8 +362,7 @@ public class ConfigFactory {
             + "\n\tversion: " + version
             + "\n\tkeyExchange: " + keyExchange
             + "\n\tServerAuth: " + serverAuth
-            + "\n\tBulkAlgo: " + bulkAlgo
-            + "\n\tHashAlgo: " + hashAlgo);
+            + "\n\tBulkAlgo: " + bulkAlgo);
     }
 
     public static String getConfigOverview(Config config) {
