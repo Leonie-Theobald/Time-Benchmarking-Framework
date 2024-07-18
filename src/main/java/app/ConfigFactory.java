@@ -47,7 +47,7 @@ public class ConfigFactory {
             KeyExchangeGroup keyExchangeGroup,
             ServerAuth serverAuth,
             ClientAuthConfig clientAuth,
-            SignatureScheme sigScheme,
+            Vector<SignatureScheme> sigSchemes,
             BulkAlgo bulkAlgo,
             Vector<Extension> extensions) {
 
@@ -55,7 +55,7 @@ public class ConfigFactory {
                 keyExchange,
                 keyExchangeGroup,
                 serverAuth,
-                sigScheme,
+                sigSchemes,
                 bulkAlgo,
                 extensions);
         if (configValidity != ConfigError.NO_ERROR) {
@@ -63,7 +63,7 @@ public class ConfigFactory {
                 + "):\n\tVersion: " + version 
                 + "\n\tKey ex: " + keyExchange 
                 + "\n\tServer auth: " + serverAuth
-                + "\n\tSignature scheme: " + sigScheme 
+                + "\n\tSignature schemes: " + sigSchemes.toString() 
                 + "\n\tBulk: " + bulkAlgo
                 + "\n\tExtensions: " + extensions.toString());
         }
@@ -92,29 +92,34 @@ public class ConfigFactory {
                 throw new Error("TLS version not supported: " + version);
         }
 
-        // set signature and hash algorithm
-        switch (sigScheme) {
-            case DSA_SHA256:
-                myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.DSA_SHA256);
-                break;
-            case DSA_SHA384:
-                myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.DSA_SHA384);
-                break;
-            case ECDSA_SHA256:
-                myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA256);
-                break;
-            case ECDSA_SHA384:
-                myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA384);
-                break;
-            case RSA_SHA256:
-                myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.RSA_SHA256);
-                break;
-            case RSA_SHA384:
-                myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.RSA_SHA384);
-                break;
-            default:
-                throw new Error("SignatureAndHashAlgorithm Scheme is not supported.");
+        // set supported signature and hash algorithms
+        Vector<SignatureAndHashAlgorithm> sigAndHashAlgos = new Vector<>();
+        for (SignatureScheme sigScheme: sigSchemes) {
+            switch (sigScheme) {
+                case DSA_SHA256:
+                    sigAndHashAlgos.add(SignatureAndHashAlgorithm.DSA_SHA256);
+                    break;
+                case DSA_SHA384:
+                    sigAndHashAlgos.add(SignatureAndHashAlgorithm.DSA_SHA384);
+                    break;
+                case ECDSA_SHA256:
+                    sigAndHashAlgos.add(SignatureAndHashAlgorithm.ECDSA_SHA256);
+                    break;
+                case ECDSA_SHA384:
+                    sigAndHashAlgos.add(SignatureAndHashAlgorithm.ECDSA_SHA384);
+                    break;
+                case RSA_SHA256:
+                    sigAndHashAlgos.add(SignatureAndHashAlgorithm.RSA_SHA256);
+                    break;
+                case RSA_SHA384:
+                    sigAndHashAlgos.add(SignatureAndHashAlgorithm.RSA_SHA384);
+                    break;
+                default:
+                    throw new Error("SignatureAndHashAlgorithm Scheme is not supported.");
+            }
         }
+        myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(sigAndHashAlgos);
+        
 
         // set cipher suite
         CipherSuite cipherSuite = matchCipher(version, keyExchange, serverAuth, bulkAlgo);
@@ -145,8 +150,6 @@ public class ConfigFactory {
         myConfig.setAutoSelectCertificate(false);
         myConfig.setDefaultExplicitCertificateKeyPair(null);
         if (clientAuth != null) {
-            myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA256, SignatureAndHashAlgorithm.RSA_SHA256);
-
             CertificateKeyPair certKeyPair;
             try {
                 certKeyPair = new CertificateKeyPair(clientAuth.cert, clientAuth.privKey);
@@ -235,7 +238,7 @@ public class ConfigFactory {
             KeyExchange keyExchange,
             KeyExchangeGroup keyExchangeGroup,
             ServerAuth serverAuth,
-            SignatureScheme sigScheme,
+            Vector<SignatureScheme> sigSchemes,
             BulkAlgo bulkAlgo,
             Vector<Extension> extensions) {
         if (version == TlsVersion.TLS13 && keyExchange == KeyExchange.RSA
