@@ -18,6 +18,8 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.tls.TlsUtils;
 
 import app.ConfigurationTypes.BulkAlgo;
+import app.ConfigurationTypes.ServerAuth;
+import app.ConfigurationTypes.ClientAuthConfig;
 import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.HashAlgo;
 import app.ConfigurationTypes.KeyExchange;
@@ -44,6 +46,7 @@ public class ConfigFactory {
             KeyExchange keyExchange,
             KeyExchangeGroup keyExchangeGroup,
             ServerAuth serverAuth,
+            ClientAuthConfig clientAuth,
             HashAlgo hashAlgo,
             BulkAlgo bulkAlgo,
             Vector<Extension> extensions) {
@@ -141,47 +144,20 @@ public class ConfigFactory {
 
         // Client authentication
         myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA256, SignatureAndHashAlgorithm.RSA_SHA256);
+        
         CertificateKeyPair certKeyPair;
         try {
-            File myFile = new File("/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/keyGen/ec_secp384r1_cert.pem");
-            InputStream fileInputStream = new FileInputStream(myFile);
-            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-            Collection<? extends java.security.cert.Certificate> certs =
-                    certFactory.generateCertificates(fileInputStream);
-            java.security.cert.Certificate sunCert =
-                    (java.security.cert.Certificate) certs.toArray()[0];
-            byte[] certBytes = sunCert.getEncoded();
-            ASN1Primitive asn1Cert = TlsUtils.readASN1Object(certBytes);
-            org.bouncycastle.asn1.x509.Certificate cert =
-                    org.bouncycastle.asn1.x509.Certificate.getInstance(asn1Cert);
-            
-            org.bouncycastle.asn1.x509.Certificate[] certArray = new org.bouncycastle.asn1.x509.Certificate[]{cert};
-            
-            org.bouncycastle.crypto.tls.Certificate tlsCerts =
-                new org.bouncycastle.crypto.tls.Certificate(certArray);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            tlsCerts.encode(out);
-            
-            byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xE3, (byte)0x17, (byte)0x0C, (byte)0x60, (byte)0xC7, (byte)0x2E, (byte)0x6F, (byte)0xDD, (byte)0x09, (byte)0x89, (byte)0x5F, (byte)0xAA, (byte)0x26, (byte)0xED, (byte)0x2F, (byte)0x58, (byte)0x72, (byte)0x99, (byte)0xA7, (byte)0xA8, (byte)0x17, (byte)0x0A, (byte)0x2A, (byte)0x6D, (byte)0xED, (byte)0x23, (byte)0x89, (byte)0x84, (byte)0x8A, (byte)0xF7, (byte)0xCB, (byte)0xBF, (byte)0xA8, (byte)0x2C, (byte)0xED, (byte)0x84, (byte)0xBE, (byte)0x99, (byte)0x15, (byte)0xB3, (byte)0xDF, (byte)0x62, (byte)0x93, (byte)0xD5, (byte)0x3D, (byte)0x55, (byte)0xC3, (byte)0x25};
-            CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
-            /*CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
-                new BigInteger("22680894355213276814068604237379515326692913667424423179105887452289906651381282343803736135056197131595363416117766447222033440405148554595150495098954618784791409846721078014631997901600818192748951260294724453863786822963457535714201456929910107294028887630816463336166663178044202436591458723765695469483323295740091515251848862253753967572511917223940594872506608243732478287780716299338656301737923256700355562820768458403307832462075060029877854803131864443444034500618089480396072963994147799521776599695622459322293973138939514112920721100797951815691387710738229293066991665386400046197146008454129381303013"),
-                new BigInteger("1081220900519306994054118481314527476163106719322647452617727838882406914114781299588271417902671126167388106236144671423388446493562843049877263993876061364494202266642979463380542895308994686679330955004731190982136777534172265998708970859053814947427221608823239751002807226391716969448091277902763492530629102587274894712676589402812658549391491035698540223575850258784236700772902034492790099278379171982874885903225435518252664651224422790750083966520867503120878596752239393242686207324374684442156551897779979099846701806053546967178413553042480432389633260063913612546788291398650159971518641894650833502207"));
-            // openssl s_server -cert ./TLS-Core/src/main/resources/certs/rsa2048_rsa_cert.pem -key ./TLS-Core/src/main/resources/certs/rsa2048_key.pem -tls1_2 -Verify 3 -CAfile ./Zusatzzeug/keyGen/rsa2048_cert.pem -trace
-            */
-            //System.out.println("PRIVKEY: " + privKey);
-
-            certKeyPair = new CertificateKeyPair(tlsCerts, privKey);
-            
-            System.out.println("certKeyPair.getCertSignatureType: " + certKeyPair.getCertSignatureType());
-            System.out.println("certKeyPair.getPublicKeyGroup: " + certKeyPair.getPublicKeyGroup());
-            System.out.println("certKeyPair.getSignatureAlgorithm: " + certKeyPair.getSignatureAlgorithm());
-            System.out.println("certKeyPair.getSignatureAndHashAlgorithm: " + certKeyPair.getSignatureAndHashAlgorithm());
-            System.out.println("certKeyPair.getSignatureGroup: " + certKeyPair.getSignatureGroup());
+            certKeyPair = new CertificateKeyPair(clientAuth.cert, clientAuth.privKey);
         } catch (Exception ex) {
             throw new Error("Error occured: " + ex);
         }
-
+        /*
+        System.out.println("certKeyPair.getCertSignatureType: " + certKeyPair.getCertSignatureType());
+        System.out.println("certKeyPair.getPublicKeyGroup: " + certKeyPair.getPublicKeyGroup());
+        System.out.println("certKeyPair.getSignatureAlgorithm: " + certKeyPair.getSignatureAlgorithm());
+        System.out.println("certKeyPair.getSignatureAndHashAlgorithm: " + certKeyPair.getSignatureAndHashAlgorithm());
+        System.out.println("certKeyPair.getSignatureGroup: " + certKeyPair.getSignatureGroup());
+        */
         myConfig.setAutoSelectCertificate(false);
         myConfig.setDefaultExplicitCertificateKeyPair(certKeyPair);
 
