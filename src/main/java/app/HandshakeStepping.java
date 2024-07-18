@@ -36,6 +36,7 @@ public class HandshakeStepping {
         TLS13_WITHOUT_CLIENTAUTH,
         TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
         TLS13_WITH_CLIENTAUTH,
+        TLS13_WITH_CLIENTAUTH_WITH_RESUMPTION,
     }
     
     public static List<WorkflowTrace> getSegmentedHandshake(
@@ -384,6 +385,56 @@ public class HandshakeStepping {
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
+                        return segmentedHandshake;
+
+                    case TLS13_WITH_CLIENTAUTH_WITH_RESUMPTION:
+                        System.out.println(handshakeType + " is supported.");
+
+                        // First handshake
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        // remove psk extension which only needed in second handshake flow
+                        HelloMessage<?> initialHello2 = (HelloMessage) getFirstSendMessage(
+                            HandshakeMessageType.CLIENT_HELLO,
+                            trace);
+                        PreSharedKeyExtensionMessage pskExtension2 = initialHello2.getExtension(PreSharedKeyExtensionMessage.class);
+                        initialHello2.getExtensions().remove(pskExtension2);
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        certMsg = new CertificateMessage();
+                        certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        trace.addTlsAction(new SendAction(certMsg));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        // TODO: RFC states that SESSION_TICKET comes before FINISHED
+                        // Figure 1 in https://datatracker.ietf.org/doc/html/rfc5077
+                        trace.addTlsAction(new ReceiveTillAction(new NewSessionTicketMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+
+                        // Reset connection and start with session resumption
+                        trace.addTlsAction(new ResetConnectionAction());
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+
+                        // Second Handshake
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
                         return segmentedHandshake;
 
                     default:
