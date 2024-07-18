@@ -143,23 +143,27 @@ public class ConfigFactory {
         }
 
         // Client authentication
-        myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA256, SignatureAndHashAlgorithm.RSA_SHA256);
-        
-        CertificateKeyPair certKeyPair;
-        try {
-            certKeyPair = new CertificateKeyPair(clientAuth.cert, clientAuth.privKey);
-        } catch (Exception ex) {
-            throw new Error("Error occured: " + ex);
-        }
-        /*
-        System.out.println("certKeyPair.getCertSignatureType: " + certKeyPair.getCertSignatureType());
-        System.out.println("certKeyPair.getPublicKeyGroup: " + certKeyPair.getPublicKeyGroup());
-        System.out.println("certKeyPair.getSignatureAlgorithm: " + certKeyPair.getSignatureAlgorithm());
-        System.out.println("certKeyPair.getSignatureAndHashAlgorithm: " + certKeyPair.getSignatureAndHashAlgorithm());
-        System.out.println("certKeyPair.getSignatureGroup: " + certKeyPair.getSignatureGroup());
-        */
         myConfig.setAutoSelectCertificate(false);
-        myConfig.setDefaultExplicitCertificateKeyPair(certKeyPair);
+        myConfig.setDefaultExplicitCertificateKeyPair(null);
+        if (clientAuth != null) {
+            myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(SignatureAndHashAlgorithm.ECDSA_SHA256, SignatureAndHashAlgorithm.RSA_SHA256);
+
+            CertificateKeyPair certKeyPair;
+            try {
+                certKeyPair = new CertificateKeyPair(clientAuth.cert, clientAuth.privKey);
+            } catch (Exception ex) {
+                throw new Error("Error occured: " + ex);
+            }
+            /*
+            System.out.println("certKeyPair.getCertSignatureType: " + certKeyPair.getCertSignatureType());
+            System.out.println("certKeyPair.getPublicKeyGroup: " + certKeyPair.getPublicKeyGroup());
+            System.out.println("certKeyPair.getSignatureAlgorithm: " + certKeyPair.getSignatureAlgorithm());
+            System.out.println("certKeyPair.getSignatureAndHashAlgorithm: " + certKeyPair.getSignatureAndHashAlgorithm());
+            System.out.println("certKeyPair.getSignatureGroup: " + certKeyPair.getSignatureGroup());
+            */
+            
+            myConfig.setDefaultExplicitCertificateKeyPair(certKeyPair);
+        }
 
         // add needed extensions
         // session resumption with ticket
