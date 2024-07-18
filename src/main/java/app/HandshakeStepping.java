@@ -67,32 +67,30 @@ public class HandshakeStepping {
                         System.out.println(handshakeType + " is supported.");
 
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         CertificateMessage certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
-
-                        trace.addTlsAction(new SendAction(new CertificateMessage()));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new SendAction(certMsg));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         return segmentedHandshake;
-
-
+                        
                     case TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
