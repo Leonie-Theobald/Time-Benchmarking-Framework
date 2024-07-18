@@ -55,8 +55,8 @@ public class App {
         Config myConfig =
             ConfigFactory.getConfig(
                 TlsVersion.TLS12,
-                KeyExchange.ECDHE,
-                KeyExchangeGroup.SECP384R1,
+                KeyExchange.RSA,
+                KeyExchangeGroup.NONE,
                 ServerAuth.RSA,
                 clientAuthConfig,
                 new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA256);add(SignatureScheme.ECDSA_SHA256);}},
@@ -69,7 +69,7 @@ public class App {
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITH_CLIENTAUTH, myConfig, outboundCon);
         Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(3, myConfig, segmentedHandshake, true, 1, 3, 1.5);
         //System.out.println(resultsMeasurement);
 
