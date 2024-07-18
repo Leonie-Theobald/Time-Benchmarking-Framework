@@ -28,6 +28,7 @@ public class HandshakeStepping {
         TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH,
         TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
         TLS12_EPHEMERAL_WITH_CLIENTAUTH,
+        TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_RESUMPTION,
         TLS12_STATIC_WITHOUT_CLIENTAUTH,
         TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
         TLS12_STATIC_WITH_CLIENTAUTH,
@@ -43,6 +44,7 @@ public class HandshakeStepping {
 
                 WorkflowTrace trace = new WorkflowTrace();
                 List<WorkflowTrace> segmentedHandshake = new ArrayList();
+                CertificateMessage certMsg = new CertificateMessage();
 
                 switch (handshakeType) {
                     case TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH:
@@ -111,9 +113,9 @@ public class HandshakeStepping {
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
-                        CertificateMessage certMsgEph = new CertificateMessage();
-                        certMsgEph.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
-                        trace.addTlsAction(new SendAction(certMsgEph));
+                        certMsg = new CertificateMessage();
+                        certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        trace.addTlsAction(new SendAction(certMsg));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
@@ -128,6 +130,51 @@ public class HandshakeStepping {
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
+                        return segmentedHandshake;
+
+                    case TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_RESUMPTION:
+                        System.out.println(handshakeType + " is supported.");
+
+                        // First handshake
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        certMsg = new CertificateMessage();
+                        certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        trace.addTlsAction(new SendAction(certMsg));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+
+                        // Reset connection
+                        trace.addTlsAction(new ResetConnectionAction());
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+
+                        // Second Handshake
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
                         return segmentedHandshake;
                     
                     case TLS12_STATIC_WITHOUT_CLIENTAUTH:
@@ -196,9 +243,9 @@ public class HandshakeStepping {
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
-                        CertificateMessage certMsgStat = new CertificateMessage();
-                        certMsgStat.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
-                        trace.addTlsAction(new SendAction(certMsgStat));
+                        certMsg = new CertificateMessage();
+                        certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        trace.addTlsAction(new SendAction(certMsg));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
@@ -280,7 +327,7 @@ public class HandshakeStepping {
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
-                        CertificateMessage certMsg = new CertificateMessage();
+                        certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
                         trace.addTlsAction(new SendAction(certMsg));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));

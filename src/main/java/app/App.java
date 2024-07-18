@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import app.ConfigurationTypes.BulkAlgo;
 import app.ConfigurationTypes.ClientAuthCert;
 import app.ConfigurationTypes.ClientAuthConfig;
+import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.KeyExchange;
 import app.ConfigurationTypes.KeyExchangeGroup;
 import app.ConfigurationTypes.ServerAuth;
@@ -54,22 +55,22 @@ public class App {
 
         Config myConfig =
             ConfigFactory.getConfig(
-                TlsVersion.TLS13,
+                TlsVersion.TLS12,
                 KeyExchange.ECDHE,
                 KeyExchangeGroup.SECP384R1,
                 ServerAuth.ECDSA,
                 clientAuthConfig,
                 new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
                 BulkAlgo.AES_256_GCM_SHA384,
-                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET); add(Extension.OCSP);}});
-                new Vector<>());
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
 
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
         Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(3, myConfig, segmentedHandshake, true, 1, 3, 1.5);
         //System.out.println(resultsMeasurement);
 
