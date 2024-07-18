@@ -41,8 +41,8 @@ public class App {
                     ClientAuthCert.RSA,
                     "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/keyGen/rsa2048_cert.pem",
                     privKey
-        );
-        */
+        );*/
+
         //EC Certificate
         byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xE3, (byte)0x17, (byte)0x0C, (byte)0x60, (byte)0xC7, (byte)0x2E, (byte)0x6F, (byte)0xDD, (byte)0x09, (byte)0x89, (byte)0x5F, (byte)0xAA, (byte)0x26, (byte)0xED, (byte)0x2F, (byte)0x58, (byte)0x72, (byte)0x99, (byte)0xA7, (byte)0xA8, (byte)0x17, (byte)0x0A, (byte)0x2A, (byte)0x6D, (byte)0xED, (byte)0x23, (byte)0x89, (byte)0x84, (byte)0x8A, (byte)0xF7, (byte)0xCB, (byte)0xBF, (byte)0xA8, (byte)0x2C, (byte)0xED, (byte)0x84, (byte)0xBE, (byte)0x99, (byte)0x15, (byte)0xB3, (byte)0xDF, (byte)0x62, (byte)0x93, (byte)0xD5, (byte)0x3D, (byte)0x55, (byte)0xC3, (byte)0x25};
         CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
@@ -54,12 +54,12 @@ public class App {
 
         Config myConfig =
             ConfigFactory.getConfig(
-                TlsVersion.TLS12,
-                KeyExchange.RSA,
-                KeyExchangeGroup.NONE,
-                ServerAuth.RSA,
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
                 clientAuthConfig,
-                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA256);add(SignatureScheme.ECDSA_SHA256);}},
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
                 BulkAlgo.AES_256_GCM_SHA384,
                 //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET); add(Extension.OCSP);}});
                 new Vector<>());
@@ -69,7 +69,7 @@ public class App {
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_STATIC_WITH_CLIENTAUTH, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfig, outboundCon);
         Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(3, myConfig, segmentedHandshake, true, 1, 3, 1.5);
         //System.out.println(resultsMeasurement);
 

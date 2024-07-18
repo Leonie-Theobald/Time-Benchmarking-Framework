@@ -33,6 +33,7 @@ public class HandshakeStepping {
         TLS12_STATIC_WITH_CLIENTAUTH,
         TLS13_WITHOUT_CLIENTAUTH,
         TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
+        TLS13_WITH_CLIENTAUTH,
     }
     
     public static List<WorkflowTrace> getSegmentedHandshake(
@@ -268,6 +269,28 @@ public class HandshakeStepping {
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
+                        return segmentedHandshake;
+
+                    case TLS13_WITH_CLIENTAUTH:
+                        System.out.println(handshakeType + " is supported.");
+
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        CertificateMessage certMsg = new CertificateMessage();
+                        certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        trace.addTlsAction(new SendAction(certMsg));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
                         return segmentedHandshake;
 
                     default:
