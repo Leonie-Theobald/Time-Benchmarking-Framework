@@ -8,9 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import app.ConfigurationTypes.BulkAlgo;
-import app.ConfigurationTypes.ClientAuthCert;
 import app.ConfigurationTypes.ClientAuthConfig;
-import app.ConfigurationTypes.Extension;
 import app.ConfigurationTypes.KeyExchange;
 import app.ConfigurationTypes.KeyExchangeGroup;
 import app.ConfigurationTypes.ServerAuth;
@@ -39,11 +37,11 @@ public class App {
             new BigInteger("1081220900519306994054118481314527476163106719322647452617727838882406914114781299588271417902671126167388106236144671423388446493562843049877263993876061364494202266642979463380542895308994686679330955004731190982136777534172265998708970859053814947427221608823239751002807226391716969448091277902763492530629102587274894712676589402812658549391491035698540223575850258784236700772902034492790099278379171982874885903225435518252664651224422790750083966520867503120878596752239393242686207324374684442156551897779979099846701806053546967178413553042480432389633260063913612546788291398650159971518641894650833502207"));
         
         ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    ClientAuthCert.RSA,
                     "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/keyGen/rsa2048_cert.pem",
                     privKey
         );
         */
+        /*
         //EC Certificate
         byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xE3, (byte)0x17, (byte)0x0C, (byte)0x60, (byte)0xC7, (byte)0x2E, (byte)0x6F, (byte)0xDD, (byte)0x09, (byte)0x89, (byte)0x5F, (byte)0xAA, (byte)0x26, (byte)0xED, (byte)0x2F, (byte)0x58, (byte)0x72, (byte)0x99, (byte)0xA7, (byte)0xA8, (byte)0x17, (byte)0x0A, (byte)0x2A, (byte)0x6D, (byte)0xED, (byte)0x23, (byte)0x89, (byte)0x84, (byte)0x8A, (byte)0xF7, (byte)0xCB, (byte)0xBF, (byte)0xA8, (byte)0x2C, (byte)0xED, (byte)0x84, (byte)0xBE, (byte)0x99, (byte)0x15, (byte)0xB3, (byte)0xDF, (byte)0x62, (byte)0x93, (byte)0xD5, (byte)0x3D, (byte)0x55, (byte)0xC3, (byte)0x25};
         CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
@@ -52,25 +50,33 @@ public class App {
                     "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/keyGen/ec_secp384r1_cert.pem",
                     privKey
         );
+        */
+       //EC Certificate NON-CA
+        byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x20, (byte)0xB5, (byte)0xB3, (byte)0xC9, (byte)0x56, (byte)0xE1, (byte)0xD0, (byte)0x3B, (byte)0x20, (byte)0xF9, (byte)0x8D, (byte)0x57, (byte)0x45, (byte)0x50, (byte)0x7E, (byte)0x3F, (byte)0x9F, (byte)0xD2, (byte)0xA4, (byte)0x13, (byte)0x62, (byte)0x90, (byte)0xCF, (byte)0xA0, (byte)0xFA, (byte)0x27, (byte)0x60, (byte)0x0D, (byte)0xF4, (byte)0xC4, (byte)0xD8, (byte)0x4D, (byte)0x14};
+        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
+        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
+                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certificates_3/vehicle-controller-ca-cert.pem",
+                    privKey
+        );
 
         Config myConfig =
             ConfigFactory.getConfig(
-                TlsVersion.TLS13,
+                TlsVersion.TLS12,
                 KeyExchange.ECDHE,
-                KeyExchangeGroup.SECP384R1,
+                KeyExchangeGroup.X25519,
                 ServerAuth.ECDSA,
                 clientAuthConfig,
-                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
                 BulkAlgo.AES_256_GCM_SHA384,
-                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
-                //new Vector<>());
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
 
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfig, outboundCon);
         Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(3, myConfig, segmentedHandshake, true, 1, 3, 1.5);
         //System.out.println(resultsMeasurement);
 

@@ -51,22 +51,13 @@ public class ConfigurationTypes {
         ECDSA,
         RSA,
     }
-    
-    public enum ClientAuthCert {
-        RSA,
-        DSS,
-        ECDSA,
-        DH
-    }
 
     public static class ClientAuthConfig {
         public CustomPrivateKey privKey;
-        public ClientAuthCert certType;
         public org.bouncycastle.crypto.tls.Certificate cert;
 
-        public ClientAuthConfig(ClientAuthCert certType, String certFilePath, CustomPrivateKey privateKey) {
+        public ClientAuthConfig(String certFilePath, CustomPrivateKey privateKey) {
             this.privKey = privateKey;
-            this.certType = certType; 
 
             try {
                 File certFile = new File(certFilePath);
