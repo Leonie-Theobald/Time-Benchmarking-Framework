@@ -19,6 +19,7 @@ import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 public class TimeMeasurement {
     // perform measurement for one config and one segmented handshake collection
     public static Long[][] startTimeMeasurement(
+        String measurementDefinition,
         int repetition,
         Config config,
         List<WorkflowTrace> segmentedHandshake,
@@ -147,7 +148,7 @@ public class TimeMeasurement {
 
             // log results if wished
             if (shouldDocument == true) {
-                logRawAndCleanMeasurement(config, segmentedHandshake, 
+                logRawAndCleanMeasurement(measurementDefinition, config, segmentedHandshake, 
                     durationForHandshakeSegments, analysisListHandshake, analysisListSegments, 
                     cleanTopOutlier, durationForHandshakeSegmentsTopClean, analysisListHandshakeTopClean, analysisListSegmentsTopClean,
                     cleanDeviationOutlier, durationForHandshakeSegmentsDeviationCleanArray, analysisListHandshakeDeviationClean, analysisListSegmentsDeviationClean,
@@ -157,7 +158,7 @@ public class TimeMeasurement {
         } else {
             // log results if wished
             if (shouldDocument == true) {
-                logRawMeasurement(config, segmentedHandshake, durationForHandshakeSegments, analysisListHandshake, analysisListSegments);
+                logRawMeasurement(measurementDefinition, config, segmentedHandshake, durationForHandshakeSegments, analysisListHandshake, analysisListSegments);
             }
         }
 
@@ -268,6 +269,7 @@ public class TimeMeasurement {
 
     // logs raw data and statistical analysis results into file
     private static void logRawMeasurement(
+        String measurementDefinition,
         Config config,
         List<WorkflowTrace> segmentedHandshake,
         Long[][] durationForHandshakeSegments,
@@ -286,9 +288,13 @@ public class TimeMeasurement {
             
             Date now = Calendar.getInstance().getTime();
             String nowAsString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-mmmm").format(now);
-            String logFileName = nowAsString + "_measurement-results";
+            String pathString = nowAsString;
+            if (measurementDefinition != null) {
+                pathString += ("_" + measurementDefinition);
+            }
+            pathString += ("_" + durationForHandshakeSegments[0].length + "rep_measurement-results");
 
-            File logFile = new File(basePath + "logging/" + logFileName);
+            File logFile = new File(basePath + "logging/" + pathString);
 
             try (PrintWriter out = new PrintWriter(logFile)) {
                 out.println("TIME MEASUREMENT RESULTS\n" + nowAsString);
@@ -339,6 +345,7 @@ public class TimeMeasurement {
 
     // logs raw data and statistical analysis as well as the cleaned results into file
     private static void logRawAndCleanMeasurement(
+        String measurementDefinition,
         Config config,
         List<WorkflowTrace> segmentedHandshake,
         Long[][] durationForHandshakeSegmentsRaw,
@@ -372,9 +379,13 @@ public class TimeMeasurement {
             
             Date now = Calendar.getInstance().getTime();
             String nowAsString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-mmmm").format(now);
-            String logFileName = nowAsString + "_measurement-results";
+            String pathString = nowAsString;
+            if (measurementDefinition != null) {
+                pathString += ("_" + measurementDefinition);
+            }
+            pathString += ("_" + durationForHandshakeSegmentsRaw[0].length + "rep_measurement-results");
 
-            File logFile = new File(basePath + "logging/" + logFileName);
+            File logFile = new File(basePath + "logging/" + pathString);
 
             try (PrintWriter out = new PrintWriter(logFile)) {
                 out.println("TIME MEASUREMENT RESULTS\n" + nowAsString);
