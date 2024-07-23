@@ -1,0 +1,268 @@
+TIME MEASUREMENT RESULTS
+2024-07-09_16-53-26-0053
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS12
+Cipher Suite: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+Sig and Hash Algo: [RSA_SHA384]
+EC Point Extension: false
+EC Extension: true
+Named Group: FFDHE3072
+Key Share: [FFDHE3072]
+OCSP: false
+Session Ticket Extension (TLS1.2): false
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:CHANGE_CIPHER_SPEC, FINISHED, 
+]
+
+#################################
+Used Repititions
+
+10
+
+##################################################################
+
+
+RAW RESULTS
+
+
+#################################
+Raw Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 2.082417 ms
+ Max: 16.209875 ms
+ Average: 3.746133 ms
+ Median: 2.344521 ms
+ 25% Quantil: 2.195 ms
+ 75% Quantil: 2.504333 ms
+ Std Deviation: 4.38589 ms
+ Variant Coef: 117,08 %
+
+Handshake Segment 1
+ Min: 6.710958 ms
+ Max: 17.819583 ms
+ Average: 8.543429 ms
+ Median: 7.138916 ms
+ 25% Quantil: 6.934167 ms
+ 75% Quantil: 7.862667 ms
+ Std Deviation: 3.484147 ms
+ Variant Coef: 40,78 %
+
+Handshake Segment 2
+ Min: 7.529917 ms
+ Max: 15.637 ms
+ Average: 9.865883 ms
+ Median: 8.631625 ms
+ 25% Quantil: 7.846375 ms
+ 75% Quantil: 12.196167 ms
+ Std Deviation: 2.702012 ms
+ Variant Coef: 27,39 %
+
+Handshake Segment 3
+ Min: 7.514458 ms
+ Max: 25.976375 ms
+ Average: 9.935687 ms
+ Median: 8.200937 ms
+ 25% Quantil: 8.048041 ms
+ 75% Quantil: 8.50925 ms
+ Std Deviation: 5.646573 ms
+ Variant Coef: 56,83 %
+
+Handshake Segment 4
+ Min: 9.436541 ms
+ Max: 57.168708 ms
+ Average: 15.130895 ms
+ Median: 9.969437 ms
+ 25% Quantil: 9.84 ms
+ 75% Quantil: 10.458583 ms
+ Std Deviation: 14.849223 ms
+ Variant Coef: 98,14 %
+
+
+#################################
+Raw Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration Average: 3.746133 ms
+ Duration Min: -0.639757 ms
+ Duration Max: 8.132023 ms
+
+Handshake Segment 1
+ Duration Average: 4.797296 ms
+ Duration Min: -3.072741 ms
+ Duration Max: 12.667333 ms
+
+Handshake Segment 2
+ Duration Average: 1.322454 ms
+ Duration Min: -4.863705 ms
+ Duration Max: 7.508613 ms
+
+Handshake Segment 3
+ Duration Average: 0.069804 ms
+ Duration Min: -8.278781 ms
+ Duration Max: 8.418389 ms
+
+Handshake Segment 4
+ Duration Average: 5.195208 ms
+ Duration Min: -15.300588 ms
+ Duration Max: 25.691004 ms
+
+
+##################################################################
+
+
+CLEANED RESULTS (removed top 1% of longest durations)
+
+
+#################################
+Cleaned Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 2.082417 ms
+ Max: 16.209875 ms
+ Average: 3.746133 ms
+ Median: 2.344521 ms
+ 25% Quantil: 2.195 ms
+ 75% Quantil: 2.504333 ms
+ Std Deviation: 4.38589 ms
+ Variant Coef: 117,08 %
+
+Handshake Segment 1
+ Min: 6.710958 ms
+ Max: 17.819583 ms
+ Average: 8.543429 ms
+ Median: 7.138916 ms
+ 25% Quantil: 6.934167 ms
+ 75% Quantil: 7.862667 ms
+ Std Deviation: 3.484147 ms
+ Variant Coef: 40,78 %
+
+Handshake Segment 2
+ Min: 7.529917 ms
+ Max: 15.637 ms
+ Average: 9.865883 ms
+ Median: 8.631625 ms
+ 25% Quantil: 7.846375 ms
+ 75% Quantil: 12.196167 ms
+ Std Deviation: 2.702012 ms
+ Variant Coef: 27,39 %
+
+Handshake Segment 3
+ Min: 7.514458 ms
+ Max: 25.976375 ms
+ Average: 9.935687 ms
+ Median: 8.200937 ms
+ 25% Quantil: 8.048041 ms
+ 75% Quantil: 8.50925 ms
+ Std Deviation: 5.646573 ms
+ Variant Coef: 56,83 %
+
+Handshake Segment 4
+ Min: 9.436541 ms
+ Max: 57.168708 ms
+ Average: 15.130895 ms
+ Median: 9.969437 ms
+ 25% Quantil: 9.84 ms
+ 75% Quantil: 10.458583 ms
+ Std Deviation: 14.849223 ms
+ Variant Coef: 98,14 %
+
+
+#################################
+Cleaned Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration Average: 3.746133 ms
+ Duration Min: -0.639757 ms
+ Duration Max: 8.132023 ms
+
+Handshake Segment 1
+ Duration Average: 4.797296 ms
+ Duration Min: -3.072741 ms
+ Duration Max: 12.667333 ms
+
+Handshake Segment 2
+ Duration Average: 1.322454 ms
+ Duration Min: -4.863705 ms
+ Duration Max: 7.508613 ms
+
+Handshake Segment 3
+ Duration Average: 0.069804 ms
+ Duration Min: -8.278781 ms
+ Duration Max: 8.418389 ms
+
+Handshake Segment 4
+ Duration Average: 5.195208 ms
+ Duration Min: -15.300588 ms
+ Duration Max: 25.691004 ms
+
+
+##################################################################
+Detailed Measurement Results
+
+
+#################################
+Raw Detailed Measurement Results
+[[2082417, 2134333, 2195000, 2319208, 2334875, 2354167, 2384041, 2504333, 2943083, 16209875], [6710958, 6752375, 6934167, 7007083, 7117750, 7160083, 7191167, 7862667, 10878458, 17819583], [7529917, 7741375, 7846375, 7975917, 8280083, 8983167, 10159375, 12196167, 12309459, 15637000], [7514458, 7714041, 8048041, 8176916, 8192958, 8208916, 8327000, 8509250, 8688916, 25976375], [9436541, 9692042, 9840000, 9959916, 9968166, 9970708, 10101875, 10458583, 14712417, 57168708]]
+
+#################################
+Cleaned Detailed Measurement Results
+[[2082417, 2134333, 2195000, 2319208, 2334875, 2354167, 2384041, 2504333, 2943083, 16209875], [6710958, 6752375, 6934167, 7007083, 7117750, 7160083, 7191167, 7862667, 10878458, 17819583], [7529917, 7741375, 7846375, 7975917, 8280083, 8983167, 10159375, 12196167, 12309459, 15637000], [7514458, 7714041, 8048041, 8176916, 8192958, 8208916, 8327000, 8509250, 8688916, 25976375], [9436541, 9692042, 9840000, 9959916, 9968166, 9970708, 10101875, 10458583, 14712417, 57168708]]

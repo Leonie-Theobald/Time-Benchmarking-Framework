@@ -1,0 +1,107 @@
+TIME MEASUREMENT RESULTS
+2024-07-11_14-42-43-0042
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS13
+Cipher Suite: TLS_AES_256_GCM_SHA384
+Sig and Hash Algo: [ECDSA_SHA384]
+EC Point Extension: true
+EC Extension: true
+Named Group: ECDH_X25519
+Key Share: [ECDH_X25519]
+OCSP: false
+Session Ticket Extension: true
+PSK Extension (TLS1.3): true
+PSK Extension (TLS1.3): true
+PSK Exchange Modes (TLS1.3): [PSK_KE]
+Early Data Extension (TLS1.3): false
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+]
+
+#################################
+Used Repititions
+
+2
+
+##################################################################
+
+
+RAW RESULTS
+
+
+#################################
+Raw Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 17.083667 ms
+ Max: 40.555875 ms
+ Average: 28.819771 ms
+ Median: 28.819771 ms
+ 25% Quantil: 17.083667 ms
+ 75% Quantil: 40.555875 ms
+ Std Deviation: 16.597357 ms
+ Variant Coef: 57,590 %
+
+
+#################################
+Raw Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 28.819771 ms
+ Duration Min considering StdDev: 12.222414 ms
+ Duration Max considering StdDev: 45.417128 ms
+ Duration considering Min: 17.083667 ms
+
+
+##################################################################
+
+
+CLEANED RESULTS (removed top 1% of longest durations)
+
+
+#################################
+Cleaned Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 17.083667 ms
+ Max: 40.555875 ms
+ Average: 28.819771 ms
+ Median: 28.819771 ms
+ 25% Quantil: 17.083667 ms
+ 75% Quantil: 40.555875 ms
+ Std Deviation: 16.597357 ms
+ Variant Coef: 57,590 %
+
+
+#################################
+Cleaned Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 28.819771 ms
+ Duration Min considering StdDev: 12.222414 ms
+ Duration Max considering StdDev: 45.417128 ms
+ Duration considering Min: 17.083667 ms
+
+
+##################################################################
+Detailed Measurement Results
+
+
+#################################
+Raw Detailed Measurement Results
+[[17083667, 40555875]]
+
+#################################
+Cleaned Detailed Measurement Results
+[[17083667, 40555875]]

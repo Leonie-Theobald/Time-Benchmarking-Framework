@@ -1,0 +1,107 @@
+TIME MEASUREMENT RESULTS
+2024-07-07_17-58-04-0058
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS12
+Default Selected Cipher Suite: OutboundConnection{ alias=null host=localhost port=4433 proxyDataHost=null proxyDataPort=null proxyControlHost=null proxyControlPort=null type=null firstTimeout=null timeout=null }
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, ECDHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, ECDHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:ECDH_CLIENT_KEY_EXCHANGE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, ECDHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:ECDH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, ECDHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:ECDH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:CHANGE_CIPHER_SPEC, FINISHED, 
+]
+
+#################################
+Used Repititions
+
+1
+
+#################################
+Anaylsis Results
+
+
+Results over 1 repetitions for each handshake segment.
+Handshake Segment 0
+0 Min: 16.242458 ms
+0 Max: 16.242458 ms
+0 Average: 16.242458 ms
+
+Handshake Segment 1
+1 Min: 19.076167 ms
+1 Max: 19.076167 ms
+1 Average: 19.076167 ms
+
+Handshake Segment 2
+2 Min: 14.549875 ms
+2 Max: 14.549875 ms
+2 Average: 14.549875 ms
+
+Handshake Segment 3
+3 Min: 28.953959 ms
+3 Max: 28.953959 ms
+3 Average: 28.953959 ms
+
+Handshake Segment 4
+4 Min: 8.996292 ms
+4 Max: 8.996292 ms
+4 Average: 8.996292 ms
+
+
+
+##################################################################
+Detailled Measurement Results
+[[16242458], [19076167], [14549875], [28953959], [8996292]]

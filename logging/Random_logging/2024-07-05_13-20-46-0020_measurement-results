@@ -1,0 +1,219 @@
+TIME MEASUREMENT RESULTS
+2024-07-05_13-20-46-0020
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS12
+Default Selected Cipher Suite: OutboundConnection{ alias=null host=localhost port=4433 proxyDataHost=null proxyDataPort=null proxyControlHost=null proxyControlPort=null type=null firstTimeout=null timeout=null }
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, SERVER_HELLO_DONE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:NEW_SESSION_TICKET, CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:NEW_SESSION_TICKET, CHANGE_CIPHER_SPEC, FINISHED, 
+
+de.rub.nds.tlsattacker.core.workflow.action.ResetConnectionAction@e46814ec, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:NEW_SESSION_TICKET, CHANGE_CIPHER_SPEC, FINISHED, 
+
+de.rub.nds.tlsattacker.core.workflow.action.ResetConnectionAction@e46814ec
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:NEW_SESSION_TICKET, CHANGE_CIPHER_SPEC, FINISHED, 
+
+de.rub.nds.tlsattacker.core.workflow.action.ResetConnectionAction@e46814ec
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:SERVER_HELLO, CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:NEW_SESSION_TICKET, CHANGE_CIPHER_SPEC, FINISHED, 
+
+de.rub.nds.tlsattacker.core.workflow.action.ResetConnectionAction@e46814ec
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:SERVER_HELLO, CHANGE_CIPHER_SPEC, FINISHED, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+]
+
+#################################
+Used Repititions
+
+2
+
+#################################
+Anaylsis Results
+
+
+Results over 2 repetitions for each handshake segment.
+Handshake Segment 0
+0 Min: 2.120042 ms
+0 Max: 20.777791 ms
+0 Average: 11.4489165 ms
+
+Handshake Segment 1
+1 Min: 5.686708 ms
+1 Max: 18.788583 ms
+1 Average: 12.2376455 ms
+
+Handshake Segment 2
+2 Min: 8.002833 ms
+2 Max: 13.925042 ms
+2 Average: 10.9639375 ms
+
+Handshake Segment 3
+3 Min: 6.538708 ms
+3 Max: 32.781334 ms
+3 Average: 19.660021 ms
+
+Handshake Segment 4
+4 Min: 8.636084 ms
+4 Max: 9.175709 ms
+4 Average: 8.9058965 ms
+
+Handshake Segment 5
+5 Min: 8.20775 ms
+5 Max: 8.39475 ms
+5 Average: 8.30125 ms
+
+Handshake Segment 6
+6 Min: 6.875875 ms
+6 Max: 7.498 ms
+6 Average: 7.1869375 ms
+
+Handshake Segment 7
+7 Min: 9.195541 ms
+7 Max: 9.326167 ms
+7 Average: 9.260854 ms
+
+Handshake Segment 8
+8 Min: 8.967166 ms
+8 Max: 14.305084 ms
+8 Average: 11.636125 ms
+
+
+
+##################################################################
+Detailled Measurement Results
+[[20777791, 2120042], [18788583, 5686708], [13925042, 8002833], [32781334, 6538708], [9175709, 8636084], [8207750, 8394750], [7498000, 6875875], [9326167, 9195541], [14305084, 8967166]]

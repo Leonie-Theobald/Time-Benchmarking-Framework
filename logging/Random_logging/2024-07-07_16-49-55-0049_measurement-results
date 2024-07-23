@@ -1,0 +1,67 @@
+TIME MEASUREMENT RESULTS
+2024-07-07_16-49-55-0049
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS13
+Default Selected Cipher Suite: OutboundConnection{ alias=null host=localhost port=4433 proxyDataHost=null proxyDataPort=null proxyControlHost=null proxyControlPort=null type=null firstTimeout=null timeout=null }
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:SERVER_HELLO, CHANGE_CIPHER_SPEC, ENCRYPTED_EXTENSIONS, CERTIFICATE, CERTIFICATE_VERIFY, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:SERVER_HELLO, CHANGE_CIPHER_SPEC, ENCRYPTED_EXTENSIONS, CERTIFICATE, CERTIFICATE_VERIFY, FINISHED, 
+
+Send Action:
+	Messages:FINISHED, 
+]
+
+#################################
+Used Repititions
+
+1
+
+#################################
+Anaylsis Results
+
+
+Results over 1 repetitions for each handshake segment.
+Handshake Segment 0
+0 Min: 23.314959 ms
+0 Max: 23.314959 ms
+0 Average: 23.314959 ms
+
+Handshake Segment 1
+1 Min: 119.620583 ms
+1 Max: 119.620583 ms
+1 Average: 119.620583 ms
+
+Handshake Segment 2
+2 Min: 13.034166 ms
+2 Max: 13.034166 ms
+2 Average: 13.034166 ms
+
+
+
+##################################################################
+Detailled Measurement Results
+[[23314959], [119620583], [13034166]]

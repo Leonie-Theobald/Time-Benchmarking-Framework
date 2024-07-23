@@ -1,0 +1,150 @@
+TIME MEASUREMENT RESULTS
+2024-07-08_17-00-30-0000
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS12
+Default Selected Cipher Suite: OutboundConnection{ alias=null host=localhost port=4433 proxyDataHost=null proxyDataPort=null proxyControlHost=null proxyControlPort=null type=null firstTimeout=null timeout=null }
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:CHANGE_CIPHER_SPEC, FINISHED, 
+]
+
+#################################
+Used Repititions
+
+2
+
+#################################
+Results for each handshake segment.
+
+Handshake Segment 0
+
+ Min: 3.80425 ms
+ Max: 17.050833 ms
+ Average: 10.427541 ms
+
+ Median: 10.427541 ms
+
+ 25% Quantil: 3.80425 ms
+
+ 75% Quantil: 17.050833 ms
+
+ Std Deviation: 9.366748 ms
+
+Handshake Segment 1
+
+ Min: 8.65475 ms
+ Max: 21.007583 ms
+ Average: 14.831166 ms
+
+ Median: 14.831166 ms
+
+ 25% Quantil: 8.65475 ms
+
+ 75% Quantil: 21.007583 ms
+
+ Std Deviation: 8.734771 ms
+
+Handshake Segment 2
+
+ Min: 11.924542 ms
+ Max: 16.333083 ms
+ Average: 14.128812 ms
+
+ Median: 14.128812 ms
+
+ 25% Quantil: 11.924542 ms
+
+ 75% Quantil: 16.333083 ms
+
+ Std Deviation: 3.117309 ms
+
+Handshake Segment 3
+
+ Min: 10.034708 ms
+ Max: 27.033541 ms
+ Average: 18.534124 ms
+
+ Median: 18.534124 ms
+
+ 25% Quantil: 10.034708 ms
+
+ 75% Quantil: 27.033541 ms
+
+ Std Deviation: 12.01999 ms
+
+Handshake Segment 4
+
+ Min: 11.931208 ms
+ Max: 12.130709 ms
+ Average: 12.030958 ms
+
+ Median: 12.030958 ms
+
+ 25% Quantil: 11.931208 ms
+
+ 75% Quantil: 12.130709 ms
+
+ Std Deviation: 0.141068 ms
+
+
+
+##################################################################
+Detailed Measurement Results
+[[Ljava.lang.Long;@31c2affc

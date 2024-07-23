@@ -1,0 +1,160 @@
+TIME MEASUREMENT RESULTS
+2024-07-09_10-30-21-0030
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS12
+Cipher Suite: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+Sig and Hash Algo: [RSA_SHA384]
+EC Point Extension: false
+EC Extension: true
+Named Group: FFDHE3072
+Key Share: [FFDHE3072]
+OCSP: true
+Session Ticket Extension (TLS1.2): true
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:NEW_SESSION_TICKET, CHANGE_CIPHER_SPEC, FINISHED, 
+]
+
+#################################
+Used Repititions
+
+2
+
+#################################
+Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 3.678875 ms
+ Max: 17.836292 ms
+ Average: 10.757583 ms
+ Median: 10.757583 ms
+ 25% Quantil: 3.678875 ms
+ 75% Quantil: 17.836292 ms
+ Std Deviation: 10.010805 ms
+
+Handshake Segment 1
+ Min: 8.663666 ms
+ Max: 22.977041 ms
+ Average: 15.820353 ms
+ Median: 15.820353 ms
+ 25% Quantil: 8.663666 ms
+ 75% Quantil: 22.977041 ms
+ Std Deviation: 10.121084 ms
+
+Handshake Segment 2
+ Min: 12.018709 ms
+ Max: 17.747 ms
+ Average: 14.882854 ms
+ Median: 14.882854 ms
+ 25% Quantil: 12.018709 ms
+ 75% Quantil: 17.747 ms
+ Std Deviation: 4.050513 ms
+
+Handshake Segment 3
+ Min: 9.40675 ms
+ Max: 29.169333 ms
+ Average: 19.288041 ms
+ Median: 19.288041 ms
+ 25% Quantil: 9.40675 ms
+ 75% Quantil: 29.169333 ms
+ Std Deviation: 13.974256 ms
+
+Handshake Segment 4
+ Min: 12.222208 ms
+ Max: 14.390167 ms
+ Average: 13.306187 ms
+ Median: 13.306187 ms
+ 25% Quantil: 12.222208 ms
+ 75% Quantil: 14.390167 ms
+ Std Deviation: 1.532978 ms
+
+
+#################################
+Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration Average: 10.757583 ms
+ Duration Min: 0.746778 ms
+ Duration Max: 20.768388 ms
+
+Handshake Segment 1
+ Duration Average: 5.06277 ms
+ Duration Min: -15.069119 ms
+ Duration Max: 25.194659 ms
+
+Handshake Segment 2
+ Duration Average: -0.937499 ms
+ Duration Min: -15.109096 ms
+ Duration Max: 13.234098 ms
+
+Handshake Segment 3
+ Duration Average: 4.405187 ms
+ Duration Min: -13.619582 ms
+ Duration Max: 22.429956 ms
+
+Handshake Segment 4
+ Duration Average: -5.981854 ms
+ Duration Min: -21.489088 ms
+ Duration Max: 9.52538 ms
+
+
+##################################################################
+Detailed Measurement Results
+[[3678875, 17836292], [8663666, 22977041], [12018709, 17747000], [9406750, 29169333], [12222208, 14390167]]

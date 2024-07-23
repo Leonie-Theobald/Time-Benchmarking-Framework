@@ -1,0 +1,278 @@
+TIME MEASUREMENT RESULTS
+2024-07-10_13-31-52-0031
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS12
+Cipher Suite: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+Sig and Hash Algo: [ECDSA_SHA256]
+EC Point Extension: true
+EC Extension: true
+Named Group: SECP256R1
+Key Share: [SECP256R1]
+OCSP: true
+Session Ticket Extension (TLS1.2): false
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:UNKNOWN, CERTIFICATE, CERTIFICATE_STATUS, ECDHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:UNKNOWN, CERTIFICATE, CERTIFICATE_STATUS, ECDHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:ECDH_CLIENT_KEY_EXCHANGE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:UNKNOWN, CERTIFICATE, CERTIFICATE_STATUS, ECDHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:ECDH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:UNKNOWN, CERTIFICATE, CERTIFICATE_STATUS, ECDHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:ECDH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:Alert(FATAL,BAD_RECORD_MAC), 
+]
+
+#################################
+Used Repititions
+
+2
+
+##################################################################
+
+
+RAW RESULTS
+
+
+#################################
+Raw Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 1.705458 ms
+ Max: 16.605083 ms
+ Average: 9.15527 ms
+ Median: 9.15527 ms
+ 25% Quantil: 1.705458 ms
+ 75% Quantil: 16.605083 ms
+ Std Deviation: 10.535625 ms
+ Variant Coef: 115,077 %
+
+Handshake Segment 1
+ Min: 6.710917 ms
+ Max: 79.874833 ms
+ Average: 43.292875 ms
+ Median: 43.292875 ms
+ 25% Quantil: 6.710917 ms
+ 75% Quantil: 79.874833 ms
+ Std Deviation: 51.734701 ms
+ Variant Coef: 119,499 %
+
+Handshake Segment 2
+ Min: 7.299 ms
+ Max: 11.100708 ms
+ Average: 9.199854 ms
+ Median: 9.199854 ms
+ 25% Quantil: 7.299 ms
+ 75% Quantil: 11.100708 ms
+ Std Deviation: 2.688213 ms
+ Variant Coef: 29,220 %
+
+Handshake Segment 3
+ Min: 7.31975 ms
+ Max: 24.831708 ms
+ Average: 16.075729 ms
+ Median: 16.075729 ms
+ 25% Quantil: 7.31975 ms
+ 75% Quantil: 24.831708 ms
+ Std Deviation: 12.382824 ms
+ Variant Coef: 77,028 %
+
+Handshake Segment 4
+ Min: 6.281458 ms
+ Max: 6.4 ms
+ Average: 6.340729 ms
+ Median: 6.340729 ms
+ 25% Quantil: 6.281458 ms
+ 75% Quantil: 6.4 ms
+ Std Deviation: 0.083821 ms
+ Variant Coef: 1,322 %
+
+
+#################################
+Raw Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 9.15527 ms
+ Duration Min considering StdDev: -1.380355 ms
+ Duration Max considering StdDev: 19.690895 ms
+ Duration considering Min: 1.705458 ms
+
+Handshake Segment 1
+ Duration considering Average: 34.137605 ms
+ Duration Min considering StdDev: -28.132721 ms
+ Duration Max considering StdDev: 96.407931 ms
+ Duration considering Min: 5.005459 ms
+
+Handshake Segment 2
+ Duration considering Average: -34.093021 ms
+ Duration Min considering StdDev: -88.515935 ms
+ Duration Max considering StdDev: 20.329893 ms
+ Duration considering Min: 0.588083 ms
+
+Handshake Segment 3
+ Duration considering Average: 6.875875 ms
+ Duration Min considering StdDev: -8.195162 ms
+ Duration Max considering StdDev: 21.946912 ms
+ Duration considering Min: 0.02075 ms
+
+Handshake Segment 4
+ Duration considering Average: -9.735 ms
+ Duration Min considering StdDev: -22.201645 ms
+ Duration Max considering StdDev: 2.731645 ms
+ Duration considering Min: -1.038292 ms
+
+
+##################################################################
+
+
+CLEANED RESULTS (removed top 1% of longest durations)
+
+
+#################################
+Cleaned Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 1.705458 ms
+ Max: 16.605083 ms
+ Average: 9.15527 ms
+ Median: 9.15527 ms
+ 25% Quantil: 1.705458 ms
+ 75% Quantil: 16.605083 ms
+ Std Deviation: 10.535625 ms
+ Variant Coef: 115,077 %
+
+Handshake Segment 1
+ Min: 6.710917 ms
+ Max: 79.874833 ms
+ Average: 43.292875 ms
+ Median: 43.292875 ms
+ 25% Quantil: 6.710917 ms
+ 75% Quantil: 79.874833 ms
+ Std Deviation: 51.734701 ms
+ Variant Coef: 119,499 %
+
+Handshake Segment 2
+ Min: 7.299 ms
+ Max: 11.100708 ms
+ Average: 9.199854 ms
+ Median: 9.199854 ms
+ 25% Quantil: 7.299 ms
+ 75% Quantil: 11.100708 ms
+ Std Deviation: 2.688213 ms
+ Variant Coef: 29,220 %
+
+Handshake Segment 3
+ Min: 7.31975 ms
+ Max: 24.831708 ms
+ Average: 16.075729 ms
+ Median: 16.075729 ms
+ 25% Quantil: 7.31975 ms
+ 75% Quantil: 24.831708 ms
+ Std Deviation: 12.382824 ms
+ Variant Coef: 77,028 %
+
+Handshake Segment 4
+ Min: 6.281458 ms
+ Max: 6.4 ms
+ Average: 6.340729 ms
+ Median: 6.340729 ms
+ 25% Quantil: 6.281458 ms
+ 75% Quantil: 6.4 ms
+ Std Deviation: 0.083821 ms
+ Variant Coef: 1,322 %
+
+
+#################################
+Cleaned Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 9.15527 ms
+ Duration Min considering StdDev: -1.380355 ms
+ Duration Max considering StdDev: 19.690895 ms
+ Duration considering Min: 1.705458 ms
+
+Handshake Segment 1
+ Duration considering Average: 34.137605 ms
+ Duration Min considering StdDev: -28.132721 ms
+ Duration Max considering StdDev: 96.407931 ms
+ Duration considering Min: 5.005459 ms
+
+Handshake Segment 2
+ Duration considering Average: -34.093021 ms
+ Duration Min considering StdDev: -88.515935 ms
+ Duration Max considering StdDev: 20.329893 ms
+ Duration considering Min: 0.588083 ms
+
+Handshake Segment 3
+ Duration considering Average: 6.875875 ms
+ Duration Min considering StdDev: -8.195162 ms
+ Duration Max considering StdDev: 21.946912 ms
+ Duration considering Min: 0.02075 ms
+
+Handshake Segment 4
+ Duration considering Average: -9.735 ms
+ Duration Min considering StdDev: -22.201645 ms
+ Duration Max considering StdDev: 2.731645 ms
+ Duration considering Min: -1.038292 ms
+
+
+##################################################################
+Detailed Measurement Results
+
+
+#################################
+Raw Detailed Measurement Results
+[[1705458, 16605083], [6710917, 79874833], [7299000, 11100708], [7319750, 24831708], [6281458, 6400000]]
+
+#################################
+Cleaned Detailed Measurement Results
+[[1705458, 16605083], [6710917, 79874833], [7299000, 11100708], [7319750, 24831708], [6281458, 6400000]]

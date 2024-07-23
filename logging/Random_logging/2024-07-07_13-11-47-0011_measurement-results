@@ -1,0 +1,107 @@
+TIME MEASUREMENT RESULTS
+2024-07-07_13-11-47-0011
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS12
+Default Selected Cipher Suite: OutboundConnection{ alias=null host=localhost port=4433 proxyDataHost=null proxyDataPort=null proxyControlHost=null proxyControlPort=null type=null firstTimeout=null timeout=null }
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual: (no messages set)
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual: (no messages set)
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual: (no messages set)
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual: (no messages set)
+
+Send Dynamic Client Key Exchange Action:
+	Messages:RSA_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual: (no messages set)
+]
+
+#################################
+Used Repititions
+
+1
+
+#################################
+Anaylsis Results
+
+
+Results over 1 repetitions for each handshake segment.
+Handshake Segment 0
+0 Min: 14.621083 ms
+0 Max: 14.621083 ms
+0 Average: 14.621083 ms
+
+Handshake Segment 1
+1 Min: 2014.00425 ms
+1 Max: 2014.00425 ms
+1 Average: 2014.00425 ms
+
+Handshake Segment 2
+2 Min: 2025.017583 ms
+2 Max: 2025.017583 ms
+2 Average: 2025.017583 ms
+
+Handshake Segment 3
+3 Min: 2047.646792 ms
+3 Max: 2047.646792 ms
+3 Average: 2047.646792 ms
+
+Handshake Segment 4
+4 Min: 4012.437708 ms
+4 Max: 4012.437708 ms
+4 Average: 4012.437708 ms
+
+
+
+##################################################################
+Detailled Measurement Results
+[[14621083], [2014004250], [2025017583], [2047646792], [4012437708]]

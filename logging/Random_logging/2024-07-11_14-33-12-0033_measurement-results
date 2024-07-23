@@ -1,0 +1,128 @@
+TIME MEASUREMENT RESULTS
+2024-07-11_14-33-12-0033
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS13
+Cipher Suite: TLS_AES_256_GCM_SHA384
+Sig and Hash Algo: [ECDSA_SHA384]
+EC Point Extension: true
+EC Extension: true
+Named Group: ECDH_X25519
+Key Share: [ECDH_X25519]
+OCSP: false
+PSK Extension (TLS1.3): true
+PSK Extension (TLS1.3): true
+PSK Exchange Modes (TLS1.3): [PSK_KE]
+Early Data Extension (TLS1.3): false
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+Receive Action:
+	Expected:SERVER_HELLO, CHANGE_CIPHER_SPEC, ENCRYPTED_EXTENSIONS, CERTIFICATE, CERTIFICATE_VERIFY, FINISHED, 
+	Actual:SERVER_HELLO, CHANGE_CIPHER_SPEC, ENCRYPTED_EXTENSIONS, CERTIFICATE, CERTIFICATE_VERIFY, FINISHED, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+Receive Action:
+	Expected:NEW_SESSION_TICKET, 
+	Actual:NEW_SESSION_TICKET, 
+
+de.rub.nds.tlsattacker.core.workflow.action.ResetConnectionAction@e46814ec
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+Receive Action:
+	Expected:SERVER_HELLO, CHANGE_CIPHER_SPEC, ENCRYPTED_EXTENSIONS, FINISHED, 
+	Actual:SERVER_HELLO, CHANGE_CIPHER_SPEC, ENCRYPTED_EXTENSIONS, CERTIFICATE, CERTIFICATE_VERIFY, FINISHED, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+]
+
+#################################
+Used Repititions
+
+2
+
+##################################################################
+
+
+RAW RESULTS
+
+
+#################################
+Raw Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 1068.857042 ms
+ Max: 1225.326458 ms
+ Average: 1147.09175 ms
+ Median: 1147.09175 ms
+ 25% Quantil: 1068.857042 ms
+ 75% Quantil: 1225.326458 ms
+ Std Deviation: 110.640585 ms
+ Variant Coef: 9,645 %
+
+
+#################################
+Raw Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 1147.09175 ms
+ Duration Min considering StdDev: 1036.451165 ms
+ Duration Max considering StdDev: 1257.732335 ms
+ Duration considering Min: 1068.857042 ms
+
+
+##################################################################
+
+
+CLEANED RESULTS (removed top 1% of longest durations)
+
+
+#################################
+Cleaned Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 1068.857042 ms
+ Max: 1225.326458 ms
+ Average: 1147.09175 ms
+ Median: 1147.09175 ms
+ 25% Quantil: 1068.857042 ms
+ 75% Quantil: 1225.326458 ms
+ Std Deviation: 110.640585 ms
+ Variant Coef: 9,645 %
+
+
+#################################
+Cleaned Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 1147.09175 ms
+ Duration Min considering StdDev: 1036.451165 ms
+ Duration Max considering StdDev: 1257.732335 ms
+ Duration considering Min: 1068.857042 ms
+
+
+##################################################################
+Detailed Measurement Results
+
+
+#################################
+Raw Detailed Measurement Results
+[[1068857042, 1225326458]]
+
+#################################
+Cleaned Detailed Measurement Results
+[[1068857042, 1225326458]]

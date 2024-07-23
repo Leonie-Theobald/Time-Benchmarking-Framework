@@ -1,0 +1,268 @@
+TIME MEASUREMENT RESULTS
+2024-07-09_19-11-11-0011
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS12
+Cipher Suite: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+Sig and Hash Algo: [RSA_SHA384]
+EC Point Extension: false
+EC Extension: true
+Named Group: FFDHE8192
+Key Share: [FFDHE8192]
+OCSP: false
+Session Ticket Extension (TLS1.2): false
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:SERVER_HELLO_DONE
+	Actual:SERVER_HELLO, CERTIFICATE, DHE_SERVER_KEY_EXCHANGE, SERVER_HELLO_DONE, 
+
+Send Dynamic Client Key Exchange Action:
+	Messages:DH_CLIENT_KEY_EXCHANGE, 
+
+Send Action:
+	Messages:CHANGE_CIPHER_SPEC, FINISHED, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:CHANGE_CIPHER_SPEC, FINISHED, 
+]
+
+#################################
+Used Repititions
+
+2
+
+##################################################################
+
+
+RAW RESULTS
+
+
+#################################
+Raw Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 3.587375 ms
+ Max: 17.928042 ms
+ Average: 10.757708 ms
+ Median: 10.757708 ms
+ 25% Quantil: 3.587375 ms
+ 75% Quantil: 17.928042 ms
+ Std Deviation: 10.140382 ms
+ Variant Coef: 94,262 %
+
+Handshake Segment 1
+ Min: 8.288458 ms
+ Max: 22.082334 ms
+ Average: 15.185396 ms
+ Median: 15.185396 ms
+ 25% Quantil: 8.288458 ms
+ 75% Quantil: 22.082334 ms
+ Std Deviation: 9.753743 ms
+ Variant Coef: 64,231 %
+
+Handshake Segment 2
+ Min: 11.477834 ms
+ Max: 16.160667 ms
+ Average: 13.81925 ms
+ Median: 13.81925 ms
+ 25% Quantil: 11.477834 ms
+ 75% Quantil: 16.160667 ms
+ Std Deviation: 3.311262 ms
+ Variant Coef: 23,961 %
+
+Handshake Segment 3
+ Min: 9.753125 ms
+ Max: 28.057458 ms
+ Average: 18.905291 ms
+ Median: 18.905291 ms
+ 25% Quantil: 9.753125 ms
+ 75% Quantil: 28.057458 ms
+ Std Deviation: 12.943117 ms
+ Variant Coef: 68,463 %
+
+Handshake Segment 4
+ Min: 10.441417 ms
+ Max: 11.197375 ms
+ Average: 10.819396 ms
+ Median: 10.819396 ms
+ 25% Quantil: 10.441417 ms
+ 75% Quantil: 11.197375 ms
+ Std Deviation: 0.534543 ms
+ Variant Coef: 4,941 %
+
+
+#################################
+Raw Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration Average: 10.757708 ms
+ Duration Min: 0.617326 ms
+ Duration Max: 20.89809 ms
+
+Handshake Segment 1
+ Duration Average: 4.427688 ms
+ Duration Min: -15.466437 ms
+ Duration Max: 24.321813 ms
+
+Handshake Segment 2
+ Duration Average: -1.366146 ms
+ Duration Min: -14.431151 ms
+ Duration Max: 11.698859 ms
+
+Handshake Segment 3
+ Duration Average: 5.086041 ms
+ Duration Min: -11.168338 ms
+ Duration Max: 21.34042 ms
+
+Handshake Segment 4
+ Duration Average: -8.085895 ms
+ Duration Min: -21.563555 ms
+ Duration Max: 5.391765 ms
+
+
+##################################################################
+
+
+CLEANED RESULTS (removed top 1% of longest durations)
+
+
+#################################
+Cleaned Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Min: 3.587375 ms
+ Max: 17.928042 ms
+ Average: 10.757708 ms
+ Median: 10.757708 ms
+ 25% Quantil: 3.587375 ms
+ 75% Quantil: 17.928042 ms
+ Std Deviation: 10.140382 ms
+ Variant Coef: 94,262 %
+
+Handshake Segment 1
+ Min: 8.288458 ms
+ Max: 22.082334 ms
+ Average: 15.185396 ms
+ Median: 15.185396 ms
+ 25% Quantil: 8.288458 ms
+ 75% Quantil: 22.082334 ms
+ Std Deviation: 9.753743 ms
+ Variant Coef: 64,231 %
+
+Handshake Segment 2
+ Min: 11.477834 ms
+ Max: 16.160667 ms
+ Average: 13.81925 ms
+ Median: 13.81925 ms
+ 25% Quantil: 11.477834 ms
+ 75% Quantil: 16.160667 ms
+ Std Deviation: 3.311262 ms
+ Variant Coef: 23,961 %
+
+Handshake Segment 3
+ Min: 9.753125 ms
+ Max: 28.057458 ms
+ Average: 18.905291 ms
+ Median: 18.905291 ms
+ 25% Quantil: 9.753125 ms
+ 75% Quantil: 28.057458 ms
+ Std Deviation: 12.943117 ms
+ Variant Coef: 68,463 %
+
+Handshake Segment 4
+ Min: 10.441417 ms
+ Max: 11.197375 ms
+ Average: 10.819396 ms
+ Median: 10.819396 ms
+ 25% Quantil: 10.441417 ms
+ 75% Quantil: 11.197375 ms
+ Std Deviation: 0.534543 ms
+ Variant Coef: 4,941 %
+
+
+#################################
+Cleaned Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration Average: 10.757708 ms
+ Duration Min: 0.617326 ms
+ Duration Max: 20.89809 ms
+
+Handshake Segment 1
+ Duration Average: 4.427688 ms
+ Duration Min: -15.466437 ms
+ Duration Max: 24.321813 ms
+
+Handshake Segment 2
+ Duration Average: -1.366146 ms
+ Duration Min: -14.431151 ms
+ Duration Max: 11.698859 ms
+
+Handshake Segment 3
+ Duration Average: 5.086041 ms
+ Duration Min: -11.168338 ms
+ Duration Max: 21.34042 ms
+
+Handshake Segment 4
+ Duration Average: -8.085895 ms
+ Duration Min: -21.563555 ms
+ Duration Max: 5.391765 ms
+
+
+##################################################################
+Detailed Measurement Results
+
+
+#################################
+Raw Detailed Measurement Results
+[[3587375, 17928042], [8288458, 22082334], [11477834, 16160667], [9753125, 28057458], [10441417, 11197375]]
+
+#################################
+Cleaned Detailed Measurement Results
+[[3587375, 17928042], [8288458, 22082334], [11477834, 16160667], [9753125, 28057458], [10441417, 11197375]]
