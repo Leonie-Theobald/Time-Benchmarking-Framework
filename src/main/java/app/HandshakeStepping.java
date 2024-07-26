@@ -7,14 +7,17 @@ import app.TimeMeasurement.StatisticResult;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.AliasedConnection;
 import de.rub.nds.tlsattacker.core.constants.HandshakeMessageType;
+import de.rub.nds.tlsattacker.core.protocol.message.ApplicationMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.CertificateMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.CertificateVerifyMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ChangeCipherSpecMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ClientHelloMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.EndOfEarlyDataMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.HelloMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.NewSessionTicketMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ServerHelloDoneMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.extension.EarlyDataExtensionMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.PreSharedKeyExtensionMessage;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 import static de.rub.nds.tlsattacker.core.workflow.WorkflowTraceUtil.getFirstSendMessage;
@@ -35,6 +38,7 @@ public class HandshakeStepping {
         TLS12_STATIC_WITH_CLIENTAUTH_WITH_RESUMPTION,
         TLS13_WITHOUT_CLIENTAUTH,
         TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
+        TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT,
         TLS13_WITH_CLIENTAUTH,
         TLS13_WITH_CLIENTAUTH_WITH_RESUMPTION,
     }
@@ -358,6 +362,57 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        return segmentedHandshake;
+
+                    case TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT:
+                        System.out.println(handshakeType + " is supported.");
+
+                        // First handshake
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        // remove psk extension which only needed in second handshake flow
+                        HelloMessage<?> initialHello3 = (HelloMessage) getFirstSendMessage(
+                            HandshakeMessageType.CLIENT_HELLO,
+                            trace);
+                        PreSharedKeyExtensionMessage pskExtension3 = initialHello3.getExtension(PreSharedKeyExtensionMessage.class);
+                        EarlyDataExtensionMessage earlyDataExtension = initialHello3.getExtension(EarlyDataExtensionMessage.class);
+                        initialHello3.getExtensions().remove(pskExtension3);
+                        initialHello3.getExtensions().remove(earlyDataExtension);
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        // TODO: RFC states that SESSION_TICKET comes before FINISHED
+                        // Figure 1 in https://datatracker.ietf.org/doc/html/rfc5077
+                        trace.addTlsAction(new ReceiveTillAction(new NewSessionTicketMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        
+
+                        // Reset connection and start with session resumption
+                        trace.addTlsAction(new ResetConnectionAction());
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        // Second Handshake
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        ApplicationMessage earlyDataMessage = new ApplicationMessage();
+                        earlyDataMessage.setDataConfig(config.getEarlyData());
+                        trace.addTlsAction(new SendAction(earlyDataMessage));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new SendAction(new EndOfEarlyDataMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendAction(new FinishedMessage()));

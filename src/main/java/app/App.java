@@ -146,7 +146,7 @@ public class App {
                 null,
                 new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
                 BulkAlgo.AES_256_GCM_SHA384,
-                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);add(Extension.ZERO_RTT);}});
                 //new Vector<>());
 
         OutboundConnection outboundCon = new OutboundConnection();
@@ -154,7 +154,7 @@ public class App {
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfig, outboundCon);
         Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(null, 1, myConfig, segmentedHandshake, false, 1, 3, 1.5);
 
         //System.out.println(resultsMeasurement);
