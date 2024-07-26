@@ -1,0 +1,367 @@
+TIME MEASUREMENT RESULTS
+2024-07-24_17-58-00-0058
+
+
+#################################
+Used Configuration
+
+Config
+
+Highest TLS Version: TLS13
+Cipher Suite: TLS_AES_256_GCM_SHA384
+Sig and Hash Algo: [ECDSA_SHA384]
+EC Point Extension: false
+EC Extension: true
+Named Group: FFDHE6144
+Key Share: [FFDHE6144]
+OCSP: false
+Session Ticket Extension: false
+PSK Extension (TLS1.3): false
+PSK Extension (TLS1.3): false
+Early Data Extension (TLS1.3): false
+
+#################################
+Used Handshake Segments
+
+[Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:SERVER_HELLO, CHANGE_CIPHER_SPEC, ENCRYPTED_EXTENSIONS, CERTIFICATE, CERTIFICATE_VERIFY, FINISHED, 
+, Trace Actions:
+Send Action:
+	Messages:CLIENT_HELLO, 
+
+WaitTillReceive Action:
+Waiting till:FINISHED
+	Actual:SERVER_HELLO, CHANGE_CIPHER_SPEC, ENCRYPTED_EXTENSIONS, CERTIFICATE, CERTIFICATE_VERIFY, FINISHED, 
+
+Send Action:
+	Messages:FINISHED, 
+]
+
+#################################
+Used Repititions
+
+2
+
+##################################################################
+
+
+RAW RESULTS
+
+
+#################################
+Raw Results: Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Elements: 2 
+ Min: 13.136334 ms
+ Max: 33.61925 ms
+ Average: 23.377792 ms
+ Median: 23.377792 ms
+ 25% Quantil: 13.136334 ms
+ 75% Quantil: 33.61925 ms
+ Std Deviation: 14.483608802074432 ms
+ Variant Coef: 61,955 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+Handshake Segment 1
+ Elements: 2 
+ Min: 60.329083 ms
+ Max: 198.318875 ms
+ Average: 129.323979 ms
+ Median: 129.323979 ms
+ 25% Quantil: 60.329083 ms
+ 75% Quantil: 198.318875 ms
+ Std Deviation: 97.57351765772121 ms
+ Variant Coef: 75,449 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+Handshake Segment 2
+ Elements: 2 
+ Min: 57.799916 ms
+ Max: 59.656459 ms
+ Average: 58.7281875 ms
+ Median: 58.7281875 ms
+ 25% Quantil: 57.799916 ms
+ 75% Quantil: 59.656459 ms
+ Std Deviation: 1.3127741448644163 ms
+ Variant Coef: 2,235 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+
+#################################
+Raw Results: Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 23.377792 ms
+ Duration considering Median: 23.377792 ms
+ Duration Min considering StdDev: 8.894183197925567 ms
+ Duration Max considering StdDev: 37.861400802074435 ms
+ Duration considering Min: 13.136334 ms
+
+Handshake Segment 1
+ Duration considering Average: 105.946187 ms
+ Duration considering Median: 105.946187 ms
+ Duration Min considering StdDev: -6.110939459795639 ms
+ Duration Max considering StdDev: 218.00331345979566 ms
+ Duration considering Min: 47.192749 ms
+
+Handshake Segment 2
+ Duration considering Average: -70.5957915 ms
+ Duration considering Median: -70.5957915 ms
+ Duration Min considering StdDev: -169.48208330258564 ms
+ Duration Max considering StdDev: 28.290500302585624 ms
+ Duration considering Min: -2.529167 ms
+
+
+##################################################################
+
+
+CLEANED RESULTS (by removing top 1% of longest durations)
+
+
+#################################
+Cleaned Results (top removal): Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Elements: 2 
+ Min: 13.136334 ms
+ Max: 33.61925 ms
+ Average: 23.377792 ms
+ Median: 23.377792 ms
+ 25% Quantil: 13.136334 ms
+ 75% Quantil: 33.61925 ms
+ Std Deviation: 14.483608802074432 ms
+ Variant Coef: 61,955 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+Handshake Segment 1
+ Elements: 2 
+ Min: 60.329083 ms
+ Max: 198.318875 ms
+ Average: 129.323979 ms
+ Median: 129.323979 ms
+ 25% Quantil: 60.329083 ms
+ 75% Quantil: 198.318875 ms
+ Std Deviation: 97.57351765772121 ms
+ Variant Coef: 75,449 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+Handshake Segment 2
+ Elements: 2 
+ Min: 57.799916 ms
+ Max: 59.656459 ms
+ Average: 58.7281875 ms
+ Median: 58.7281875 ms
+ 25% Quantil: 57.799916 ms
+ 75% Quantil: 59.656459 ms
+ Std Deviation: 1.3127741448644163 ms
+ Variant Coef: 2,235 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+
+#################################
+Cleaned Results (top removal): Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 23.377792 ms
+ Duration considering Median: 23.377792 ms
+ Duration Min considering StdDev: 8.894183197925567 ms
+ Duration Max considering StdDev: 37.861400802074435 ms
+ Duration considering Min: 13.136334 ms
+
+Handshake Segment 1
+ Duration considering Average: 105.946187 ms
+ Duration considering Median: 105.946187 ms
+ Duration Min considering StdDev: -6.110939459795639 ms
+ Duration Max considering StdDev: 218.00331345979566 ms
+ Duration considering Min: 47.192749 ms
+
+Handshake Segment 2
+ Duration considering Average: -70.5957915 ms
+ Duration considering Median: -70.5957915 ms
+ Duration Min considering StdDev: -169.48208330258564 ms
+ Duration Max considering StdDev: 28.290500302585624 ms
+ Duration considering Min: -2.529167 ms
+
+
+##################################################################
+
+
+CLEANED RESULTS (by removing everything with z-score above/below +/-3)
+
+
+#################################
+Cleaned Results (deviation): Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Elements: 2 
+ Min: 13.136334 ms
+ Max: 33.61925 ms
+ Average: 23.377792 ms
+ Median: 23.377792 ms
+ 25% Quantil: 13.136334 ms
+ 75% Quantil: 33.61925 ms
+ Std Deviation: 14.483608802074432 ms
+ Variant Coef: 61,955 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+Handshake Segment 1
+ Elements: 2 
+ Min: 60.329083 ms
+ Max: 198.318875 ms
+ Average: 129.323979 ms
+ Median: 129.323979 ms
+ 25% Quantil: 60.329083 ms
+ 75% Quantil: 198.318875 ms
+ Std Deviation: 97.57351765772121 ms
+ Variant Coef: 75,449 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+Handshake Segment 2
+ Elements: 2 
+ Min: 57.799916 ms
+ Max: 59.656459 ms
+ Average: 58.7281875 ms
+ Median: 58.7281875 ms
+ 25% Quantil: 57.799916 ms
+ 75% Quantil: 59.656459 ms
+ Std Deviation: 1.3127741448644163 ms
+ Variant Coef: 2,235 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+
+#################################
+Cleaned Results (deviation): Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 23.377792 ms
+ Duration considering Median: 23.377792 ms
+ Duration Min considering StdDev: 8.894183197925567 ms
+ Duration Max considering StdDev: 37.861400802074435 ms
+ Duration considering Min: 13.136334 ms
+
+Handshake Segment 1
+ Duration considering Average: 105.946187 ms
+ Duration considering Median: 105.946187 ms
+ Duration Min considering StdDev: -6.110939459795639 ms
+ Duration Max considering StdDev: 218.00331345979566 ms
+ Duration considering Min: 47.192749 ms
+
+Handshake Segment 2
+ Duration considering Average: -70.5957915 ms
+ Duration considering Median: -70.5957915 ms
+ Duration Min considering StdDev: -169.48208330258564 ms
+ Duration Max considering StdDev: 28.290500302585624 ms
+ Duration considering Min: -2.529167 ms
+
+
+##################################################################
+
+
+CLEANED RESULTS (by removing everything outside (Q_25 - 1.5*IQR, Q_75 + 1.5*IQR)
+
+
+#################################
+Cleaned Results (IQR): Complete duration to the end of each handshake segment.
+
+Handshake Segment 0
+ Elements: 2 
+ Min: 13.136334 ms
+ Max: 33.61925 ms
+ Average: 23.377792 ms
+ Median: 23.377792 ms
+ 25% Quantil: 13.136334 ms
+ 75% Quantil: 33.61925 ms
+ Std Deviation: 14.483608802074432 ms
+ Variant Coef: 61,955 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+Handshake Segment 1
+ Elements: 2 
+ Min: 60.329083 ms
+ Max: 198.318875 ms
+ Average: 129.323979 ms
+ Median: 129.323979 ms
+ 25% Quantil: 60.329083 ms
+ 75% Quantil: 198.318875 ms
+ Std Deviation: 97.57351765772121 ms
+ Variant Coef: 75,449 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+Handshake Segment 2
+ Elements: 2 
+ Min: 57.799916 ms
+ Max: 59.656459 ms
+ Average: 58.7281875 ms
+ Median: 58.7281875 ms
+ 25% Quantil: 57.799916 ms
+ 75% Quantil: 59.656459 ms
+ Std Deviation: 1.3127741448644163 ms
+ Variant Coef: 2,235 %
+ Skewness: NaN
+ Pearson's Skewness: 0,000
+
+
+#################################
+Cleaned Results (IQR): Actual duration for each handshake segment.
+
+Handshake Segment 0
+ Duration considering Average: 23.377792 ms
+ Duration considering Median: 23.377792 ms
+ Duration Min considering StdDev: 8.894183197925567 ms
+ Duration Max considering StdDev: 37.861400802074435 ms
+ Duration considering Min: 13.136334 ms
+
+Handshake Segment 1
+ Duration considering Average: 105.946187 ms
+ Duration considering Median: 105.946187 ms
+ Duration Min considering StdDev: -6.110939459795639 ms
+ Duration Max considering StdDev: 218.00331345979566 ms
+ Duration considering Min: 47.192749 ms
+
+Handshake Segment 2
+ Duration considering Average: -70.5957915 ms
+ Duration considering Median: -70.5957915 ms
+ Duration Min considering StdDev: -169.48208330258564 ms
+ Duration Max considering StdDev: 28.290500302585624 ms
+ Duration considering Min: -2.529167 ms
+
+
+##################################################################
+Detailed Measurement Results
+
+
+#################################
+Raw Detailed Measurement Results
+[[13136334, 33619250], [60329083, 198318875], [57799916, 59656459]]
+
+#################################
+Top Cleaned Detailed Measurement Results
+[[13136334, 33619250], [60329083, 198318875], [57799916, 59656459]]
+
+#################################
+Deviation Cleaned Detailed Measurement Results
+[[13136334, 33619250], [60329083, 198318875], [57799916, 59656459]]
+
+#################################
+IQR Cleaned Detailed Measurement Results
+[[13136334, 33619250], [60329083, 198318875], [57799916, 59656459]]
