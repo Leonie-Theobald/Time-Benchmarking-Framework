@@ -23,6 +23,7 @@ public class ConfigurationTypes {
 
     public enum KeyExchange {
         ECDHE,
+        ECDH,
         DHE,
         DH,
         RSA,
@@ -95,7 +96,12 @@ public class ConfigurationTypes {
         AES_128_GCM_SHA256,
         AES_256_GCM_SHA384,
         AES_128_CBC_SHA256,
+        AES_256_CBC_SHA256,
         AES_256_CBC_SHA384,
+        AES_128_CCM,
+        AES_256_CCM,
+        CHACHA20_POLY1305_SHA256,
+        AES_128_CCM_SHA256
     }
 
     public enum SignatureScheme {
@@ -103,6 +109,7 @@ public class ConfigurationTypes {
         DSA_SHA384,
         ECDSA_SHA256,
         ECDSA_SHA384,
+        ECDSA_SHA512,
         RSA_SHA256,
         RSA_SHA384,
     }
