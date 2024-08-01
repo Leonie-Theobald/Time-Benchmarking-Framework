@@ -17,6 +17,8 @@ import app.HandshakeStepping.HandshakeType;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.OutboundConnection;
 import de.rub.nds.tlsattacker.core.exceptions.WorkflowExecutionException;
+import de.rub.nds.tlsattacker.core.protocol.message.EndOfEarlyDataMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
 import de.rub.nds.tlsattacker.core.state.State;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutor;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutorFactory;
@@ -142,20 +144,20 @@ public class App {
                 TlsVersion.TLS13,
                 KeyExchange.ECDHE,
                 KeyExchangeGroup.SECP384R1,
-                ServerAuth.ECDSA,
+                ServerAuth.RSA,
                 null,
-                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
                 BulkAlgo.AES_256_GCM_SHA384,
-                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);add(Extension.ZERO_RTT);}});
-                //new Vector<>());
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
 
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(null, 1, myConfig, segmentedHandshake, false, 1, 3, 1.5);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement("D52", 2, myConfig, segmentedHandshake, false, 1, 3, 1.5);
 
         //System.out.println(resultsMeasurement);
 
