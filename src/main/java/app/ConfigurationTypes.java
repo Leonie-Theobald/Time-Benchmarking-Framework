@@ -112,5 +112,7 @@ public class ConfigurationTypes {
         ECDSA_SHA512,
         RSA_SHA256,
         RSA_SHA384,
+        RSA_PSS_RSAE_SHA384,
+        RSA_PSS_PSS_SHA384,
     }
 }

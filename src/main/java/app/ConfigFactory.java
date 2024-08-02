@@ -104,12 +104,17 @@ public class ConfigFactory {
                 case RSA_SHA384:
                     sigAndHashAlgos.add(SignatureAndHashAlgorithm.RSA_SHA384);
                     break;
+                case RSA_PSS_RSAE_SHA384:
+                    sigAndHashAlgos.add(SignatureAndHashAlgorithm.RSA_PSS_RSAE_SHA384);
+                    break;
+                case RSA_PSS_PSS_SHA384:
+                    sigAndHashAlgos.add(SignatureAndHashAlgorithm.RSA_PSS_PSS_SHA384);
+                    break;
                 default:
                     throw new Error("SignatureAndHashAlgorithm Scheme is not supported.");
             }
         }
         myConfig.setDefaultClientSupportedSignatureAndHashAlgorithms(sigAndHashAlgos);
-        
 
         // set cipher suite
         CipherSuite cipherSuite = matchCipher(version, keyExchange, serverAuth, bulkAlgo);
