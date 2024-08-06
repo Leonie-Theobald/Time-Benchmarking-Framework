@@ -413,7 +413,7 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendAction(new EndOfEarlyDataMessage()));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
