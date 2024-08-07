@@ -57,294 +57,265 @@ public class HandshakeActions {
                         System.out.println(handshakeType + " is supported.");
 
                         trace.addTlsAction(new SetMeasuringActiveAction(true));
-
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new LogLastMeasurementAction());
                         
                         trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-                        //trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
                         
                         trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-
                         trace.addTlsAction(new LogLastMeasurementAction());
 
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
                         this.trace = trace;
                         this.serverCntActions = 2;
                         break;
-/*
+
                     case TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
                         // First handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
                         
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
                         
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
                         // Reset connection
                         trace.addTlsAction(new ResetConnectionAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-
-                        // Second Handshake
-                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
-                        return segmentedHandshake;
+                        // Second Handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        
+                        this.trace = trace;
+                        this.serverCntActions = 3;
+                        break;
 
                     case TLS12_EPHEMERAL_WITH_CLIENTAUTH:
                         System.out.println(handshakeType + " is supported.");
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(certMsg));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
-                        return segmentedHandshake;
+                        this.trace = trace;
+                        this.serverCntActions = 2;
+                        break;
 
                     case TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
                         // First handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(certMsg));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
                         
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
                         // Reset connection
                         trace.addTlsAction(new ResetConnectionAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
 
                         // Second Handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
                         
-                        return segmentedHandshake;
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        
+                        this.trace = trace;
+                        this.serverCntActions = 3;
+                        break;
                     
                     case TLS12_STATIC_WITHOUT_CLIENTAUTH:
                         System.out.println(handshakeType + " is supported.");
-
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
                         
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
                         
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
-                        return segmentedHandshake;
+                        this.trace = trace;
+                        this.serverCntActions = 2;
+                        break;
 
                     case TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
                         // First handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
                         
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
                         
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
                         // Reset connection
                         trace.addTlsAction(new ResetConnectionAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-
+                        
                         // Second Handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
                         
-                        return segmentedHandshake;
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        
+                        this.trace = trace;
+                        this.serverCntActions = 3;
+                        break;
 
                     case TLS12_STATIC_WITH_CLIENTAUTH:
                         System.out.println(handshakeType + " is supported.");
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(certMsg));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
                         
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
-                        return segmentedHandshake;
+                        this.trace = trace;
+                        this.serverCntActions = 2;
+                        break;
 
                     case TLS12_STATIC_WITH_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
                         // First handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(certMsg));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
                         
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
                         // Reset connection
                         trace.addTlsAction(new ResetConnectionAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
 
                         // Second Handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
                         
-                        return segmentedHandshake;
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        
+                        this.trace = trace;
+                        this.serverCntActions = 3;
+                        break;
                             
                     case TLS13_WITHOUT_CLIENTAUTH:
                         System.out.println(handshakeType + " is supported.");
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-                        return segmentedHandshake;
+                        
+                        this.trace = trace;
+                        this.serverCntActions = 1;
+                        break;
 
                     case TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
-                        // First handshake
+                        // first handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
                         // remove psk extension which only needed in second handshake flow
                         HelloMessage<?> initialHello = (HelloMessage) getFirstSendMessage(
@@ -352,41 +323,36 @@ public class HandshakeActions {
                             trace);
                         PreSharedKeyExtensionMessage pskExtension = initialHello.getExtension(PreSharedKeyExtensionMessage.class);
                         initialHello.getExtensions().remove(pskExtension);
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         // TODO: RFC states that SESSION_TICKET comes before FINISHED
                         // Figure 1 in https://datatracker.ietf.org/doc/html/rfc5077
                         trace.addTlsAction(new ReceiveTillAction(new NewSessionTicketMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
                         // Reset connection and start with session resumption
                         trace.addTlsAction(new ResetConnectionAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
 
                         // Second Handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
-                        return segmentedHandshake;
+                        this.trace = trace;
+                        this.serverCntActions = 3;
+                        break;
 
                     case TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT:
                         System.out.println(handshakeType + " is supported.");
 
-                        // First handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
                         // remove psk extension which only needed in second handshake flow
                         HelloMessage<?> initialHello3 = (HelloMessage) getFirstSendMessage(
@@ -396,70 +362,61 @@ public class HandshakeActions {
                         EarlyDataExtensionMessage earlyDataExtension = initialHello3.getExtension(EarlyDataExtensionMessage.class);
                         initialHello3.getExtensions().remove(pskExtension3);
                         initialHello3.getExtensions().remove(earlyDataExtension);
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         // TODO: RFC states that SESSION_TICKET comes before FINISHED
                         // Figure 1 in https://datatracker.ietf.org/doc/html/rfc5077
                         trace.addTlsAction(new ReceiveTillAction(new NewSessionTicketMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
                         // Reset connection and start with session resumption
                         trace.addTlsAction(new ResetConnectionAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         // Second Handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         ApplicationMessage earlyDataMessage = new ApplicationMessage();
                         earlyDataMessage.setDataConfig(config.getEarlyData());
                         trace.addTlsAction(new SendAction(earlyDataMessage));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
-                        trace.addTlsAction(new SendAction(new EndOfEarlyDataMessage()));
-                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
-
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
-                        return segmentedHandshake;
+                        this.trace = trace;
+                        this.serverCntActions = 3;
+                        break;
 
                     case TLS13_WITH_CLIENTAUTH:
                         System.out.println(handshakeType + " is supported.");
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
                         trace.addTlsAction(new SendAction(certMsg));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
-                        return segmentedHandshake;
+                        
+                        this.trace = trace;
+                        this.serverCntActions = 1;
+                        break;
 
                     case TLS13_WITH_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
                         // First handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
                         // remove psk extension which only needed in second handshake flow
                         HelloMessage<?> initialHello2 = (HelloMessage) getFirstSendMessage(
@@ -467,45 +424,38 @@ public class HandshakeActions {
                             trace);
                         PreSharedKeyExtensionMessage pskExtension2 = initialHello2.getExtension(PreSharedKeyExtensionMessage.class);
                         initialHello2.getExtensions().remove(pskExtension2);
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
                         trace.addTlsAction(new SendAction(certMsg));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         // TODO: RFC states that SESSION_TICKET comes before FINISHED
                         // Figure 1 in https://datatracker.ietf.org/doc/html/rfc5077
                         trace.addTlsAction(new ReceiveTillAction(new NewSessionTicketMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
                         // Reset connection and start with session resumption
                         trace.addTlsAction(new ResetConnectionAction());
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
 
                         // Second Handshake
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new LogLastMeasurementAction());
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
-                        return segmentedHandshake;
- */                                            
+                        this.trace = trace;
+                        this.serverCntActions = 3;
+                        break;
+ 
                     default:
                         System.out.println(handshakeType + " is NOT supported.");
                         //return segmentedHandshake;
