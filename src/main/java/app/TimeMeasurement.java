@@ -21,13 +21,15 @@ public class TimeMeasurement {
         String measurementDefinition,
         int repetition,
         Config config,
-        WorkflowTrace handshakeTrace,
-        int totalCntServerActions,
+        HandshakeActions handshakeActions,
         Boolean shouldDocument,
         int cleanTopOutlier,
         int cleanDeviationOutlier,
         double cleanIqrOutlier
     ) {
+        int totalCntServerActions = handshakeActions.getCntServerActions();
+        WorkflowTrace handshakeTrace = handshakeActions.getTrace();
+
         Long[][] durationsForServerActions = new Long[totalCntServerActions][repetition];
        
         // run repeatedly through handshake

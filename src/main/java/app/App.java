@@ -16,7 +16,7 @@ import app.ConfigurationTypes.KeyExchangeGroup;
 import app.ConfigurationTypes.ServerAuth;
 import app.ConfigurationTypes.SignatureScheme;
 import app.ConfigurationTypes.TlsVersion;
-import app.HandshakeStepping.HandshakeType;
+import app.HandshakeTypes.HandshakeType;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.OutboundConnection;
 import de.rub.nds.tlsattacker.core.constants.NamedGroup;
@@ -232,8 +232,8 @@ public class App {
         outboundCon.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
         myConfig.setDefaultClientConnection(outboundCon);
 
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(null, 10, myConfig, segmentedHandshake.get(0), 2, true, 1, 3, 1.5);
+        HandshakeActions handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(null, 10, myConfig, handshakeActions, true, 1, 3, 1.5);
         
         //System.out.println(resultsMeasurement);
 
@@ -248,16 +248,10 @@ public class App {
 
         ArrayList<Long> allMeasurements = new ArrayList<Long>();
         try {
-            //long start = System.nanoTime();
             workflowExecutor.executeWorkflow();
-            
-
+    
             TimeableTcpContext timeableTcpContext = (TimeableTcpContext) state.getTcpContext();
             allMeasurements = timeableTcpContext.getAllMeasurements();
-            System.out.println("Got all measurements: " + allMeasurements);
-            
-            //long finish = System.nanoTime();
-            //timeElapsed = finish - start;
         } catch (WorkflowExecutionException ex) {
             System.out.println(
                     "The TLS protocol flow was not executed completely, follow the debug messages for more information.");

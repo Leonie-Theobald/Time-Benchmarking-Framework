@@ -3,9 +3,11 @@ package app;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.HandshakeTypes.HandshakeType;
 import app.TimeMeasurement.StatisticResult;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.AliasedConnection;
+import de.rub.nds.tlsattacker.core.connection.OutboundConnection;
 import de.rub.nds.tlsattacker.core.constants.HandshakeMessageType;
 import de.rub.nds.tlsattacker.core.protocol.message.ApplicationMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.CertificateMessage;
@@ -30,30 +32,24 @@ import de.rub.nds.tlsattacker.core.workflow.action.SendAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicClientKeyExchangeAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SetMeasuringActiveAction;
 
-public class HandshakeStepping {
-    public enum HandshakeType {
-        TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH,
-        TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
-        TLS12_EPHEMERAL_WITH_CLIENTAUTH,
-        TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_RESUMPTION,
-        TLS12_STATIC_WITHOUT_CLIENTAUTH,
-        TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
-        TLS12_STATIC_WITH_CLIENTAUTH,
-        TLS12_STATIC_WITH_CLIENTAUTH_WITH_RESUMPTION,
-        TLS13_WITHOUT_CLIENTAUTH,
-        TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION,
-        TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT,
-        TLS13_WITH_CLIENTAUTH,
-        TLS13_WITH_CLIENTAUTH_WITH_RESUMPTION,
+public class HandshakeActions {
+
+    private int serverCntActions;
+    private WorkflowTrace trace;
+
+    public int getCntServerActions() {
+        return this.serverCntActions;
+    }
+    public WorkflowTrace getTrace() {
+        return this.trace;
     }
     
-    public static List<WorkflowTrace> getSegmentedHandshake(
+    public HandshakeActions (
             HandshakeType handshakeType,
             Config config,
             AliasedConnection connection) {
 
                 WorkflowTrace trace = new WorkflowTrace();
-                List<WorkflowTrace> segmentedHandshake = new ArrayList();
                 CertificateMessage certMsg = new CertificateMessage();
 
                 switch (handshakeType) {
@@ -86,9 +82,11 @@ public class HandshakeStepping {
 
                         trace.addTlsAction(new LogLastMeasurementAction());
 
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
-                        return segmentedHandshake;
-                                            
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        this.trace = trace;
+                        this.serverCntActions = 2;
+                        break;
+/*
                     case TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION:
                         System.out.println(handshakeType + " is supported.");
 
@@ -507,10 +505,10 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
                         
                         return segmentedHandshake;
-
+ */                                            
                     default:
                         System.out.println(handshakeType + " is NOT supported.");
-                        return segmentedHandshake;
+                        //return segmentedHandshake;
                 }
     }
 }
