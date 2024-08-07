@@ -233,36 +233,37 @@ public class App {
         myConfig.setDefaultClientConnection(outboundCon);
 
         List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(null, 1, myConfig, segmentedHandshake, false, 1, 3, 1.5);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(null, 10, myConfig, segmentedHandshake.get(0), 2, true, 1, 3, 1.5);
+        
         //System.out.println(resultsMeasurement);
 
         System.out.println("Reached End");
     }
 
-    public static long startTlsClient(Config config, WorkflowTrace trace) {
+    public static ArrayList<Long> startTlsClient(Config config, WorkflowTrace trace) {
         State state = new State(config, trace);
         WorkflowExecutor workflowExecutor =
                 WorkflowExecutorFactory.createWorkflowExecutor(
                         config.getWorkflowExecutorType(), state);
 
-        long timeElapsed = 0;
+        ArrayList<Long> allMeasurements = new ArrayList<Long>();
         try {
-            long start = System.nanoTime();
+            //long start = System.nanoTime();
             workflowExecutor.executeWorkflow();
             
 
             TimeableTcpContext timeableTcpContext = (TimeableTcpContext) state.getTcpContext();
-            ArrayList<Long> allMeasurements = timeableTcpContext.getAllMeasurements();
+            allMeasurements = timeableTcpContext.getAllMeasurements();
             System.out.println("Got all measurements: " + allMeasurements);
             
-            long finish = System.nanoTime();
-            timeElapsed = finish - start;
+            //long finish = System.nanoTime();
+            //timeElapsed = finish - start;
         } catch (WorkflowExecutionException ex) {
             System.out.println(
                     "The TLS protocol flow was not executed completely, follow the debug messages for more information.");
             LOGGER.warn(
                     "The TLS protocol flow was not executed completely, follow the debug messages for more information.");
         }
-        return timeElapsed;
+        return allMeasurements;
     }
 }

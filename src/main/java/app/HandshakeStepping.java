@@ -513,49 +513,4 @@ public class HandshakeStepping {
                         return segmentedHandshake;
                 }
     }
-    
-    public static class StatisticResultHandshakeSegment {
-        private double durationMean;
-        private double durationMedian;
-        private double durationStdDevMin;
-        private double durationStdDevMax;
-        private double durationMin;
-
-        public static StatisticResultHandshakeSegment[] runStatisticAnalysis(StatisticResult[] statisticResultHandshake) {
-            StatisticResultHandshakeSegment[] resultSegments = new StatisticResultHandshakeSegment[statisticResultHandshake.length];
-
-            // first segment is measured against zero time
-            StatisticResultHandshakeSegment firstSegment = new StatisticResultHandshakeSegment();
-            firstSegment.durationMean = statisticResultHandshake[0].mean;
-            firstSegment.durationMedian = statisticResultHandshake[0].median;
-            firstSegment.durationStdDevMin = statisticResultHandshake[0].mean - statisticResultHandshake[0].standardDeviation;
-            firstSegment.durationStdDevMax = statisticResultHandshake[0].mean + statisticResultHandshake[0].standardDeviation;
-            firstSegment.durationMin = statisticResultHandshake[0].min;
-            resultSegments[0] = firstSegment;
-
-            // all other segments depend on the previous segment as well
-            for (int segmentCount = 1; segmentCount < statisticResultHandshake.length; segmentCount++) {
-                StatisticResultHandshakeSegment segment = new StatisticResultHandshakeSegment();
-                segment.durationMean = statisticResultHandshake[segmentCount].mean - statisticResultHandshake[segmentCount-1].mean;
-                segment.durationMedian = statisticResultHandshake[segmentCount].median - statisticResultHandshake[segmentCount-1].median;
-                segment.durationStdDevMin = (statisticResultHandshake[segmentCount].mean - statisticResultHandshake[segmentCount].standardDeviation) - (statisticResultHandshake[segmentCount-1].mean + statisticResultHandshake[segmentCount-1].standardDeviation);
-                segment.durationStdDevMax = (statisticResultHandshake[segmentCount].mean + statisticResultHandshake[segmentCount].standardDeviation) - (statisticResultHandshake[segmentCount-1].mean - statisticResultHandshake[segmentCount-1].standardDeviation);
-                segment.durationMin = statisticResultHandshake[segmentCount].min - statisticResultHandshake[segmentCount-1].min;
-                resultSegments[segmentCount] = segment;
-            }
-
-            return resultSegments;
-        }
-
-        // creates text overview of statistical analysis
-        public static String textualRepresentation(StatisticResultHandshakeSegment statisticResultSegments) {
-            String analysisResultsString = " Duration considering Average: " + statisticResultSegments.durationMean/1000000.0 + " ms\n";
-            analysisResultsString += " Duration considering Median: " + statisticResultSegments.durationMedian/1000000.0 + " ms\n";
-            analysisResultsString += " Duration Min considering StdDev: " + statisticResultSegments.durationStdDevMin/1000000.0 + " ms\n";
-            analysisResultsString += " Duration Max considering StdDev: " + statisticResultSegments.durationStdDevMax/1000000.0 + " ms\n";
-            analysisResultsString += " Duration considering Min: " + statisticResultSegments.durationMin/1000000.0 + " ms\n";
-            
-            return analysisResultsString;
-        }
-    }
 }

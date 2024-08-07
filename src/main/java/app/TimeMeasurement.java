@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 
-import app.HandshakeStepping.StatisticResultHandshakeSegment;
 import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 
@@ -22,147 +21,148 @@ public class TimeMeasurement {
         String measurementDefinition,
         int repetition,
         Config config,
-        List<WorkflowTrace> segmentedHandshake,
+        WorkflowTrace handshakeTrace,
+        int totalCntServerActions,
         Boolean shouldDocument,
         int cleanTopOutlier,
         int cleanDeviationOutlier,
         double cleanIqrOutlier
     ) {
-        // run repeatedly through handshake segments
-        Long[][] durationForHandshakeSegments = new Long[segmentedHandshake.size()][repetition];
-            
-        int segCnt = 0;
-        for (WorkflowTrace partialTrace: segmentedHandshake) {
-            for (int i = 0; i < repetition; i++) {
-                long timeElapsed = App.startTlsClient(config, partialTrace);
-                durationForHandshakeSegments[segCnt][i] = timeElapsed;
+        Long[][] durationsForServerActions = new Long[totalCntServerActions][repetition];
+       
+        // run repeatedly through handshake
+        // collect logs of duration measurements for the different server actions
+        for (int cntRep = 0; cntRep < repetition; cntRep++) {
+            // results in list with [duration for 0. server action, duration for 1. server action, duration for 2. server action, ...]
+            // [0. server action, 1. server action, ...]
+            ArrayList<Long> collectedMeasurements = App.startTlsClient(config, handshakeTrace);
+
+            // split list and distribute results in list bucketing all results for 0. server action, for 1. server action, ...
+            // [[0. server action of 0. rep, 1. server action of 0. rep, ...], [0. server action of 0. rep, 1. server action of 0. rep, ...], ...]
+            int cntServerAction = 0;
+            for (Long durationOneServerAction: collectedMeasurements) {
+                durationsForServerActions[cntServerAction][cntRep] = durationOneServerAction;
+                cntServerAction++;
             }
-            segCnt++;
         }
 
-        // run statistical analysis
-        // for the data set of each handshake segment (always measured from 0.00ms to end of handshake segment)
-        StatisticResult[] analysisListHandshake = new StatisticResult[segmentedHandshake.size()];
-        segCnt = 0;
-        for (Long[] dataSetOneHandshakeSegment: durationForHandshakeSegments) {
-            analysisListHandshake[segCnt] = StatisticResult.runStatisticAnalysis(dataSetOneHandshakeSegment);
-            segCnt++;
+
+        // run statistical analysis on duration measurements for server actions
+        StatisticResult[] statisticResultsServerActions = new StatisticResult[totalCntServerActions];
+        int cntServerAction = 0;
+        for (Long[] durationsForOneAction: durationsForServerActions) {
+            statisticResultsServerActions[cntServerAction] = StatisticResult.runStatisticAnalysis(durationsForOneAction);
+            cntServerAction++;
         }
-        // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
-        StatisticResultHandshakeSegment[] analysisListSegments = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshake);
 
         // check whether data should also be cleaned from outliers
-        if (cleanTopOutlier > 0 || cleanDeviationOutlier > 0) {
+        if (cleanTopOutlier > 0 || cleanDeviationOutlier > 0 || cleanIqrOutlier > 0) {
             // ## remove outliers by deleting the top end durations ##
             // calculate how many values should be removed
             int cntRemovedValues = (int) (cleanTopOutlier * repetition / 100);
 
-            Long[][] durationForHandshakeSegmentsTopClean = new Long[segmentedHandshake.size()][repetition  - cntRemovedValues];
-            // sort each data set of the handshake and cut the highest values
-            segCnt = 0;
-            for (Long[] segment: durationForHandshakeSegments) {
-                Arrays.sort(segment);
-                List<Long> segmentList = Arrays.asList(segment);
-                List<Long> segmentListTopClean = segmentList.subList(0, segmentList.size() - cntRemovedValues);
+            Long[][] durationsForServerActionsCleanTop = new Long[totalCntServerActions][repetition - cntRemovedValues];
+            // sort each data set of the measured durations of server actions and cut the highest values
+            cntServerAction = 0;
+            for (Long[] durationsForOneAction: durationsForServerActions) {
+                Arrays.sort(durationsForOneAction);
+                List<Long> durationsList = Arrays.asList(durationsForOneAction);
+                List<Long> durationsListCleanTop = durationsList.subList(0, durationsList.size() - cntRemovedValues);
 
-                Long[] tempArray = new Long[segmentList.size() - cntRemovedValues];
-                tempArray = segmentListTopClean.toArray(tempArray);
-                durationForHandshakeSegmentsTopClean[segCnt] = tempArray;
+                Long[] tempArray = new Long[durationsListCleanTop.size()];
+                tempArray = durationsListCleanTop.toArray(tempArray);
+                durationsForServerActionsCleanTop[cntServerAction] = tempArray;
 
-                segCnt++;
+                cntServerAction++;
             }
 
-            // do same analysis steps as for raw data
-            StatisticResult[] analysisListHandshakeTopClean = new StatisticResult[segmentedHandshake.size()];
-            segCnt = 0;
-            for (Long[] dataSetOneHandshakeSegmenTopClean: durationForHandshakeSegmentsTopClean) {
-                analysisListHandshakeTopClean[segCnt] = StatisticResult.runStatisticAnalysis(dataSetOneHandshakeSegmenTopClean);
-                segCnt++;
+            // run statistical analysis on duration measurements for server actions
+            StatisticResult[] statisticResultsServerActionsCleanTop = new StatisticResult[totalCntServerActions];
+            cntServerAction = 0;
+            for (Long[] durationsForOneActionCleanTop: durationsForServerActionsCleanTop) {
+                statisticResultsServerActionsCleanTop[cntServerAction] = StatisticResult.runStatisticAnalysis(durationsForOneActionCleanTop);
+                cntServerAction++;
             }
-            // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
-            StatisticResultHandshakeSegment[] analysisListSegmentsTopClean = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshakeTopClean);
 
-
+            
             // ## remove outliers by deleting everything with z-score above/below +/- factor ##
-            ArrayList<ArrayList<Long>> durationForHandshakeSegmentsDeviationClean = new ArrayList<>();
-            // go through each element for each handshake segment and only copy it if it's within the valid range
-            segCnt = 0;
-            for (Long[] segment: durationForHandshakeSegments) {
-                ArrayList<Long> segmentClean = new ArrayList<>();
-                for (Long val: segment) {
+            ArrayList<ArrayList<Long>> durationsForServerActionsCleanDeviation = new ArrayList<>();
+
+            // go through all durations of each server actions and only copy it if it's within the valid range
+            cntServerAction = 0;
+            for (Long[] durationsForOneAction: durationsForServerActions) {
+                ArrayList<Long> durationsForOneActionCleanDeviation = new ArrayList<>();
+                for (Long duration: durationsForOneAction) {
                     // calculate z-score
-                    double zScore = (val - analysisListHandshake[segCnt].mean) / analysisListHandshake[segCnt].standardDeviation;
+                    double zScore = (duration - statisticResultsServerActions[cntServerAction].mean) / statisticResultsServerActions[cntServerAction].standardDeviation;
                     // check whether z score lies within +/- range
-                    if (zScore >= -3.0 && zScore <= 3.0) {
-                        segmentClean.add(val);
+                    if (zScore >= -cleanDeviationOutlier && zScore <= cleanDeviationOutlier) {
+                        durationsForOneActionCleanDeviation.add(duration);
                     }
                 }
-                durationForHandshakeSegmentsDeviationClean.add(segmentClean);
-                segCnt++;
+                durationsForServerActionsCleanDeviation.add(durationsForOneActionCleanDeviation);
+                cntServerAction++;
             }
 
+            // run statistical analysis on duration measurements for server actions
+            StatisticResult[] statisticResultsServerActionsCleanDeviation = new StatisticResult[totalCntServerActions];
             // transform ArrayList to Array
-            Long[][] durationForHandshakeSegmentsDeviationCleanArray = durationForHandshakeSegmentsDeviationClean.stream().map(u -> u.toArray(new Long[0])).toArray(Long[][]::new);
-
-            // do same analysis steps as for raw data
-            StatisticResult[] analysisListHandshakeDeviationClean = new StatisticResult[segmentedHandshake.size()];
-            segCnt = 0;
-            for (Long[] dataSetOneHandshakeSegmentDeviationClean: durationForHandshakeSegmentsDeviationCleanArray) {
-                analysisListHandshakeDeviationClean[segCnt] = StatisticResult.runStatisticAnalysis(dataSetOneHandshakeSegmentDeviationClean);
-                segCnt++;
+            Long[][] durationsForServerActionsCleanDeviationArray = durationsForServerActionsCleanDeviation.stream().map(u -> u.toArray(new Long[0])).toArray(Long[][]::new);
+            cntServerAction = 0;
+            for (Long[] durationsForOneActionCleanDeviation: durationsForServerActionsCleanDeviationArray) {
+                statisticResultsServerActionsCleanDeviation[cntServerAction] = StatisticResult.runStatisticAnalysis(durationsForOneActionCleanDeviation);
+                cntServerAction++;
             }
-            // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
-            StatisticResultHandshakeSegment[] analysisListSegmentsDeviationClean = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshakeDeviationClean);
 
 
             // ## remove outliers by deleting everything outside a multiple of interquartil range (iqr) ##
-            ArrayList<ArrayList<Long>> durationForHandshakeSegmentsIqrClean = new ArrayList<>();
-            // go through each element for each handshake segment and only copy it if it's within the valid range
-            segCnt = 0;
-            double iqr = analysisListHandshake[segCnt].quantil75 - analysisListHandshake[segCnt].quantil25;
-            for (Long[] segment: durationForHandshakeSegments) {
-                ArrayList<Long> segmentClean = new ArrayList<>();
-                for (Long val: segment) {
+            ArrayList<ArrayList<Long>> durationsForServerActionsCleanIqr = new ArrayList<>();
+
+            // go through all durations of each server actions and only copy it if it's within the valid range
+            cntServerAction = 0;
+            for (Long[] durationsForOneAction: durationsForServerActions) {
+                double iqr = statisticResultsServerActions[cntServerAction].quantil75 - statisticResultsServerActions[cntServerAction].quantil25;
+                ArrayList<Long> durationsForOneActionCleanIqr = new ArrayList<>();
+                for (Long duration: durationsForOneAction) {
                     // check whether value lies within (q_25-factor*iqr, q_75+factor*iqr) range
-                    if (val >= (analysisListHandshake[segCnt].quantil25 - cleanIqrOutlier * iqr)
-                    && val <= (analysisListHandshake[segCnt].quantil75 + cleanIqrOutlier * iqr)) {
-                        segmentClean.add(val);
+                    if (duration >= (statisticResultsServerActions[cntServerAction].quantil25 - cleanIqrOutlier * iqr)
+                    && duration <= (statisticResultsServerActions[cntServerAction].quantil75 + cleanIqrOutlier * iqr)) {
+                        durationsForOneActionCleanIqr.add(duration);
                     }
                 }
-                durationForHandshakeSegmentsIqrClean.add(segmentClean);
-                segCnt++;
+                durationsForServerActionsCleanIqr.add(durationsForOneActionCleanIqr);
+                cntServerAction++;
             }
 
+            // run statistical analysis on duration measurements for server actions
+            StatisticResult[] statisticResultsServerActionsCleanIqr = new StatisticResult[totalCntServerActions];
             // transform ArrayList to Array
-            Long[][] durationForHandshakeSegmentsIqrCleanArray = durationForHandshakeSegmentsIqrClean.stream().map(u -> u.toArray(new Long[0])).toArray(Long[][]::new);
-
-            // do same analysis steps as for raw data
-            StatisticResult[] analysisListHandshakeIqrClean = new StatisticResult[segmentedHandshake.size()];
-            segCnt = 0;
-            for (Long[] dataSetOneHandshakeSegmentIqrClean: durationForHandshakeSegmentsIqrCleanArray) {
-                analysisListHandshakeIqrClean[segCnt] = StatisticResult.runStatisticAnalysis(dataSetOneHandshakeSegmentIqrClean);
-                segCnt++;
+            Long[][] durationsForServerActionsCleanIqrArray = durationsForServerActionsCleanIqr.stream().map(u -> u.toArray(new Long[0])).toArray(Long[][]::new);
+            
+            cntServerAction = 0;
+            for (Long[] durationsForOneActionCleanIqr: durationsForServerActionsCleanIqrArray) {
+                statisticResultsServerActionsCleanIqr[cntServerAction] = StatisticResult.runStatisticAnalysis(durationsForOneActionCleanIqr);
+                cntServerAction++;
             }
-            // statistical analysis for each handshake segment on its own (measured from previous to own handshake segment)
-            StatisticResultHandshakeSegment[] analysisListSegmentsIqrClean = StatisticResultHandshakeSegment.runStatisticAnalysis(analysisListHandshakeIqrClean);
+
 
             // log results if wished
             if (shouldDocument == true) {
-                logRawAndCleanMeasurement(measurementDefinition, config, segmentedHandshake, 
-                    durationForHandshakeSegments, analysisListHandshake, analysisListSegments, 
-                    cleanTopOutlier, durationForHandshakeSegmentsTopClean, analysisListHandshakeTopClean, analysisListSegmentsTopClean,
-                    cleanDeviationOutlier, durationForHandshakeSegmentsDeviationCleanArray, analysisListHandshakeDeviationClean, analysisListSegmentsDeviationClean,
-                    cleanIqrOutlier, durationForHandshakeSegmentsIqrCleanArray, analysisListHandshakeIqrClean, analysisListSegmentsIqrClean)
+                logRawAndCleanMeasurement(measurementDefinition, config, handshakeTrace, totalCntServerActions,
+                    durationsForServerActions, statisticResultsServerActions, 
+                    cleanTopOutlier, durationsForServerActionsCleanTop, statisticResultsServerActionsCleanTop,
+                    cleanDeviationOutlier, durationsForServerActionsCleanDeviationArray, statisticResultsServerActionsCleanDeviation,
+                    cleanIqrOutlier, durationsForServerActionsCleanIqrArray, statisticResultsServerActionsCleanIqr)
                 ;
             }
         } else {
             // log results if wished
             if (shouldDocument == true) {
-                logRawMeasurement(measurementDefinition, config, segmentedHandshake, durationForHandshakeSegments, analysisListHandshake, analysisListSegments);
+                logRawMeasurement(measurementDefinition, config, handshakeTrace, totalCntServerActions, durationsForServerActions, statisticResultsServerActions);
             }
         }
 
-        return durationForHandshakeSegments;
+        return durationsForServerActions;
     }
 
     public static class StatisticResult {
@@ -271,10 +271,10 @@ public class TimeMeasurement {
     private static void logRawMeasurement(
         String measurementDefinition,
         Config config,
-        List<WorkflowTrace> segmentedHandshake,
-        Long[][] durationForHandshakeSegments,
-        StatisticResult[] analysisListHandshake,
-        StatisticResultHandshakeSegment[] analysisListSegments
+        WorkflowTrace handshakeTrace,
+        int totalCntServerActions,
+        Long[][] durationsForServerActions,
+        StatisticResult[] statisticResultsServerActions
     ) {
         try {
             // Get path of the JAR file and strip unnecessary folders
@@ -292,7 +292,7 @@ public class TimeMeasurement {
             if (measurementDefinition != null) {
                 pathString += ("_" + measurementDefinition);
             }
-            pathString += ("_" + durationForHandshakeSegments[0].length + "rep_measurement-results");
+            pathString += ("_" + durationsForServerActions[0].length + "rep_measurement-results");
 
             File logFile = new File(basePath + "logging/" + pathString);
 
@@ -304,40 +304,29 @@ public class TimeMeasurement {
                 out.print(ConfigFactory.getConfigOverview(config));
 
                 out.println("\n\n#################################");
-                out.println("Used Handshake Segments\n");
-                out.print(segmentedHandshake);
+                out.println("Used Handshake Trace\n");
+                out.print(handshakeTrace);
 
                 out.println("\n\n#################################");
                 out.println("Used Repititions\n");
-                out.print(durationForHandshakeSegments[0].length);
+                out.print(durationsForServerActions[0].length);
                 
                 out.println("\n\n#################################");
-                out.println("Results: Complete duration to the end of each handshake segment.");
-                int segmentCount = 0;
-                for (StatisticResult oneResult: analysisListHandshake) {
-                    out.println("\nHandshake Segment " + segmentCount);
+                out.println("Statistic results for each server action.");
+                int cntServerAction = 0;
+                for (StatisticResult oneResult: statisticResultsServerActions) {
+                    out.println("\nServer Action " + cntServerAction);
                     out.print(StatisticResult.textualRepresentation(oneResult));
-                    segmentCount++;
-                }
-
-                out.println("\n\n#################################");
-                out.println("Results: Actual duration for each handshake segment.");
-                segmentCount = 0;
-                for (StatisticResultHandshakeSegment oneResult: analysisListSegments) {
-                    out.println("\nHandshake Segment " + segmentCount);
-                    out.print(StatisticResultHandshakeSegment.textualRepresentation(oneResult));
-                    segmentCount++;
+                    cntServerAction++;
                 }
                 
                 out.println("\n\n#################################");
                 out.println("Detailed Measurement Results");
-                out.print(Arrays.deepToString(durationForHandshakeSegments));
+                out.print(Arrays.deepToString(durationsForServerActions));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
-
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -347,25 +336,23 @@ public class TimeMeasurement {
     private static void logRawAndCleanMeasurement(
         String measurementDefinition,
         Config config,
-        List<WorkflowTrace> segmentedHandshake,
-        Long[][] durationForHandshakeSegmentsRaw,
-        StatisticResult[] analysisListHandshakeRaw,
-        StatisticResultHandshakeSegment[] analysisListSegmentsRaw,
+        WorkflowTrace handshakeTrace,
+        int totalCntServerActions,
+
+        Long[][] durationsForServerActions,
+        StatisticResult[] statisticResultsServerActions,
 
         int removedTopPercentage,
-        Long[][] durationForHandshakeSegmentsTopClean,
-        StatisticResult[] analysisListHandshakeTopClean,
-        StatisticResultHandshakeSegment[] analysisListSegmentsTopClean,
+        Long[][] durationsForServerActionsCleanTop,
+        StatisticResult[] statisticResultsServerActionsCleanTop,
 
         int removedStdDevRange,
-        Long[][] durationForHandshakeSegmentsDeviationClean,
-        StatisticResult[] analysisListHandshakeDeviationClean,
-        StatisticResultHandshakeSegment[] analysisListSegmentsDeviationClean,
+        Long[][] durationsForServerActionsCleanDeviation,
+        StatisticResult[] statisticResultsServerActionsCleanDeviation,
 
         double removedIqrRange,
-        Long[][] durationForHandshakeSegmentsIqrClean,
-        StatisticResult[] analysisListHandshakeIqrClean,
-        StatisticResultHandshakeSegment[] analysisListSegmentsIqrClean
+        Long[][] durationsForServerActionsCleanIqr,
+        StatisticResult[] statisticResultsServerActionsCleanIqr
     ) {
         try {
             // Get path of the JAR file and strip unnecessary folders
@@ -383,7 +370,7 @@ public class TimeMeasurement {
             if (measurementDefinition != null) {
                 pathString += ("_" + measurementDefinition);
             }
-            pathString += ("_" + durationForHandshakeSegmentsRaw[0].length + "rep_measurement-results");
+            pathString += ("_" + durationsForServerActions[0].length + "rep_measurement-results");
 
             File logFile = new File(basePath + "logging/" + pathString);
 
@@ -395,99 +382,54 @@ public class TimeMeasurement {
                 out.print(ConfigFactory.getConfigOverview(config));
 
                 out.println("\n\n#################################");
-                out.println("Used Handshake Segments\n");
-                out.print(segmentedHandshake);
+                out.println("Used Handshake Trace\n");
+                out.print(handshakeTrace);
 
                 out.println("\n\n#################################");
                 out.println("Used Repititions\n");
-                out.print(durationForHandshakeSegmentsRaw[0].length);
+                out.print(durationsForServerActions[0].length);
 
                 
                 out.println("\n\n##################################################################");
                 out.println("\n\nRAW RESULTS");
-            
-                out.println("\n\n#################################");
-                out.println("Raw Results: Complete duration to the end of each handshake segment.");
-                int segmentCount = 0;
-                for (StatisticResult oneResult: analysisListHandshakeRaw) {
-                    out.println("\nHandshake Segment " + segmentCount);
+                out.println("Statistic results for each server action.");
+                int cntServerAction = 0;
+                for (StatisticResult oneResult: statisticResultsServerActions) {
+                    out.println("\nServer Action " + cntServerAction);
                     out.print(StatisticResult.textualRepresentation(oneResult));
-                    segmentCount++;
-                }
-
-                out.println("\n\n#################################");
-                out.println("Raw Results: Actual duration for each handshake segment.");
-                segmentCount = 0;
-                for (StatisticResultHandshakeSegment oneResult: analysisListSegmentsRaw) {
-                    out.println("\nHandshake Segment " + segmentCount);
-                    out.print(StatisticResultHandshakeSegment.textualRepresentation(oneResult));
-                    segmentCount++;
+                    cntServerAction++;
                 }
 
 
                 out.println("\n\n##################################################################");
                 out.println("\n\nCLEANED RESULTS (by removing top " + String.valueOf(removedTopPercentage) + "% of longest durations)");
-            
-                out.println("\n\n#################################");
-                out.println("Cleaned Results (top removal): Complete duration to the end of each handshake segment.");
-                segmentCount = 0;
-                for (StatisticResult oneResult: analysisListHandshakeTopClean) {
-                    out.println("\nHandshake Segment " + segmentCount);
+                out.println("Statistic results cleaned by removing top durations.");
+                cntServerAction = 0;
+                for (StatisticResult oneResult: statisticResultsServerActionsCleanTop) {
+                    out.println("\nServer Action " + cntServerAction);
                     out.print(StatisticResult.textualRepresentation(oneResult));
-                    segmentCount++;
-                }
-
-                out.println("\n\n#################################");
-                out.println("Cleaned Results (top removal): Actual duration for each handshake segment.");
-                segmentCount = 0;
-                for (StatisticResultHandshakeSegment oneResult: analysisListSegmentsTopClean) {
-                    out.println("\nHandshake Segment " + segmentCount);
-                    out.print(StatisticResultHandshakeSegment.textualRepresentation(oneResult));
-                    segmentCount++;
+                    cntServerAction++;
                 }
                 
 
                 out.println("\n\n##################################################################");
                 out.println("\n\nCLEANED RESULTS (by removing everything with z-score above/below +/-" + String.valueOf(removedStdDevRange) + ")");
-            
-                out.println("\n\n#################################");
-                out.println("Cleaned Results (deviation): Complete duration to the end of each handshake segment.");
-                segmentCount = 0;
-                for (StatisticResult oneResult: analysisListHandshakeDeviationClean) {
-                    out.println("\nHandshake Segment " + segmentCount);
+                out.println("Statistic results cleaned by removing everything outside z-score range");
+                cntServerAction = 0;
+                for (StatisticResult oneResult: statisticResultsServerActionsCleanDeviation) {
+                    out.println("\nServer Action " + cntServerAction);
                     out.print(StatisticResult.textualRepresentation(oneResult));
-                    segmentCount++;
+                    cntServerAction++;
                 }
-
-                out.println("\n\n#################################");
-                out.println("Cleaned Results (deviation): Actual duration for each handshake segment.");
-                segmentCount = 0;
-                for (StatisticResultHandshakeSegment oneResult: analysisListSegmentsDeviationClean) {
-                    out.println("\nHandshake Segment " + segmentCount);
-                    out.print(StatisticResultHandshakeSegment.textualRepresentation(oneResult));
-                    segmentCount++;
-                }
-
 
                 out.println("\n\n##################################################################");
                 out.println("\n\nCLEANED RESULTS (by removing everything outside (Q_25 - " + String.valueOf(removedIqrRange) + "*IQR, Q_75 + " + String.valueOf(removedIqrRange) + "*IQR)");
-            
-                out.println("\n\n#################################");
-                out.println("Cleaned Results (IQR): Complete duration to the end of each handshake segment.");
-                segmentCount = 0;
-                for (StatisticResult oneResult: analysisListHandshakeIqrClean) {
-                    out.println("\nHandshake Segment " + segmentCount);
+                out.println("Statistic results cleaned by removing everything outside iqr range");
+                cntServerAction = 0;
+                for (StatisticResult oneResult: statisticResultsServerActionsCleanIqr) {
+                    out.println("\nServer Action " + cntServerAction);
                     out.print(StatisticResult.textualRepresentation(oneResult));
-                    segmentCount++;
-                }
-
-                out.println("\n\n#################################");
-                out.println("Cleaned Results (IQR): Actual duration for each handshake segment.");
-                segmentCount = 0;
-                for (StatisticResultHandshakeSegment oneResult: analysisListSegmentsIqrClean) {
-                    out.println("\nHandshake Segment " + segmentCount);
-                    out.print(StatisticResultHandshakeSegment.textualRepresentation(oneResult));
-                    segmentCount++;
+                    cntServerAction++;
                 }
 
 
@@ -496,19 +438,19 @@ public class TimeMeasurement {
 
                 out.println("\n\n#################################");
                 out.println("Raw Detailed Measurement Results");
-                out.print(Arrays.deepToString(durationForHandshakeSegmentsRaw));
+                out.print(Arrays.deepToString(durationsForServerActions));
 
                 out.println("\n\n#################################");
                 out.println("Top Cleaned Detailed Measurement Results");
-                out.print(Arrays.deepToString(durationForHandshakeSegmentsTopClean));
+                out.print(Arrays.deepToString(durationsForServerActionsCleanTop));
 
                 out.println("\n\n#################################");
                 out.println("Deviation Cleaned Detailed Measurement Results");
-                out.print(Arrays.deepToString(durationForHandshakeSegmentsDeviationClean));
+                out.print(Arrays.deepToString(durationsForServerActionsCleanDeviation));
 
                 out.println("\n\n#################################");
                 out.println("IQR Cleaned Detailed Measurement Results");
-                out.print(Arrays.deepToString(durationForHandshakeSegmentsIqrClean));
+                out.print(Arrays.deepToString(durationsForServerActionsCleanIqr));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
