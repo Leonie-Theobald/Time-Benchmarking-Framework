@@ -25,7 +25,9 @@ public class TimeMeasurement {
         Boolean shouldDocument,
         int cleanTopOutlier,
         int cleanDeviationOutlier,
-        double cleanIqrOutlier
+        double cleanIqrOutlier,
+        Boolean shouldCreateMetaLogging,
+        String serverName
     ) {
         int totalCntServerActions = handshakeActions.getCntServerActions();
         WorkflowTrace handshakeTrace = handshakeActions.getTrace();
@@ -149,13 +151,19 @@ public class TimeMeasurement {
 
 
             // log results if wished
-            if (shouldDocument == true) {
+            if (shouldDocument) {
                 logRawAndCleanMeasurement(measurementDefinition, config, handshakeTrace, totalCntServerActions,
                     durationsForServerActions, statisticResultsServerActions, 
                     cleanTopOutlier, durationsForServerActionsCleanTop, statisticResultsServerActionsCleanTop,
                     cleanDeviationOutlier, durationsForServerActionsCleanDeviationArray, statisticResultsServerActionsCleanDeviation,
-                    cleanIqrOutlier, durationsForServerActionsCleanIqrArray, statisticResultsServerActionsCleanIqr)
-                ;
+                    cleanIqrOutlier, durationsForServerActionsCleanIqrArray, statisticResultsServerActionsCleanIqr);
+            }
+            if (shouldCreateMetaLogging) {
+                logMetaMeasurement(measurementDefinition, config, handshakeTrace, totalCntServerActions, repetition, serverName,
+                    statisticResultsServerActions,
+                    cleanTopOutlier, statisticResultsServerActionsCleanTop,
+                    cleanDeviationOutlier, statisticResultsServerActionsCleanDeviation,
+                    cleanIqrOutlier, statisticResultsServerActionsCleanIqr);
             }
         } else {
             // log results if wished
@@ -267,7 +275,56 @@ public class TimeMeasurement {
         }
     }
     
-    // TODO: Add calculation of relevant server steps
+    private static class MergedStatisticResult {
+        Long[] mins;
+        Long[] maxs;
+        double[] means;
+        double[] medians;
+        double[] quantils25;
+        double[] quantils75;
+        //Long variance;
+        double[] standardDeviations;
+        double[] variationCoefficients;
+        double[] skewnesses;
+        double[] pearsonSkewnesses;
+        //Long confidenceInterval95Min;
+        //Long confidenceInterval95Max;
+        //Long confidenceInterval99Min;
+        //Long confidenceInterval99Max;
+
+        // merge statistic results of all server actions into one listing
+        private static MergedStatisticResult mergeStatisticResults(StatisticResult[] statisticResults) {
+            MergedStatisticResult mergedStatisticResult = new MergedStatisticResult();
+
+            // initialize all fields
+            mergedStatisticResult.mins = new Long[statisticResults.length];
+            mergedStatisticResult.maxs = new Long[statisticResults.length];
+            mergedStatisticResult.means = new double[statisticResults.length];
+            mergedStatisticResult.medians = new double[statisticResults.length];
+            mergedStatisticResult.quantils25 = new double[statisticResults.length];
+            mergedStatisticResult.quantils75 = new double[statisticResults.length];
+            mergedStatisticResult.standardDeviations = new double[statisticResults.length];
+            mergedStatisticResult.skewnesses = new double[statisticResults.length];
+            mergedStatisticResult.pearsonSkewnesses = new double[statisticResults.length];
+
+            // map single values of a result into lists
+            int cntServerAction = 0;
+            for (StatisticResult oneResult: statisticResults) {
+                mergedStatisticResult.mins[cntServerAction] = oneResult.min;
+                mergedStatisticResult.maxs[cntServerAction] = oneResult.max;
+                mergedStatisticResult.means[cntServerAction] = oneResult.mean;
+                mergedStatisticResult.medians[cntServerAction] = oneResult.median;
+                mergedStatisticResult.quantils25[cntServerAction] = oneResult.quantil25;
+                mergedStatisticResult.quantils75[cntServerAction] = oneResult.quantil75;
+                mergedStatisticResult.standardDeviations[cntServerAction] = oneResult.standardDeviation;
+                mergedStatisticResult.skewnesses[cntServerAction] = oneResult.skewness;
+                mergedStatisticResult.pearsonSkewnesses[cntServerAction] = oneResult.pearsonSkewness;
+                cntServerAction ++;
+            }
+
+            return mergedStatisticResult;
+        }
+    }
 
     // logs raw data and statistical analysis results into file
     private static void logRawMeasurement(
@@ -454,6 +511,126 @@ public class TimeMeasurement {
                 out.println("IQR Cleaned Detailed Measurement Results");
                 out.print(Arrays.deepToString(durationsForServerActionsCleanIqr));
 
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // create meta logging for statistical visualization script
+    private static void logMetaMeasurement(
+        String measurementDefinition,
+        Config config,
+        WorkflowTrace handshakeTrace,
+        int totalCntServerActions,
+        int repititions,
+        String serverName,
+
+        StatisticResult[] statisticResultsServerActions,
+
+        int removedTopPercentage,
+        StatisticResult[] statisticResultsServerActionsCleanTop,
+
+        int removedStdDevRange,
+        StatisticResult[] statisticResultsServerActionsCleanDeviation,
+
+        double removedIqrRange,
+        StatisticResult[] statisticResultsServerActionsCleanIqr
+    ) {
+        // merge statistic results for all raw and the cleaned data sets
+        MergedStatisticResult mergedStatisticResultRaw = MergedStatisticResult.mergeStatisticResults(statisticResultsServerActions);
+        MergedStatisticResult mergedStatisticResultCleanTop = MergedStatisticResult.mergeStatisticResults(statisticResultsServerActionsCleanTop);
+        MergedStatisticResult mergedStatisticResultCleanDeviation = MergedStatisticResult.mergeStatisticResults(statisticResultsServerActionsCleanDeviation);
+        MergedStatisticResult mergedStatisticResultCleanIqr = MergedStatisticResult.mergeStatisticResults(statisticResultsServerActionsCleanIqr);
+
+        try {
+            // Get path of the JAR file and strip unnecessary folders
+            String jarPath = App.class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .toURI()
+                    .getPath();
+            String basePath = jarPath.substring(0, jarPath.lastIndexOf("target"));
+            
+            Date now = Calendar.getInstance().getTime();
+            String nowAsString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-mmmm").format(now);
+            String pathString = nowAsString;
+            
+            pathString += ("_v2-0_");
+
+            String measurementDefinitionName = "unknownMeasurementDefinition";
+            if (measurementDefinition != null) {
+                measurementDefinitionName = measurementDefinition;
+            }
+            pathString += measurementDefinition;
+
+            String serverNameString = "unknownServer";
+            if (serverName != null) {
+                serverNameString = serverName;
+            }
+            pathString += ("_" + serverNameString);
+
+            pathString += ("_" + repititions + "rep_python-meta");
+
+            File logFile = new File(basePath + "logging/" + pathString);
+
+            try (PrintWriter out = new PrintWriter(logFile)) {
+                out.println("# version\n2.0");
+
+                out.println("\n\n## General Info");
+                out.println("# test name\n" + measurementDefinitionName);
+                out.println("# server name\n" + serverNameString);
+                out.println("# repetitions\n" + repititions);
+                out.println("# time\n" + nowAsString);
+
+                out.println("\n\n## Statistic results raw data");
+                out.println("# min\n" + Arrays.toString(mergedStatisticResultRaw.mins));
+                out.println("# max\n" + Arrays.toString(mergedStatisticResultRaw.maxs));
+                out.println("# average\n" + Arrays.toString(mergedStatisticResultRaw.means));
+                out.println("# median\n" + Arrays.toString(mergedStatisticResultRaw.medians));
+                out.println("# 25th quantil\n" + Arrays.toString(mergedStatisticResultRaw.quantils25));
+                out.println("# 75th quantile\n" + Arrays.toString(mergedStatisticResultRaw.quantils75));
+                out.println("# standard deviation\n" + Arrays.toString(mergedStatisticResultRaw.standardDeviations));
+                out.println("# skewness\n" + Arrays.toString(mergedStatisticResultRaw.skewnesses));
+                out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultRaw.pearsonSkewnesses));
+
+                out.println("\n\n## Statistic results clean data by removing top " + removedTopPercentage + "%");
+                out.println("# min\n" + Arrays.toString(mergedStatisticResultCleanTop.mins));
+                out.println("# max\n" + Arrays.toString(mergedStatisticResultCleanTop.maxs));
+                out.println("# average\n" + Arrays.toString(mergedStatisticResultCleanTop.means));
+                out.println("# median\n" + Arrays.toString(mergedStatisticResultCleanTop.medians));
+                out.println("# 25th quantil\n" + Arrays.toString(mergedStatisticResultCleanTop.quantils25));
+                out.println("# 75th quantile\n" + Arrays.toString(mergedStatisticResultCleanTop.quantils75));
+                out.println("# standard deviation\n" + Arrays.toString(mergedStatisticResultCleanTop.standardDeviations));
+                out.println("# skewness\n" + Arrays.toString(mergedStatisticResultCleanTop.skewnesses));
+                out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultCleanTop.pearsonSkewnesses));
+
+                out.println("\n\n## Statistic results clean data by removing above/below +/- " + removedStdDevRange + " z score");
+                out.println("# min\n" + Arrays.toString(mergedStatisticResultCleanDeviation.mins));
+                out.println("# max\n" + Arrays.toString(mergedStatisticResultCleanDeviation.maxs));
+                out.println("# average\n" + Arrays.toString(mergedStatisticResultCleanDeviation.means));
+                out.println("# median\n" + Arrays.toString(mergedStatisticResultCleanDeviation.medians));
+                out.println("# 25th quantil\n" + Arrays.toString(mergedStatisticResultCleanDeviation.quantils25));
+                out.println("# 75th quantile\n" + Arrays.toString(mergedStatisticResultCleanDeviation.quantils75));
+                out.println("# standard deviation\n" + Arrays.toString(mergedStatisticResultCleanDeviation.standardDeviations));
+                out.println("# skewness\n" + Arrays.toString(mergedStatisticResultCleanDeviation.skewnesses));
+                out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultCleanDeviation.pearsonSkewnesses));
+
+                out.println("\n\n## Statistic results clean data by removing outside " + removedIqrRange + " IQR");
+                out.println("# min\n" + Arrays.toString(mergedStatisticResultCleanIqr.mins));
+                out.println("# max\n" + Arrays.toString(mergedStatisticResultCleanIqr.maxs));
+                out.println("# average\n" + Arrays.toString(mergedStatisticResultCleanIqr.means));
+                out.println("# median\n" + Arrays.toString(mergedStatisticResultCleanIqr.medians));
+                out.println("# 25th quantil\n" + Arrays.toString(mergedStatisticResultCleanIqr.quantils25));
+                out.println("# 75th quantile\n" + Arrays.toString(mergedStatisticResultCleanIqr.quantils75));
+                out.println("# standard deviation\n" + Arrays.toString(mergedStatisticResultCleanIqr.standardDeviations));
+                out.println("# skewness\n" + Arrays.toString(mergedStatisticResultCleanIqr.skewnesses));
+                out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultCleanIqr.pearsonSkewnesses));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

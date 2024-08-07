@@ -233,7 +233,7 @@ public class App {
         myConfig.setDefaultClientConnection(outboundCon);
 
         HandshakeActions handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(null, 10, myConfig, handshakeActions, true, 1, 3, 1.5);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement("fakeTest", 10, myConfig, handshakeActions, true, 1, 3, 1.5, true, "OpenSSL");
         
         //System.out.println(resultsMeasurement);
 
