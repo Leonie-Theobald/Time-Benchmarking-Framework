@@ -24,6 +24,7 @@ import de.rub.nds.tlsattacker.core.crypto.keys.CustomECPrivateKey;
 import de.rub.nds.tlsattacker.core.crypto.keys.CustomRSAPrivateKey;
 import de.rub.nds.tlsattacker.core.exceptions.WorkflowExecutionException;
 import de.rub.nds.tlsattacker.core.layer.context.TcpContext;
+import de.rub.nds.tlsattacker.core.layer.context.TimeableTcpContext;
 import de.rub.nds.tlsattacker.core.protocol.message.EndOfEarlyDataMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
 import de.rub.nds.tlsattacker.core.state.State;
@@ -249,8 +250,9 @@ public class App {
             long start = System.nanoTime();
             workflowExecutor.executeWorkflow();
             
-            TcpContext tcpContext = state.getTcpContext();
-            ArrayList<Long> allMeasurements = tcpContext.getAllMeasurements();
+
+            TimeableTcpContext timeableTcpContext = (TimeableTcpContext) state.getTcpContext();
+            ArrayList<Long> allMeasurements = timeableTcpContext.getAllMeasurements();
             System.out.println("Got all measurements: " + allMeasurements);
             
             long finish = System.nanoTime();
