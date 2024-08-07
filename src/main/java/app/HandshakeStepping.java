@@ -12,6 +12,7 @@ import de.rub.nds.tlsattacker.core.protocol.message.CertificateMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.CertificateVerifyMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ChangeCipherSpecMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ClientHelloMessage;
+import de.rub.nds.tlsattacker.core.protocol.message.ClientKeyExchangeMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.EndOfEarlyDataMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.HelloMessage;
@@ -21,10 +22,13 @@ import de.rub.nds.tlsattacker.core.protocol.message.extension.EarlyDataExtension
 import de.rub.nds.tlsattacker.core.protocol.message.extension.PreSharedKeyExtensionMessage;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 import static de.rub.nds.tlsattacker.core.workflow.WorkflowTraceUtil.getFirstSendMessage;
+
+import de.rub.nds.tlsattacker.core.workflow.action.LogLastMeasurementAction;
 import de.rub.nds.tlsattacker.core.workflow.action.ReceiveTillAction;
 import de.rub.nds.tlsattacker.core.workflow.action.ResetConnectionAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicClientKeyExchangeAction;
+import de.rub.nds.tlsattacker.core.workflow.action.SetMeasuringActiveAction;
 
 public class HandshakeStepping {
     public enum HandshakeType {
@@ -56,21 +60,33 @@ public class HandshakeStepping {
                     case TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH:
                         System.out.println(handshakeType + " is supported.");
 
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        trace.addTlsAction(new LogLastMeasurementAction());
                         
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
                         //segmentedHandshake.add(WorkflowTrace.copy(trace));
+
+                        //trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
                         
-                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage(), new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
 
+                        trace.addTlsAction(new LogLastMeasurementAction());
+
+                        segmentedHandshake.add(WorkflowTrace.copy(trace));
                         return segmentedHandshake;
                                             
                     case TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION:
@@ -317,10 +333,10 @@ public class HandshakeStepping {
                         System.out.println(handshakeType + " is supported.");
 
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
@@ -413,7 +429,7 @@ public class HandshakeStepping {
                         segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendAction(new EndOfEarlyDataMessage()));
-                        segmentedHandshake.add(WorkflowTrace.copy(trace));
+                        //segmentedHandshake.add(WorkflowTrace.copy(trace));
 
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         segmentedHandshake.add(WorkflowTrace.copy(trace));

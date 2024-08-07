@@ -1,6 +1,7 @@
 package app;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -22,12 +23,14 @@ import de.rub.nds.tlsattacker.core.constants.NamedGroup;
 import de.rub.nds.tlsattacker.core.crypto.keys.CustomECPrivateKey;
 import de.rub.nds.tlsattacker.core.crypto.keys.CustomRSAPrivateKey;
 import de.rub.nds.tlsattacker.core.exceptions.WorkflowExecutionException;
+import de.rub.nds.tlsattacker.core.layer.context.TcpContext;
 import de.rub.nds.tlsattacker.core.protocol.message.EndOfEarlyDataMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.FinishedMessage;
 import de.rub.nds.tlsattacker.core.state.State;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutor;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowExecutorFactory;
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
+import de.rub.nds.tlsattacker.transport.TransportHandlerType;
 
 
 public class App {
@@ -212,12 +215,12 @@ public class App {
 
         Config myConfig =
         ConfigFactory.getConfig(
-            TlsVersion.TLS13,
+            TlsVersion.TLS12,
             KeyExchange.ECDHE,
             KeyExchangeGroup.SECP384R1,
             ServerAuth.ECDSA,
-            clientAuthConfig,
-            new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+            null,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
             BulkAlgo.AES_256_GCM_SHA384,
             //new Vector<Extension>(){{add(Extension.OCSP);}});
             new Vector<>());
@@ -225,10 +228,11 @@ public class App {
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
         outboundCon.setPort(4433);
+        outboundCon.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
         myConfig.setDefaultClientConnection(outboundCon);
 
-        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement("D132", 2, myConfig, segmentedHandshake, true, 1, 3, 1.5);
+        List<WorkflowTrace> segmentedHandshake = HandshakeStepping.getSegmentedHandshake(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement(null, 1, myConfig, segmentedHandshake, false, 1, 3, 1.5);
         //System.out.println(resultsMeasurement);
 
         System.out.println("Reached End");
@@ -244,6 +248,11 @@ public class App {
         try {
             long start = System.nanoTime();
             workflowExecutor.executeWorkflow();
+            
+            TcpContext tcpContext = state.getTcpContext();
+            ArrayList<Long> allMeasurements = tcpContext.getAllMeasurements();
+            System.out.println("Got all measurements: " + allMeasurements);
+            
             long finish = System.nanoTime();
             timeElapsed = finish - start;
         } catch (WorkflowExecutionException ex) {
