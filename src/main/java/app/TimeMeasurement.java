@@ -304,6 +304,7 @@ public class TimeMeasurement {
             mergedStatisticResult.quantils25 = new double[statisticResults.length];
             mergedStatisticResult.quantils75 = new double[statisticResults.length];
             mergedStatisticResult.standardDeviations = new double[statisticResults.length];
+            mergedStatisticResult.variationCoefficients = new double[statisticResults.length];
             mergedStatisticResult.skewnesses = new double[statisticResults.length];
             mergedStatisticResult.pearsonSkewnesses = new double[statisticResults.length];
 
@@ -317,6 +318,7 @@ public class TimeMeasurement {
                 mergedStatisticResult.quantils25[cntServerAction] = oneResult.quantil25;
                 mergedStatisticResult.quantils75[cntServerAction] = oneResult.quantil75;
                 mergedStatisticResult.standardDeviations[cntServerAction] = oneResult.standardDeviation;
+                mergedStatisticResult.variationCoefficients[cntServerAction] = oneResult.variationCoefficient;
                 mergedStatisticResult.skewnesses[cntServerAction] = oneResult.skewness;
                 mergedStatisticResult.pearsonSkewnesses[cntServerAction] = oneResult.pearsonSkewness;
                 cntServerAction ++;
@@ -596,6 +598,7 @@ public class TimeMeasurement {
                 out.println("# 25th quantil\n" + Arrays.toString(mergedStatisticResultRaw.quantils25));
                 out.println("# 75th quantile\n" + Arrays.toString(mergedStatisticResultRaw.quantils75));
                 out.println("# standard deviation\n" + Arrays.toString(mergedStatisticResultRaw.standardDeviations));
+                out.println("# variance coefficients\n" + Arrays.toString(mergedStatisticResultRaw.variationCoefficients));
                 out.println("# skewness\n" + Arrays.toString(mergedStatisticResultRaw.skewnesses));
                 out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultRaw.pearsonSkewnesses));
 
@@ -607,6 +610,7 @@ public class TimeMeasurement {
                 out.println("# 25th quantil\n" + Arrays.toString(mergedStatisticResultCleanTop.quantils25));
                 out.println("# 75th quantile\n" + Arrays.toString(mergedStatisticResultCleanTop.quantils75));
                 out.println("# standard deviation\n" + Arrays.toString(mergedStatisticResultCleanTop.standardDeviations));
+                out.println("# variance coefficients\n" + Arrays.toString(mergedStatisticResultCleanTop.variationCoefficients));
                 out.println("# skewness\n" + Arrays.toString(mergedStatisticResultCleanTop.skewnesses));
                 out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultCleanTop.pearsonSkewnesses));
 
@@ -618,6 +622,7 @@ public class TimeMeasurement {
                 out.println("# 25th quantil\n" + Arrays.toString(mergedStatisticResultCleanDeviation.quantils25));
                 out.println("# 75th quantile\n" + Arrays.toString(mergedStatisticResultCleanDeviation.quantils75));
                 out.println("# standard deviation\n" + Arrays.toString(mergedStatisticResultCleanDeviation.standardDeviations));
+                out.println("# variance coefficients\n" + Arrays.toString(mergedStatisticResultCleanDeviation.variationCoefficients));
                 out.println("# skewness\n" + Arrays.toString(mergedStatisticResultCleanDeviation.skewnesses));
                 out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultCleanDeviation.pearsonSkewnesses));
 
@@ -629,6 +634,7 @@ public class TimeMeasurement {
                 out.println("# 25th quantil\n" + Arrays.toString(mergedStatisticResultCleanIqr.quantils25));
                 out.println("# 75th quantile\n" + Arrays.toString(mergedStatisticResultCleanIqr.quantils75));
                 out.println("# standard deviation\n" + Arrays.toString(mergedStatisticResultCleanIqr.standardDeviations));
+                out.println("# variance coefficients\n" + Arrays.toString(mergedStatisticResultCleanIqr.variationCoefficients));
                 out.println("# skewness\n" + Arrays.toString(mergedStatisticResultCleanIqr.skewnesses));
                 out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultCleanIqr.pearsonSkewnesses));
             } catch (FileNotFoundException e) {
