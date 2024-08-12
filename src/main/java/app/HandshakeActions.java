@@ -9,6 +9,7 @@ import de.rub.nds.tlsattacker.core.config.Config;
 import de.rub.nds.tlsattacker.core.connection.AliasedConnection;
 import de.rub.nds.tlsattacker.core.connection.OutboundConnection;
 import de.rub.nds.tlsattacker.core.constants.HandshakeMessageType;
+import de.rub.nds.tlsattacker.core.protocol.message.AlertMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.ApplicationMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.CertificateMessage;
 import de.rub.nds.tlsattacker.core.protocol.message.CertificateVerifyMessage;
@@ -132,6 +133,52 @@ public class HandshakeActions {
                         trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        trace.addTlsAction(new LogLastMeasurementAction());
+
+                        this.trace = trace;
+                        this.serverCntActions = 2;
+                        break;
+
+                    case TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT:
+                    case TLS12_STATIC_WITH_CLIENTAUTH_WITH_ALERT_CERT:
+                        System.out.println(handshakeType + " is supported.");
+
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
+                        certMsg = new CertificateMessage();
+                        certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(certMsg));
+                        trace.addTlsAction(new ReceiveTillAction(new AlertMessage()));
+                        trace.addTlsAction(new LogLastMeasurementAction());
+
+                        this.trace = trace;
+                        this.serverCntActions = 2;
+                        break;
+
+                    case TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY:
+                    case TLS12_STATIC_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY:
+                        System.out.println(handshakeType + " is supported.");
+
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
+                        certMsg = new CertificateMessage();
+                        certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SendAction(certMsg));
+                        trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
+
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
+                        trace.addTlsAction(new ReceiveTillAction(new AlertMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
 
                         this.trace = trace;
@@ -293,6 +340,29 @@ public class HandshakeActions {
                         
                         this.trace = trace;
                         this.serverCntActions = 1;
+                        break;
+
+                    case TLS13_WITH_CLIENTAUTH_WITH_ALERT_END:
+                        System.out.println(handshakeType + " is supported.");
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                        trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        certMsg = new CertificateMessage();
+                        certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+                        trace.addTlsAction(new SendAction(certMsg));
+                        trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
+                        
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
+                        trace.addTlsAction(new ReceiveTillAction(new AlertMessage()));
+                        trace.addTlsAction(new LogLastMeasurementAction());
+                        
+                        this.trace = trace;
+                        this.serverCntActions = 2;
                         break;
 
                     case TLS13_WITH_CLIENTAUTH_WITH_RESUMPTION:
