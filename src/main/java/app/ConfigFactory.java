@@ -333,6 +333,7 @@ public class ConfigFactory {
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.DHE, ServerAuth.RSA, BulkAlgo.AES_256_GCM_SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_GCM_SHA256));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_GCM_SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDH, ServerAuth.RSA, BulkAlgo.AES_256_GCM_SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_CBC_SHA256));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_CBC_SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.AES_256_GCM_SHA384));
@@ -342,6 +343,7 @@ public class ConfigFactory {
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CCM, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.AES_128_CCM));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_128_CBC_SHA256));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.RSA, BulkAlgo.AES_256_CBC_SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384, TlsVersion.TLS12, KeyExchange.ECDH, ServerAuth.RSA, BulkAlgo.AES_256_CBC_SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TlsVersion.TLS12, KeyExchange.DHE, ServerAuth.RSA, BulkAlgo.AES_128_CBC_SHA256));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TlsVersion.TLS12, KeyExchange.DHE, ServerAuth.RSA, BulkAlgo.AES_256_CBC_SHA256));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DHE_RSA_WITH_AES_128_GCM_SHA256, TlsVersion.TLS12, KeyExchange.DHE, ServerAuth.RSA, BulkAlgo.AES_128_GCM_SHA256));
@@ -349,6 +351,7 @@ public class ConfigFactory {
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DHE_RSA_WITH_AES_128_CCM, TlsVersion.TLS12, KeyExchange.DHE, ServerAuth.RSA, BulkAlgo.AES_128_CCM));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DHE_RSA_WITH_AES_256_CCM, TlsVersion.TLS12, KeyExchange.DHE, ServerAuth.RSA, BulkAlgo.AES_256_CCM));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.ECDH, ServerAuth.ECDSA, BulkAlgo.AES_256_GCM_SHA384));
+        ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384, TlsVersion.TLS12, KeyExchange.ECDH, ServerAuth.ECDSA, BulkAlgo.AES_256_CBC_SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.RSA, ServerAuth.RSA, BulkAlgo.AES_256_GCM_SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_DH_RSA_WITH_AES_256_GCM_SHA384, TlsVersion.TLS12, KeyExchange.DH, ServerAuth.RSA, BulkAlgo.AES_256_GCM_SHA384));
         ciphersOverview.add(new CipherDetails(CipherSuite.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, TlsVersion.TLS12, KeyExchange.ECDHE, ServerAuth.ECDSA, BulkAlgo.CHACHA20_POLY1305_SHA256));
