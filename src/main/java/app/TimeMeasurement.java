@@ -23,7 +23,7 @@ public class TimeMeasurement {
         Config config,
         HandshakeActions handshakeActions,
         Boolean shouldDocument,
-        int cleanTopOutlier,
+        // outlier treatment is ignored if both of them are <= 0
         int cleanDeviationOutlier,
         double cleanIqrOutlier,
         Boolean shouldCreateMetaLogging,
@@ -60,35 +60,7 @@ public class TimeMeasurement {
         }
 
         // check whether data should also be cleaned from outliers
-        if (cleanTopOutlier > 0 || cleanDeviationOutlier > 0 || cleanIqrOutlier > 0) {
-            // ## remove outliers by deleting the top end durations ##
-            // calculate how many values should be removed
-            int cntRemovedValues = (int) (cleanTopOutlier * repetition / 100);
-
-            Long[][] durationsForServerActionsCleanTop = new Long[totalCntServerActions][repetition - cntRemovedValues];
-            // sort each data set of the measured durations of server actions and cut the highest values
-            cntServerAction = 0;
-            for (Long[] durationsForOneAction: durationsForServerActions) {
-                Arrays.sort(durationsForOneAction);
-                List<Long> durationsList = Arrays.asList(durationsForOneAction);
-                List<Long> durationsListCleanTop = durationsList.subList(0, durationsList.size() - cntRemovedValues);
-
-                Long[] tempArray = new Long[durationsListCleanTop.size()];
-                tempArray = durationsListCleanTop.toArray(tempArray);
-                durationsForServerActionsCleanTop[cntServerAction] = tempArray;
-
-                cntServerAction++;
-            }
-
-            // run statistical analysis on duration measurements for server actions
-            StatisticResult[] statisticResultsServerActionsCleanTop = new StatisticResult[totalCntServerActions];
-            cntServerAction = 0;
-            for (Long[] durationsForOneActionCleanTop: durationsForServerActionsCleanTop) {
-                statisticResultsServerActionsCleanTop[cntServerAction] = StatisticResult.runStatisticAnalysis(durationsForOneActionCleanTop);
-                cntServerAction++;
-            }
-
-            
+        if (cleanDeviationOutlier > 0 || cleanIqrOutlier > 0) {            
             // ## remove outliers by deleting everything with z-score above/below +/- factor ##
             ArrayList<ArrayList<Long>> durationsForServerActionsCleanDeviation = new ArrayList<>();
 
@@ -153,15 +125,13 @@ public class TimeMeasurement {
             // log results if wished
             if (shouldDocument) {
                 logRawAndCleanMeasurement(measurementDefinition, config, handshakeTrace, totalCntServerActions,
-                    durationsForServerActions, statisticResultsServerActions, 
-                    cleanTopOutlier, durationsForServerActionsCleanTop, statisticResultsServerActionsCleanTop,
+                    durationsForServerActions, statisticResultsServerActions,
                     cleanDeviationOutlier, durationsForServerActionsCleanDeviationArray, statisticResultsServerActionsCleanDeviation,
                     cleanIqrOutlier, durationsForServerActionsCleanIqrArray, statisticResultsServerActionsCleanIqr);
             }
             if (shouldCreateMetaLogging) {
                 logMetaMeasurement(measurementDefinition, config, handshakeTrace, totalCntServerActions, repetition, serverName,
                     statisticResultsServerActions,
-                    cleanTopOutlier, statisticResultsServerActionsCleanTop,
                     cleanDeviationOutlier, statisticResultsServerActionsCleanDeviation,
                     cleanIqrOutlier, statisticResultsServerActionsCleanIqr);
             }
@@ -209,9 +179,11 @@ public class TimeMeasurement {
 
             // get more advanced statistic values
             // Median, 25 and 75 % percentil (https://studyflix.de/statistik/quantile-1040)
-            statisticResult.median = calcQuantil(dataSet, 0.5);
-            statisticResult.quantil25 = calcQuantil(dataSet, 0.25);
-            statisticResult.quantil75 = calcQuantil(dataSet, 0.75);
+            // use copied data set as calcQuantil modifies data (sorting)
+            Long[] clonedDataSet = dataSet.clone();
+            statisticResult.median = calcQuantil(clonedDataSet, 0.5);
+            statisticResult.quantil25 = calcQuantil(clonedDataSet, 0.25);
+            statisticResult.quantil75 = calcQuantil(clonedDataSet, 0.75);
 
             // variance (https://studyflix.de/statistik/empirische-varianz-2016)
             double tempSum = 0.0;
@@ -403,10 +375,6 @@ public class TimeMeasurement {
         Long[][] durationsForServerActions,
         StatisticResult[] statisticResultsServerActions,
 
-        int removedTopPercentage,
-        Long[][] durationsForServerActionsCleanTop,
-        StatisticResult[] statisticResultsServerActionsCleanTop,
-
         int removedStdDevRange,
         Long[][] durationsForServerActionsCleanDeviation,
         StatisticResult[] statisticResultsServerActionsCleanDeviation,
@@ -460,17 +428,6 @@ public class TimeMeasurement {
                     out.print(StatisticResult.textualRepresentation(oneResult));
                     cntServerAction++;
                 }
-
-
-                out.println("\n\n##################################################################");
-                out.println("\n\nCLEANED RESULTS (by removing top " + String.valueOf(removedTopPercentage) + "% of longest durations)");
-                out.println("Statistic results cleaned by removing top durations.");
-                cntServerAction = 0;
-                for (StatisticResult oneResult: statisticResultsServerActionsCleanTop) {
-                    out.println("\nServer Action " + cntServerAction);
-                    out.print(StatisticResult.textualRepresentation(oneResult));
-                    cntServerAction++;
-                }
                 
 
                 out.println("\n\n##################################################################");
@@ -502,10 +459,6 @@ public class TimeMeasurement {
                 out.print(Arrays.deepToString(durationsForServerActions));
 
                 out.println("\n\n#################################");
-                out.println("Top Cleaned Detailed Measurement Results");
-                out.print(Arrays.deepToString(durationsForServerActionsCleanTop));
-
-                out.println("\n\n#################################");
                 out.println("Deviation Cleaned Detailed Measurement Results");
                 out.print(Arrays.deepToString(durationsForServerActionsCleanDeviation));
 
@@ -534,9 +487,6 @@ public class TimeMeasurement {
 
         StatisticResult[] statisticResultsServerActions,
 
-        int removedTopPercentage,
-        StatisticResult[] statisticResultsServerActionsCleanTop,
-
         int removedStdDevRange,
         StatisticResult[] statisticResultsServerActionsCleanDeviation,
 
@@ -545,7 +495,6 @@ public class TimeMeasurement {
     ) {
         // merge statistic results for all raw and the cleaned data sets
         MergedStatisticResult mergedStatisticResultRaw = MergedStatisticResult.mergeStatisticResults(statisticResultsServerActions);
-        MergedStatisticResult mergedStatisticResultCleanTop = MergedStatisticResult.mergeStatisticResults(statisticResultsServerActionsCleanTop);
         MergedStatisticResult mergedStatisticResultCleanDeviation = MergedStatisticResult.mergeStatisticResults(statisticResultsServerActionsCleanDeviation);
         MergedStatisticResult mergedStatisticResultCleanIqr = MergedStatisticResult.mergeStatisticResults(statisticResultsServerActionsCleanIqr);
 
@@ -563,7 +512,7 @@ public class TimeMeasurement {
             String nowAsString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-mmmm").format(now);
             String pathString = nowAsString;
             
-            pathString += ("_v2-0_");
+            pathString += ("_v2-1_");
 
             String measurementDefinitionName = "unknownMeasurementDefinition";
             if (measurementDefinition != null) {
@@ -582,7 +531,7 @@ public class TimeMeasurement {
             File logFile = new File(basePath + "logging/" + pathString);
 
             try (PrintWriter out = new PrintWriter(logFile)) {
-                out.println("# version\n2.0");
+                out.println("# version\n2.1");
 
                 out.println("\n\n## General Info");
                 out.println("# test name\n" + measurementDefinitionName);
@@ -601,18 +550,6 @@ public class TimeMeasurement {
                 out.println("# variance coefficients\n" + Arrays.toString(mergedStatisticResultRaw.variationCoefficients));
                 out.println("# skewness\n" + Arrays.toString(mergedStatisticResultRaw.skewnesses));
                 out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultRaw.pearsonSkewnesses));
-
-                out.println("\n\n## Statistic results clean data by removing top " + removedTopPercentage + "%");
-                out.println("# min\n" + Arrays.toString(mergedStatisticResultCleanTop.mins));
-                out.println("# max\n" + Arrays.toString(mergedStatisticResultCleanTop.maxs));
-                out.println("# average\n" + Arrays.toString(mergedStatisticResultCleanTop.means));
-                out.println("# median\n" + Arrays.toString(mergedStatisticResultCleanTop.medians));
-                out.println("# 25th quantil\n" + Arrays.toString(mergedStatisticResultCleanTop.quantils25));
-                out.println("# 75th quantile\n" + Arrays.toString(mergedStatisticResultCleanTop.quantils75));
-                out.println("# standard deviation\n" + Arrays.toString(mergedStatisticResultCleanTop.standardDeviations));
-                out.println("# variance coefficients\n" + Arrays.toString(mergedStatisticResultCleanTop.variationCoefficients));
-                out.println("# skewness\n" + Arrays.toString(mergedStatisticResultCleanTop.skewnesses));
-                out.println("# pearson skewness\n" + Arrays.toString(mergedStatisticResultCleanTop.pearsonSkewnesses));
 
                 out.println("\n\n## Statistic results clean data by removing above/below +/- " + removedStdDevRange + " z score");
                 out.println("# min\n" + Arrays.toString(mergedStatisticResultCleanDeviation.mins));

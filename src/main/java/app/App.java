@@ -368,7 +368,7 @@ public class App {
         myConfig.setDefaultClientConnection(outboundCon);
         
         HandshakeActions handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement("D179", 10, myConfig, handshakeActions, true, 1, 3, 1.5, false, null); 
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement("D179", 10, myConfig, handshakeActions, true, 3, 1.5, false, null); 
 
         
 
