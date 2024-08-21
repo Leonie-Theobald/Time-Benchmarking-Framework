@@ -63,11 +63,9 @@ public class HandshakeActions {
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
                         
-                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
-                        
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
@@ -86,11 +84,9 @@ public class HandshakeActions {
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
                         
-                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
-                        
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
@@ -124,13 +120,11 @@ public class HandshakeActions {
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
                         
-                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(certMsg));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
-                        
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
@@ -141,29 +135,8 @@ public class HandshakeActions {
 
                     case TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT:
                     case TLS12_STATIC_WITH_CLIENTAUTH_WITH_ALERT_CERT:
-                        System.out.println(handshakeType + " is supported.");
-
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
-                        trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-                        trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
-                        trace.addTlsAction(new LogLastMeasurementAction());
-                        
-                        certMsg = new CertificateMessage();
-                        certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
-                        
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
-                        trace.addTlsAction(new SendAction(certMsg));
-                        trace.addTlsAction(new ReceiveTillAction(new AlertMessage()));
-                        trace.addTlsAction(new LogLastMeasurementAction());
-
-                        this.trace = trace;
-                        this.serverCntActions = 2;
-                        break;
-
                     case TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY:
                     case TLS12_STATIC_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY:
-                        System.out.println(handshakeType + " is supported.");
-
                         trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
                         trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
@@ -172,12 +145,12 @@ public class HandshakeActions {
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
                         
-                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(certMsg));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
-
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
+                        trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
+                        trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new AlertMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
 
@@ -198,13 +171,11 @@ public class HandshakeActions {
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
                         
-                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(certMsg));
                         trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
                         trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
-                        
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
@@ -309,14 +280,16 @@ public class HandshakeActions {
                         trace.addTlsAction(new SetMeasuringActiveAction(false));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
 
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         ApplicationMessage earlyDataMessage = new ApplicationMessage();
                         earlyDataMessage.setDataConfig(config.getEarlyData());
+
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(earlyDataMessage));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
 
                         trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SendAction(new EndOfEarlyDataMessage()));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         
                         this.trace = trace;
@@ -350,13 +323,12 @@ public class HandshakeActions {
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
                         
-                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
+
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(certMsg));
                         trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
-                        
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         trace.addTlsAction(new ReceiveTillAction(new AlertMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
@@ -380,13 +352,12 @@ public class HandshakeActions {
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
 
-                        trace.addTlsAction(new SetMeasuringActiveAction(false));
                         certMsg = new CertificateMessage();
                         certMsg.setCertificateKeyPair(config.getDefaultExplicitCertificateKeyPair());
-                        trace.addTlsAction(new SendAction(certMsg));
-                        trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
 
                         trace.addTlsAction(new SetMeasuringActiveAction(true));
+                        trace.addTlsAction(new SendAction(certMsg));
+                        trace.addTlsAction(new SendAction(new CertificateVerifyMessage()));
                         trace.addTlsAction(new SendAction(new FinishedMessage()));
                         // TODO: RFC states that SESSION_TICKET comes before FINISHED
                         // Figure 1 in https://datatracker.ietf.org/doc/html/rfc5077

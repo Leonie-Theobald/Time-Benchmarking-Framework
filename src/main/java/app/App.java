@@ -96,7 +96,7 @@ public class App {
         );
         */
 
-        /*
+        
         // rsa2048_ecdsa_cert
         CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
             new BigInteger("26771365176862042370447575317565893333866273712037299127575052249674034748267894140397512257060726426322455635432866021654806411928200746474640782711282567116925416069973475223851750164467399571358264073882999106033870353964296750679820882007516361140910857888467117716008086392199516237277703953528841565822088283170754234812797697884826276767281787118745219065929293008898620818455193628593075811923553931146948032486881744551681199389494680499733105121735679615830150910409010886912815252815356756220924211463447938426459936019562402757712105879611074030708449744682053450528084497532631901464236091316500928887307"),
@@ -106,7 +106,7 @@ public class App {
                     "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem",
                     privKey
         );
-        */
+        
         
         /*
         // rsa4096_ecdsa_cert
@@ -355,11 +355,11 @@ public class App {
             KeyExchange.ECDHE,
             KeyExchangeGroup.SECP384R1,
             ServerAuth.ECDSA,
-            null,
-            new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+            clientAuthConfig,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
             BulkAlgo.AES_256_GCM_SHA384,
-            //new Vector<Extension>(){{add(Extension.OCSP);}});
-            new Vector<>());
+            new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+            //new Vector<>());
 
         OutboundConnection outboundCon = new OutboundConnection();
         outboundCon.setHostname("localhost");
@@ -367,8 +367,8 @@ public class App {
         outboundCon.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
         myConfig.setDefaultClientConnection(outboundCon);
         
-        HandshakeActions handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement("D179", 10, myConfig, handshakeActions, true, 3, 1.5, false, null); 
+        HandshakeActions handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
+        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement("singleFlight", 2, myConfig, handshakeActions, true, 3, 1.5, false, null); 
 
         
 
