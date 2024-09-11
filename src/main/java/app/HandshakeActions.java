@@ -277,13 +277,10 @@ public class HandshakeActions {
                         trace.addTlsAction(new ResetConnectionAction());
 
                         // Second Handshake
-                        trace.addTlsAction(new SetMeasuringActiveAction(false));
+                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
-
                         ApplicationMessage earlyDataMessage = new ApplicationMessage();
                         earlyDataMessage.setDataConfig(config.getEarlyData());
-
-                        trace.addTlsAction(new SetMeasuringActiveAction(true));
                         trace.addTlsAction(new SendAction(earlyDataMessage));
                         trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
                         trace.addTlsAction(new LogLastMeasurementAction());
