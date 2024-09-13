@@ -26,8 +26,10 @@ import de.rub.nds.tlsattacker.core.protocol.message.extension.PreSharedKeyExtens
 import de.rub.nds.tlsattacker.core.workflow.WorkflowTrace;
 import static de.rub.nds.tlsattacker.core.workflow.WorkflowTraceUtil.getFirstSendMessage;
 
+import de.rub.nds.tlsattacker.core.workflow.action.FlushSessionCacheAction;
 import de.rub.nds.tlsattacker.core.workflow.action.LogLastMeasurementAction;
 import de.rub.nds.tlsattacker.core.workflow.action.ReceiveTillAction;
+import de.rub.nds.tlsattacker.core.workflow.action.RenegotiationAction;
 import de.rub.nds.tlsattacker.core.workflow.action.ResetConnectionAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendAction;
 import de.rub.nds.tlsattacker.core.workflow.action.SendDynamicClientKeyExchangeAction;
@@ -107,6 +109,44 @@ public class HandshakeActions {
                         this.trace = trace;
                         this.serverCntActions = 3;
                         break;
+
+                    case TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RENEGOTIATION:
+                    case TLS12_STATIC_WITHOUT_CLIENTAUTH_WITH_RENEGOTIATION:
+                            System.out.println(handshakeType + " is supported.");
+    
+                            // First handshake
+                            trace.addTlsAction(new SetMeasuringActiveAction(true));
+                            trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                            trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
+                            trace.addTlsAction(new LogLastMeasurementAction());
+                            
+                            trace.addTlsAction(new SetMeasuringActiveAction(true));
+                            trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
+                            trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
+                            trace.addTlsAction(new SendAction(new FinishedMessage()));
+                            trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                            trace.addTlsAction(new LogLastMeasurementAction());
+                            
+                            // Intermediate steps preparring renegotiation
+                            trace.addTlsAction(new RenegotiationAction());
+                            trace.addTlsAction(new FlushSessionCacheAction());
+                            
+                            // Second Handshake
+                            trace.addTlsAction(new SetMeasuringActiveAction(true));
+                            trace.addTlsAction(new SendAction(new ClientHelloMessage(config)));
+                            trace.addTlsAction(new ReceiveTillAction(new ServerHelloDoneMessage()));
+                            trace.addTlsAction(new LogLastMeasurementAction());
+                            
+                            trace.addTlsAction(new SetMeasuringActiveAction(true));
+                            trace.addTlsAction(new SendDynamicClientKeyExchangeAction());
+                            trace.addTlsAction(new SendAction(new ChangeCipherSpecMessage()));
+                            trace.addTlsAction(new SendAction(new FinishedMessage()));
+                            trace.addTlsAction(new ReceiveTillAction(new FinishedMessage()));
+                            trace.addTlsAction(new LogLastMeasurementAction());
+                            
+                            this.trace = trace;
+                            this.serverCntActions = 4;
+                            break;
 
                     case TLS12_EPHEMERAL_WITH_CLIENTAUTH:
                     case TLS12_STATIC_WITH_CLIENTAUTH:

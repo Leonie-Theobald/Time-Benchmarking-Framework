@@ -90,6 +90,7 @@ public class ConfigurationTypes {
         ZERO_RTT,
         RESUMPTION_SESSION_ID,
         RESUMPTION_SESSION_TICKET,
+        RENEGOTIATION,
     }
 
     public enum BulkAlgo {

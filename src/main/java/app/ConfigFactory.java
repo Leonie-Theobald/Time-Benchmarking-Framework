@@ -214,8 +214,12 @@ public class ConfigFactory {
             myConfig.setAddCertificateStatusRequestExtension(false);
         }
 
-        // Misc
-        myConfig.setAddRenegotiationInfoExtension(false);
+        // Renegotiation
+        if (extensions.contains(Extension.RENEGOTIATION)) {
+            myConfig.setAddRenegotiationInfoExtension(true);
+        } else {
+            myConfig.setAddRenegotiationInfoExtension(false);
+        }
 
         System.out.println(getConfigOverview(myConfig));
         return myConfig;
@@ -224,6 +228,7 @@ public class ConfigFactory {
     private enum ConfigError {
         NO_ERROR,
         TLS13_WITH_STATIC_KX,
+        TLS13_WITH_RENEGOTIATION,
         TLS13_WITH_SESSION_ID_RESUMPTION,
         AMBIGUOUS_RESUMPTION,
         KX_MISMATCHING_GROUP,
@@ -240,6 +245,10 @@ public class ConfigFactory {
         if (version == TlsVersion.TLS13 && keyExchange == KeyExchange.RSA
                 || version == TlsVersion.TLS13 && keyExchange == KeyExchange.DH) {
             return ConfigError.TLS13_WITH_STATIC_KX;
+        }
+
+        if (version == TlsVersion.TLS13 && extensions.contains(Extension.RENEGOTIATION)) {
+            return ConfigError.TLS13_WITH_RENEGOTIATION;
         }
 
         if (version == TlsVersion.TLS13 && extensions.contains(Extension.RESUMPTION_SESSION_ID)){
@@ -408,6 +417,9 @@ public class ConfigFactory {
         configDescription += "\nOCSP: " + config.isAddCertificateStatusRequestExtension();
 
         configDescription += "\nSession Ticket Extension: " + config.isAddSessionTicketTLSExtension(); 
+        if (config.getHighestProtocolVersion() == ProtocolVersion.TLS12) {
+            configDescription += "\nRenegotiation Extension (TLS1.2): " + config.isAddRenegotiationInfoExtension();
+        }
         if (config.getHighestProtocolVersion() == ProtocolVersion.TLS13) {
             configDescription += "\nPSK Extension (TLS1.3): " + config.isAddPSKKeyExchangeModesExtension();
             configDescription += "\nPSK Extension (TLS1.3): " + config.isAddPreSharedKeyExtension();
