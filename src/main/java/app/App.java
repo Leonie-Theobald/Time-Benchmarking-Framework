@@ -38,341 +38,8353 @@ public class App {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static void main(String[] args) {  
-        /*
-        // openssl s_server -cert ./TLS-Core/src/main/resources/certs/rsa2048_rsa_cert.pem -key ./TLS-Core/src/main/resources/certs/rsa2048_key.pem -tls1_2 -Verify 3 -CAfile ./Zusatzzeug/keyGen/rsa2048_cert.pem -trace
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
-            new BigInteger("22680894355213276814068604237379515326692913667424423179105887452289906651381282343803736135056197131595363416117766447222033440405148554595150495098954618784791409846721078014631997901600818192748951260294724453863786822963457535714201456929910107294028887630816463336166663178044202436591458723765695469483323295740091515251848862253753967572511917223940594872506608243732478287780716299338656301737923256700355562820768458403307832462075060029877854803131864443444034500618089480396072963994147799521776599695622459322293973138939514112920721100797951815691387710738229293066991665386400046197146008454129381303013"),
-            new BigInteger("1081220900519306994054118481314527476163106719322647452617727838882406914114781299588271417902671126167388106236144671423388446493562843049877263993876061364494202266642979463380542895308994686679330955004731190982136777534172265998708970859053814947427221608823239751002807226391716969448091277902763492530629102587274894712676589402812658549391491035698540223575850258784236700772902034492790099278379171982874885903225435518252664651224422790750083966520867503120878596752239393242686207324374684442156551897779979099846701806053546967178413553042480432389633260063913612546788291398650159971518641894650833502207"));
+        CustomRSAPrivateKey privKeyRsa;
+        CustomECPrivateKey privKeyEcc;
+        byte[] derEncdoedPrivKey;
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/keyGen/rsa2048_cert.pem",
-                    privKey
-        );
-        */
-
-        
-        /*
-        //EC Certificate
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xE3, (byte)0x17, (byte)0x0C, (byte)0x60, (byte)0xC7, (byte)0x2E, (byte)0x6F, (byte)0xDD, (byte)0x09, (byte)0x89, (byte)0x5F, (byte)0xAA, (byte)0x26, (byte)0xED, (byte)0x2F, (byte)0x58, (byte)0x72, (byte)0x99, (byte)0xA7, (byte)0xA8, (byte)0x17, (byte)0x0A, (byte)0x2A, (byte)0x6D, (byte)0xED, (byte)0x23, (byte)0x89, (byte)0x84, (byte)0x8A, (byte)0xF7, (byte)0xCB, (byte)0xBF, (byte)0xA8, (byte)0x2C, (byte)0xED, (byte)0x84, (byte)0xBE, (byte)0x99, (byte)0x15, (byte)0xB3, (byte)0xDF, (byte)0x62, (byte)0x93, (byte)0xD5, (byte)0x3D, (byte)0x55, (byte)0xC3, (byte)0x25};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/keyGen/ec_secp384r1_cert.pem",
-                    privKey
-        );
-        */
-        
-        
-        /*
-       //EC Certificate NON-CA
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x20, (byte)0xB5, (byte)0xB3, (byte)0xC9, (byte)0x56, (byte)0xE1, (byte)0xD0, (byte)0x3B, (byte)0x20, (byte)0xF9, (byte)0x8D, (byte)0x57, (byte)0x45, (byte)0x50, (byte)0x7E, (byte)0x3F, (byte)0x9F, (byte)0xD2, (byte)0xA4, (byte)0x13, (byte)0x62, (byte)0x90, (byte)0xCF, (byte)0xA0, (byte)0xFA, (byte)0x27, (byte)0x60, (byte)0x0D, (byte)0xF4, (byte)0xC4, (byte)0xD8, (byte)0x4D, (byte)0x14};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certificates_3/vehicle-controller-ca-cert.pem",
-                    privKey
-        );
-        */
-
-        /*
-        // certGen Test
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xF1, (byte)0xF8, (byte)0x9B, (byte)0x19, (byte)0xA0, (byte)0x96, (byte)0x00, (byte)0x17, (byte)0xAC, (byte)0x27, (byte)0x7B, (byte)0x8D, (byte)0x38, (byte)0xD5, (byte)0x04, (byte)0x2C, (byte)0x33, (byte)0x3B, (byte)0x2B, (byte)0x1B, (byte)0xA2, (byte)0x89, (byte)0xFC, (byte)0xF1, (byte)0xBC, (byte)0x76, (byte)0x1A, (byte)0x3A, (byte)0x42, (byte)0x4F, (byte)0xD1, (byte)0xAE, (byte)0xEF, (byte)0x46, (byte)0xA7, (byte)0x6B, (byte)0xA9, (byte)0xD6, (byte)0x8B, (byte)0xB7, (byte)0x91, (byte)0x18, (byte)0xD4, (byte)0xDA, (byte)0x99, (byte)0x12, (byte)0xFE, (byte)0x57};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem",
-                    privKey
-        );
-        */
-
-
-
-        /*
         // rsa1024_ecdsa_cert
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("122196060381948061524181822542992910701265350082186396309660022581822502403487504433930918918391270348215377662080919979293352972201341666977666439686093758569559751208961900988053904364482077420392551275507784762644191161672667395076974003605211901879113196745154057490294124316407485242885967672876205342799"),
             new BigInteger("39276439445591588202189451635994105069230428604929374830446745741887651450775352562686037002241666690345254290732480573779917914451703041257374361841212819606453430256634759729697692106919469422720434651742430624650822087125431824981188151317079856307610875006125587845702795210101202837648047020119822006793"));
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa1024_ecdsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigRsa1024Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa1024_ecdsa_cert.pem",
+                    privKeyRsa
         );
-        */
 
-        
         // rsa2048_ecdsa_cert
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("26771365176862042370447575317565893333866273712037299127575052249674034748267894140397512257060726426322455635432866021654806411928200746474640782711282567116925416069973475223851750164467399571358264073882999106033870353964296750679820882007516361140910857888467117716008086392199516237277703953528841565822088283170754234812797697884826276767281787118745219065929293008898620818455193628593075811923553931146948032486881744551681199389494680499733105121735679615830150910409010886912815252815356756220924211463447938426459936019562402757712105879611074030708449744682053450528084497532631901464236091316500928887307"),
             new BigInteger("3817974039482141065587199028115867709003786063590896994001559818905021068628192816015767403308330859569751920237015461058587486901855871903279522645391191442366043628759434917370804017763928011561408290989020723324924382613291721931564549394742689921777367490952559862866313372059947487857486000299942287485742181937280487452268798626155772086785043347656601787917435741531857454522387951048281304351492979192727258718910368045897904523372612560514149153981361480911080238427046988476001823785451736527110241523432142198384633545960663244549097206442975208364759922621377923628888252187350027973877262617888140292365"));
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigRsa2048Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem",
+                    privKeyRsa
         );
         
-        
-        /*
         // rsa4096_ecdsa_cert
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("870323041865936973091870103424871182443959716636903087203161929732695673467192469840137305410157590635777794004038812230941028770647478622902699349388092891957000194146741038689897422637239853959109045150116847317189612862597164300140707098428531319732688497129471384934739103825184317099441032904973394018922128501436942999910609650854190529492597519888681500945749681544081467994073534483892815358393346326297679661238191200266280874146719754808720501698464357887864408637126065244999084470287095139268633117373092344969781377047751005432558109684456827713722430170410512076538371374490822279219383372064878713103711951158522707707436926438741739605856691652628524008439128450688696386915481675393969896250330155740032457370902372607571413673931454735427967317005185694660040331430176843876172001778177151392497282259670564133082310934455085413383897901946352255292877381725797288866654185154759563197516229643548549782917811488413338485300978536143976580691512568192388965473249455250767063394418400131837077751908111725417818825002736314671611085088959810383091103416945973734155632326348196133136811885315574363476959280793753814055751078215557222129697939318093734512584175738964316827777248132858786686077919868029174323987367"),
             new BigInteger("2016067005899381793360195655310730065091911291559362261961430929738356525387316818111506263977853296311142177753883827246234776301109986137997829010416001862135376305371323695328078644025610908993603009488362565541734268829031032191616178709880963438114838493874267760692348764929521798386130091239212126899579426296947520193444952730410503084949898470086832111623359865076979645368449057736743268482183686069674093627439520129793970497156965277092843672620902454128378965054898956990739077046194182216418204089251534152367314829728637695025016900865132310702948496267608565301563924335211688980616570061519603635427325271229292004846071273115472873906916104883201379322688404647573242493973784636316474451189693690390191209520091234552080511886065342543505774829221086512942759740809418711636705014399692420869582237222292359236578943732827194347784488161331400380928314253895658229795430495824097113205265585771742458547700422870870406209330619630566010364008759233353171735096106044615752719903737584223504654774818164841234680777168146991289547902539238061734424877111718001626976990756893812480642925124010950100842391276437404231840519091618369235260848957358519783916916775301173539676694700818904046314171195175022962433673"));
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa4096_ecdsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigRsa4096Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa4096_ecdsa_cert.pem",
+                    privKeyRsa
         );
-        */
 
-        /*
         // ec_secp256r1_ecdsa_cert
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x80, (byte)0x2D, (byte)0x8C, (byte)0x55, (byte)0xCB, (byte)0x0B, (byte)0xDE, (byte)0x67, (byte)0xE9, (byte)0xE2, (byte)0x9D, (byte)0xF2, (byte)0xAB, (byte)0xA9, (byte)0x60, (byte)0x88, (byte)0x90, (byte)0xBB, (byte)0x35, (byte)0xA8, (byte)0x2A, (byte)0x7B, (byte)0xBB, (byte)0x5F, (byte)0x37, (byte)0x43, (byte)0xD7, (byte)0x93, (byte)0xC0, (byte)0x84, (byte)0x92, (byte)0xC0};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_ecdsa_cert.pem",
-                    privKey
+        derEncdoedPrivKey = new byte[]{(byte)0x80, (byte)0x2D, (byte)0x8C, (byte)0x55, (byte)0xCB, (byte)0x0B, (byte)0xDE, (byte)0x67, (byte)0xE9, (byte)0xE2, (byte)0x9D, (byte)0xF2, (byte)0xAB, (byte)0xA9, (byte)0x60, (byte)0x88, (byte)0x90, (byte)0xBB, (byte)0x35, (byte)0xA8, (byte)0x2A, (byte)0x7B, (byte)0xBB, (byte)0x5F, (byte)0x37, (byte)0x43, (byte)0xD7, (byte)0x93, (byte)0xC0, (byte)0x84, (byte)0x92, (byte)0xC0};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
+        ClientAuthConfig clientAuthConfigEcc256Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_ecdsa_cert.pem",
+                    privKeyEcc
         );
-        */
 
-        /*
         // ec_secp384r1_ecdsa_cert
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0xF1, (byte)0xF8, (byte)0x9B, (byte)0x19, (byte)0xA0, (byte)0x96, (byte)0x00, (byte)0x17, (byte)0xAC, (byte)0x27, (byte)0x7B, (byte)0x8D, (byte)0x38, (byte)0xD5, (byte)0x04, (byte)0x2C, (byte)0x33, (byte)0x3B, (byte)0x2B, (byte)0x1B, (byte)0xA2, (byte)0x89, (byte)0xFC, (byte)0xF1, (byte)0xBC, (byte)0x76, (byte)0x1A, (byte)0x3A, (byte)0x42, (byte)0x4F, (byte)0xD1, (byte)0xAE, (byte)0xEF, (byte)0x46, (byte)0xA7, (byte)0x6B, (byte)0xA9, (byte)0xD6, (byte)0x8B, (byte)0xB7, (byte)0x91, (byte)0x18, (byte)0xD4, (byte)0xDA, (byte)0x99, (byte)0x12, (byte)0xFE, (byte)0x57};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem",
-                    privKey
+        derEncdoedPrivKey = new byte[]{(byte)0xF1, (byte)0xF8, (byte)0x9B, (byte)0x19, (byte)0xA0, (byte)0x96, (byte)0x00, (byte)0x17, (byte)0xAC, (byte)0x27, (byte)0x7B, (byte)0x8D, (byte)0x38, (byte)0xD5, (byte)0x04, (byte)0x2C, (byte)0x33, (byte)0x3B, (byte)0x2B, (byte)0x1B, (byte)0xA2, (byte)0x89, (byte)0xFC, (byte)0xF1, (byte)0xBC, (byte)0x76, (byte)0x1A, (byte)0x3A, (byte)0x42, (byte)0x4F, (byte)0xD1, (byte)0xAE, (byte)0xEF, (byte)0x46, (byte)0xA7, (byte)0x6B, (byte)0xA9, (byte)0xD6, (byte)0x8B, (byte)0xB7, (byte)0x91, (byte)0x18, (byte)0xD4, (byte)0xDA, (byte)0x99, (byte)0x12, (byte)0xFE, (byte)0x57};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
+        ClientAuthConfig clientAuthConfigEcc384Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem",
+                    privKeyEcc
         );
-        */
 
-        /*
         // ec_secp521r1_ecdsa_cert
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x01, (byte)0xD5, (byte)0xC4, (byte)0x9A, (byte)0x07, (byte)0xFA, (byte)0x36, (byte)0x2E, (byte)0x7B, (byte)0x95, (byte)0xB2, (byte)0x24, (byte)0x90, (byte)0x3D, (byte)0x4E, (byte)0x2B, (byte)0x52, (byte)0x77, (byte)0x5E, (byte)0x0E, (byte)0xA3, (byte)0x92, (byte)0xB6, (byte)0x4E, (byte)0x9F, (byte)0x6D, (byte)0xE9, (byte)0xC1, (byte)0x9A, (byte)0xDD, (byte)0x74, (byte)0xCC, (byte)0xC1, (byte)0x45, (byte)0x43, (byte)0x70, (byte)0x1B, (byte)0xFA, (byte)0xBF, (byte)0x40, (byte)0x78, (byte)0x3A, (byte)0x22, (byte)0xC3, (byte)0xA8, (byte)0x9B, (byte)0xF1, (byte)0xC5, (byte)0x1C, (byte)0x93, (byte)0x67, (byte)0x1B, (byte)0x58, (byte)0x04, (byte)0x5B, (byte)0xE4, (byte)0xA4, (byte)0xBB, (byte)0xEC, (byte)0xAD, (byte)0x15, (byte)0x1F, (byte)0x16, (byte)0x99, (byte)0x64, (byte)0x5B};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP521R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_ecdsa_cert.pem",
-                    privKey
+        derEncdoedPrivKey = new byte[]{(byte)0x01, (byte)0xD5, (byte)0xC4, (byte)0x9A, (byte)0x07, (byte)0xFA, (byte)0x36, (byte)0x2E, (byte)0x7B, (byte)0x95, (byte)0xB2, (byte)0x24, (byte)0x90, (byte)0x3D, (byte)0x4E, (byte)0x2B, (byte)0x52, (byte)0x77, (byte)0x5E, (byte)0x0E, (byte)0xA3, (byte)0x92, (byte)0xB6, (byte)0x4E, (byte)0x9F, (byte)0x6D, (byte)0xE9, (byte)0xC1, (byte)0x9A, (byte)0xDD, (byte)0x74, (byte)0xCC, (byte)0xC1, (byte)0x45, (byte)0x43, (byte)0x70, (byte)0x1B, (byte)0xFA, (byte)0xBF, (byte)0x40, (byte)0x78, (byte)0x3A, (byte)0x22, (byte)0xC3, (byte)0xA8, (byte)0x9B, (byte)0xF1, (byte)0xC5, (byte)0x1C, (byte)0x93, (byte)0x67, (byte)0x1B, (byte)0x58, (byte)0x04, (byte)0x5B, (byte)0xE4, (byte)0xA4, (byte)0xBB, (byte)0xEC, (byte)0xAD, (byte)0x15, (byte)0x1F, (byte)0x16, (byte)0x99, (byte)0x64, (byte)0x5B};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP521R1);
+        ClientAuthConfig clientAuthConfigEcc521Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_ecdsa_cert.pem",
+                    privKeyEcc
         );
-        */
 
-        /*
         // rsa1024_rsa_cert
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("122196060381948061524181822542992910701265350082186396309660022581822502403487504433930918918391270348215377662080919979293352972201341666977666439686093758569559751208961900988053904364482077420392551275507784762644191161672667395076974003605211901879113196745154057490294124316407485242885967672876205342799"),
             new BigInteger("39276439445591588202189451635994105069230428604929374830446745741887651450775352562686037002241666690345254290732480573779917914451703041257374361841212819606453430256634759729697692106919469422720434651742430624650822087125431824981188151317079856307610875006125587845702795210101202837648047020119822006793"));
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa1024_rsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigRsa1024Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa1024_rsa_cert.pem",
+                    privKeyRsa
         );
-        */
 
-        /*
         // rsa2048_rsa_cert
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("26771365176862042370447575317565893333866273712037299127575052249674034748267894140397512257060726426322455635432866021654806411928200746474640782711282567116925416069973475223851750164467399571358264073882999106033870353964296750679820882007516361140910857888467117716008086392199516237277703953528841565822088283170754234812797697884826276767281787118745219065929293008898620818455193628593075811923553931146948032486881744551681199389494680499733105121735679615830150910409010886912815252815356756220924211463447938426459936019562402757712105879611074030708449744682053450528084497532631901464236091316500928887307"),
             new BigInteger("3817974039482141065587199028115867709003786063590896994001559818905021068628192816015767403308330859569751920237015461058587486901855871903279522645391191442366043628759434917370804017763928011561408290989020723324924382613291721931564549394742689921777367490952559862866313372059947487857486000299942287485742181937280487452268798626155772086785043347656601787917435741531857454522387951048281304351492979192727258718910368045897904523372612560514149153981361480911080238427046988476001823785451736527110241523432142198384633545960663244549097206442975208364759922621377923628888252187350027973877262617888140292365"));
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa2048_rsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigRsa2048Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa2048_rsa_cert.pem",
+                    privKeyRsa
         );
-        */
 
-        /*
         // rsa4096_rsa_cert
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("870323041865936973091870103424871182443959716636903087203161929732695673467192469840137305410157590635777794004038812230941028770647478622902699349388092891957000194146741038689897422637239853959109045150116847317189612862597164300140707098428531319732688497129471384934739103825184317099441032904973394018922128501436942999910609650854190529492597519888681500945749681544081467994073534483892815358393346326297679661238191200266280874146719754808720501698464357887864408637126065244999084470287095139268633117373092344969781377047751005432558109684456827713722430170410512076538371374490822279219383372064878713103711951158522707707436926438741739605856691652628524008439128450688696386915481675393969896250330155740032457370902372607571413673931454735427967317005185694660040331430176843876172001778177151392497282259670564133082310934455085413383897901946352255292877381725797288866654185154759563197516229643548549782917811488413338485300978536143976580691512568192388965473249455250767063394418400131837077751908111725417818825002736314671611085088959810383091103416945973734155632326348196133136811885315574363476959280793753814055751078215557222129697939318093734512584175738964316827777248132858786686077919868029174323987367"),
             new BigInteger("2016067005899381793360195655310730065091911291559362261961430929738356525387316818111506263977853296311142177753883827246234776301109986137997829010416001862135376305371323695328078644025610908993603009488362565541734268829031032191616178709880963438114838493874267760692348764929521798386130091239212126899579426296947520193444952730410503084949898470086832111623359865076979645368449057736743268482183686069674093627439520129793970497156965277092843672620902454128378965054898956990739077046194182216418204089251534152367314829728637695025016900865132310702948496267608565301563924335211688980616570061519603635427325271229292004846071273115472873906916104883201379322688404647573242493973784636316474451189693690390191209520091234552080511886065342543505774829221086512942759740809418711636705014399692420869582237222292359236578943732827194347784488161331400380928314253895658229795430495824097113205265585771742458547700422870870406209330619630566010364008759233353171735096106044615752719903737584223504654774818164841234680777168146991289547902539238061734424877111718001626976990756893812480642925124010950100842391276437404231840519091618369235260848957358519783916916775301173539676694700818904046314171195175022962433673"));
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa4096_rsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigRsa4096Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa4096_rsa_cert.pem",
+                    privKeyRsa
         );
-        */
 
-        /*
         // ec_secp256r1_rsa_cert
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x80, (byte)0x2D, (byte)0x8C, (byte)0x55, (byte)0xCB, (byte)0x0B, (byte)0xDE, (byte)0x67, (byte)0xE9, (byte)0xE2, (byte)0x9D, (byte)0xF2, (byte)0xAB, (byte)0xA9, (byte)0x60, (byte)0x88, (byte)0x90, (byte)0xBB, (byte)0x35, (byte)0xA8, (byte)0x2A, (byte)0x7B, (byte)0xBB, (byte)0x5F, (byte)0x37, (byte)0x43, (byte)0xD7, (byte)0x93, (byte)0xC0, (byte)0x84, (byte)0x92, (byte)0xC0};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_rsa_cert.pem",
-                    privKey
+        derEncdoedPrivKey = new byte[]{(byte)0x80, (byte)0x2D, (byte)0x8C, (byte)0x55, (byte)0xCB, (byte)0x0B, (byte)0xDE, (byte)0x67, (byte)0xE9, (byte)0xE2, (byte)0x9D, (byte)0xF2, (byte)0xAB, (byte)0xA9, (byte)0x60, (byte)0x88, (byte)0x90, (byte)0xBB, (byte)0x35, (byte)0xA8, (byte)0x2A, (byte)0x7B, (byte)0xBB, (byte)0x5F, (byte)0x37, (byte)0x43, (byte)0xD7, (byte)0x93, (byte)0xC0, (byte)0x84, (byte)0x92, (byte)0xC0};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
+        ClientAuthConfig clientAuthConfigEcc256Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_rsa_cert.pem",
+                    privKeyEcc
         );
-        */
 
-        /*
         // ec_secp384r1_rsa_cert
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0xF1, (byte)0xF8, (byte)0x9B, (byte)0x19, (byte)0xA0, (byte)0x96, (byte)0x00, (byte)0x17, (byte)0xAC, (byte)0x27, (byte)0x7B, (byte)0x8D, (byte)0x38, (byte)0xD5, (byte)0x04, (byte)0x2C, (byte)0x33, (byte)0x3B, (byte)0x2B, (byte)0x1B, (byte)0xA2, (byte)0x89, (byte)0xFC, (byte)0xF1, (byte)0xBC, (byte)0x76, (byte)0x1A, (byte)0x3A, (byte)0x42, (byte)0x4F, (byte)0xD1, (byte)0xAE, (byte)0xEF, (byte)0x46, (byte)0xA7, (byte)0x6B, (byte)0xA9, (byte)0xD6, (byte)0x8B, (byte)0xB7, (byte)0x91, (byte)0x18, (byte)0xD4, (byte)0xDA, (byte)0x99, (byte)0x12, (byte)0xFE, (byte)0x57};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_rsa_cert.pem",
-                    privKey
+        derEncdoedPrivKey = new byte[]{(byte)0xF1, (byte)0xF8, (byte)0x9B, (byte)0x19, (byte)0xA0, (byte)0x96, (byte)0x00, (byte)0x17, (byte)0xAC, (byte)0x27, (byte)0x7B, (byte)0x8D, (byte)0x38, (byte)0xD5, (byte)0x04, (byte)0x2C, (byte)0x33, (byte)0x3B, (byte)0x2B, (byte)0x1B, (byte)0xA2, (byte)0x89, (byte)0xFC, (byte)0xF1, (byte)0xBC, (byte)0x76, (byte)0x1A, (byte)0x3A, (byte)0x42, (byte)0x4F, (byte)0xD1, (byte)0xAE, (byte)0xEF, (byte)0x46, (byte)0xA7, (byte)0x6B, (byte)0xA9, (byte)0xD6, (byte)0x8B, (byte)0xB7, (byte)0x91, (byte)0x18, (byte)0xD4, (byte)0xDA, (byte)0x99, (byte)0x12, (byte)0xFE, (byte)0x57};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
+        ClientAuthConfig clientAuthConfigEcc384Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_rsa_cert.pem",
+                    privKeyEcc
         );
-        */
 
-        /*
         // ec_secp521r1_rsa_cert
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x01, (byte)0xD5, (byte)0xC4, (byte)0x9A, (byte)0x07, (byte)0xFA, (byte)0x36, (byte)0x2E, (byte)0x7B, (byte)0x95, (byte)0xB2, (byte)0x24, (byte)0x90, (byte)0x3D, (byte)0x4E, (byte)0x2B, (byte)0x52, (byte)0x77, (byte)0x5E, (byte)0x0E, (byte)0xA3, (byte)0x92, (byte)0xB6, (byte)0x4E, (byte)0x9F, (byte)0x6D, (byte)0xE9, (byte)0xC1, (byte)0x9A, (byte)0xDD, (byte)0x74, (byte)0xCC, (byte)0xC1, (byte)0x45, (byte)0x43, (byte)0x70, (byte)0x1B, (byte)0xFA, (byte)0xBF, (byte)0x40, (byte)0x78, (byte)0x3A, (byte)0x22, (byte)0xC3, (byte)0xA8, (byte)0x9B, (byte)0xF1, (byte)0xC5, (byte)0x1C, (byte)0x93, (byte)0x67, (byte)0x1B, (byte)0x58, (byte)0x04, (byte)0x5B, (byte)0xE4, (byte)0xA4, (byte)0xBB, (byte)0xEC, (byte)0xAD, (byte)0x15, (byte)0x1F, (byte)0x16, (byte)0x99, (byte)0x64, (byte)0x5B};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP521R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_rsa_cert.pem",
-                    privKey
+        derEncdoedPrivKey = new byte[]{(byte)0x01, (byte)0xD5, (byte)0xC4, (byte)0x9A, (byte)0x07, (byte)0xFA, (byte)0x36, (byte)0x2E, (byte)0x7B, (byte)0x95, (byte)0xB2, (byte)0x24, (byte)0x90, (byte)0x3D, (byte)0x4E, (byte)0x2B, (byte)0x52, (byte)0x77, (byte)0x5E, (byte)0x0E, (byte)0xA3, (byte)0x92, (byte)0xB6, (byte)0x4E, (byte)0x9F, (byte)0x6D, (byte)0xE9, (byte)0xC1, (byte)0x9A, (byte)0xDD, (byte)0x74, (byte)0xCC, (byte)0xC1, (byte)0x45, (byte)0x43, (byte)0x70, (byte)0x1B, (byte)0xFA, (byte)0xBF, (byte)0x40, (byte)0x78, (byte)0x3A, (byte)0x22, (byte)0xC3, (byte)0xA8, (byte)0x9B, (byte)0xF1, (byte)0xC5, (byte)0x1C, (byte)0x93, (byte)0x67, (byte)0x1B, (byte)0x58, (byte)0x04, (byte)0x5B, (byte)0xE4, (byte)0xA4, (byte)0xBB, (byte)0xEC, (byte)0xAD, (byte)0x15, (byte)0x1F, (byte)0x16, (byte)0x99, (byte)0x64, (byte)0x5B};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP521R1);
+        ClientAuthConfig clientAuthConfigEcc521Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_rsa_cert.pem",
+                    privKeyEcc
         );
-        */
 
-
-
-        /*
-        // ec_secp256r1_ecdsa_cert with wrong private key => invalid Client CertififcateVerify
-        // cert is from certGen and key is from certGen2
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0xEA, (byte)0x42, (byte)0x71, (byte)0xE2, (byte)0xC6, (byte)0x7D, (byte)0x5F, (byte)0x7D, (byte)0xD6, (byte)0x3D, (byte)0x76, (byte)0x74, (byte)0x79, (byte)0x92, (byte)0xFB, (byte)0x9C, (byte)0xED, (byte)0xA8, (byte)0x19, (byte)0x57, (byte)0xF6, (byte)0x52, (byte)0x95, (byte)0xCF, (byte)0x4F, (byte)0x33, (byte)0xE5, (byte)0x11, (byte)0xE6, (byte)0xB7, (byte)0x9C, (byte)0xB0};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_ecdsa_cert.pem",
-                    privKey
-        );
-        */
-        
-        /*
-        // ec_secp384r1_ecdsa_cert with wrong private key => invalid Client CertififcateVerify
-        // cert is from certGen and key is from keyGen
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xE3, (byte)0x17, (byte)0x0C, (byte)0x60, (byte)0xC7, (byte)0x2E, (byte)0x6F, (byte)0xDD, (byte)0x09, (byte)0x89, (byte)0x5F, (byte)0xAA, (byte)0x26, (byte)0xED, (byte)0x2F, (byte)0x58, (byte)0x72, (byte)0x99, (byte)0xA7, (byte)0xA8, (byte)0x17, (byte)0x0A, (byte)0x2A, (byte)0x6D, (byte)0xED, (byte)0x23, (byte)0x89, (byte)0x84, (byte)0x8A, (byte)0xF7, (byte)0xCB, (byte)0xBF, (byte)0xA8, (byte)0x2C, (byte)0xED, (byte)0x84, (byte)0xBE, (byte)0x99, (byte)0x15, (byte)0xB3, (byte)0xDF, (byte)0x62, (byte)0x93, (byte)0xD5, (byte)0x3D, (byte)0x55, (byte)0xC3, (byte)0x25};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem",
-                    privKey
-        );
-        */
-
-        /*
-        // ec_secp521r1_ecdsa_cert with wrong private key => invalid Client CertififcateVerify
-        // cert is from certGen and key is from certGen2
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x01, (byte)0xC6, (byte)0x1F, (byte)0xB1, (byte)0xF1, (byte)0x34, (byte)0x6E, (byte)0xA8, (byte)0x05, (byte)0x2B, (byte)0x55, (byte)0x77, (byte)0x4C, (byte)0x01, (byte)0x12, (byte)0xE6, (byte)0xC8, (byte)0x79, (byte)0xBD, (byte)0xF4, (byte)0x3A, (byte)0x59, (byte)0xF3, (byte)0x11, (byte)0x71, (byte)0xDA, (byte)0x68, (byte)0xAA, (byte)0x96, (byte)0x05, (byte)0xBF, (byte)0xBD, (byte)0xBA, (byte)0x32, (byte)0x2B, (byte)0x58, (byte)0xDA, (byte)0x7E, (byte)0xAC, (byte)0x03, (byte)0x4D, (byte)0x72, (byte)0xB6, (byte)0xC8, (byte)0x55, (byte)0x6B, (byte)0xCD, (byte)0x96, (byte)0x0D, (byte)0xAB, (byte)0xF9, (byte)0x46, (byte)0xFC, (byte)0xE4, (byte)0x1C, (byte)0x7C, (byte)0xD1, (byte)0x6A, (byte)0x7D, (byte)0xFC, (byte)0xEB, (byte)0x13, (byte)0x7D, (byte)0x86, (byte)0x19, (byte)0xCE};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP521R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_ecdsa_cert.pem",
-                    privKey
-        );
-        */
-
-        /*
         // rsa1024_ecdsa with wrong private key => invalid Client CertififcateVerify
         // cert is from certGen and key is from keyGen
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("133036613583584766722627167895543666110945441784531293248300263347963447119309012052760220970493727434013797551014869938386844577478628069777522631156036187092247169041998724400223126943591133649867396637464779454981617768022717766287673892927747602238188750383200972105764151545835578062231965849418058778591"),
             new BigInteger("79977868052850393275627321786418739049775538411412613068797504854454916353413427008662281551131152893368778090428839597517483093642987431850170348733031246855672667348828452871804203691995026680444196025725410630143919461115833538688793433501354179966585900463421886750881507166476154670233626201523579376217"));
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa1024_ecdsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigWrongPrivKeyRsa1024Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa1024_ecdsa_cert.pem",
+                    privKeyRsa
         );
-        */
 
-        /*
         // rsa2048_ecdsa with wrong private key => invalid Client CertififcateVerify
         // cert is from certGen and key is from keyGen
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("22680894355213276814068604237379515326692913667424423179105887452289906651381282343803736135056197131595363416117766447222033440405148554595150495098954618784791409846721078014631997901600818192748951260294724453863786822963457535714201456929910107294028887630816463336166663178044202436591458723765695469483323295740091515251848862253753967572511917223940594872506608243732478287780716299338656301737923256700355562820768458403307832462075060029877854803131864443444034500618089480396072963994147799521776599695622459322293973138939514112920721100797951815691387710738229293066991665386400046197146008454129381303013"),
             new BigInteger("1081220900519306994054118481314527476163106719322647452617727838882406914114781299588271417902671126167388106236144671423388446493562843049877263993876061364494202266642979463380542895308994686679330955004731190982136777534172265998708970859053814947427221608823239751002807226391716969448091277902763492530629102587274894712676589402812658549391491035698540223575850258784236700772902034492790099278379171982874885903225435518252664651224422790750083966520867503120878596752239393242686207324374684442156551897779979099846701806053546967178413553042480432389633260063913612546788291398650159971518641894650833502207"));
 
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigWrongPrivKeyRsa2048Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem",
+                    privKeyRsa
         );
-        */
 
-        /*
         // rsa4096_ecdsa with wrong private key => invalid Client CertififcateVerify
         // cert is from certGen and key is from keyGen
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("852132952999414671099393774063293127652446994401189119421778379168763568043379670708471991524655228814701344581274528081403175923386878171967361033694154938616783557688566672039179514804765609518929683335595281254519270047663421125343709225234669085217306299571274759959162059668104189511586225943039219932340462394299053682489982195395639437761454677198321813593904478672671449606083893106350647952529586648606880915748519989502395256150259506923713154934561779327954016513764188071670555495592131239774035954362571978638516232272261117609930046763573235620536696850462564389597996659991003040488476977737519286797121927476934067129408078121957643589377122375762650442144224746270268334696422882363982552114017780503525610862417495788240739164803583339913792546571896354035563856896218251684603638041262552554074228343877103241350822274789745544678909598063226914089069194485608502583728419091742683270569302031970636745849243936946023041339422014506215218029019424724078299164996084386919025721118941802149996845914387105786189120258431416100116464407067763342245716815608015819546071727625353311562478815977708270046794107314497991174282134976358701147683795429748566478595182281497596614681411095968542119055993559227298617273393"),
             new BigInteger("1577838426571467966290102129843367652987564170064483260120666863529939056087185646990491669057029871989757111356527801111487206165430605517790250980100183910955780344777789059799842554613873022287395357348656619915627939449674685806195522097677673337967950373700054638712893517277931980964408177488948428589232369780753323226431465485634362466510507569224315422787351465587871078346171877620503655320497421924573203298973731780587619645071973067350116958488464422828875064411638668876583489710038413613293665659738896947777102819141923676415888125025329617284988170939080659462621750708909961199278316579666265471284411308168742592228759856431809971179832819882743656355732122736613548282080973448224211242752079381333161400996671559205400690357862701837063694983072364763737559523404684122926698232880076443995159940503316336698151537502251178314909302197360154782312532737602951492886767268762805369324666410493219324150566001927968176553085110837673401663709474656617042012317394134616182316613248980524815149898195861929122139751689668051463561645904915604651867914643315171577543881284507500727447305357892836962990874770785977904358137196505125663058851326109036893589703717951682846186960995516981782343062101664347647417409"));
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa4096_ecdsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigWrongPrivKeyRsa4096Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa4096_ecdsa_cert.pem",
+                    privKeyRsa
         );
-        */
 
-        /*
-        // ec_secp256r1_rsa_cert with wrong private key => invalid Client CertififcateVerify
+        // ec_secp256r1_ecdsa_cert with wrong private key => invalid Client CertififcateVerify
         // cert is from certGen and key is from certGen2
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0xEA, (byte)0x42, (byte)0x71, (byte)0xE2, (byte)0xC6, (byte)0x7D, (byte)0x5F, (byte)0x7D, (byte)0xD6, (byte)0x3D, (byte)0x76, (byte)0x74, (byte)0x79, (byte)0x92, (byte)0xFB, (byte)0x9C, (byte)0xED, (byte)0xA8, (byte)0x19, (byte)0x57, (byte)0xF6, (byte)0x52, (byte)0x95, (byte)0xCF, (byte)0x4F, (byte)0x33, (byte)0xE5, (byte)0x11, (byte)0xE6, (byte)0xB7, (byte)0x9C, (byte)0xB0};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_rsa_cert.pem",
-                    privKey
+        derEncdoedPrivKey = new byte[]{(byte)0xEA, (byte)0x42, (byte)0x71, (byte)0xE2, (byte)0xC6, (byte)0x7D, (byte)0x5F, (byte)0x7D, (byte)0xD6, (byte)0x3D, (byte)0x76, (byte)0x74, (byte)0x79, (byte)0x92, (byte)0xFB, (byte)0x9C, (byte)0xED, (byte)0xA8, (byte)0x19, (byte)0x57, (byte)0xF6, (byte)0x52, (byte)0x95, (byte)0xCF, (byte)0x4F, (byte)0x33, (byte)0xE5, (byte)0x11, (byte)0xE6, (byte)0xB7, (byte)0x9C, (byte)0xB0};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
+        ClientAuthConfig clientAuthConfigWrongPrivKeyEcc256Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_ecdsa_cert.pem",
+                    privKeyEcc
         );
-        */
-
-        /*
-        // ec_secp384r1_rsa_cert with wrong private key => invalid Client CertififcateVerify
+        
+        // ec_secp384r1_ecdsa_cert with wrong private key => invalid Client CertififcateVerify
         // cert is from certGen and key is from keyGen
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xE3, (byte)0x17, (byte)0x0C, (byte)0x60, (byte)0xC7, (byte)0x2E, (byte)0x6F, (byte)0xDD, (byte)0x09, (byte)0x89, (byte)0x5F, (byte)0xAA, (byte)0x26, (byte)0xED, (byte)0x2F, (byte)0x58, (byte)0x72, (byte)0x99, (byte)0xA7, (byte)0xA8, (byte)0x17, (byte)0x0A, (byte)0x2A, (byte)0x6D, (byte)0xED, (byte)0x23, (byte)0x89, (byte)0x84, (byte)0x8A, (byte)0xF7, (byte)0xCB, (byte)0xBF, (byte)0xA8, (byte)0x2C, (byte)0xED, (byte)0x84, (byte)0xBE, (byte)0x99, (byte)0x15, (byte)0xB3, (byte)0xDF, (byte)0x62, (byte)0x93, (byte)0xD5, (byte)0x3D, (byte)0x55, (byte)0xC3, (byte)0x25};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_rsa_cert.pem",
-                    privKey
+        derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xE3, (byte)0x17, (byte)0x0C, (byte)0x60, (byte)0xC7, (byte)0x2E, (byte)0x6F, (byte)0xDD, (byte)0x09, (byte)0x89, (byte)0x5F, (byte)0xAA, (byte)0x26, (byte)0xED, (byte)0x2F, (byte)0x58, (byte)0x72, (byte)0x99, (byte)0xA7, (byte)0xA8, (byte)0x17, (byte)0x0A, (byte)0x2A, (byte)0x6D, (byte)0xED, (byte)0x23, (byte)0x89, (byte)0x84, (byte)0x8A, (byte)0xF7, (byte)0xCB, (byte)0xBF, (byte)0xA8, (byte)0x2C, (byte)0xED, (byte)0x84, (byte)0xBE, (byte)0x99, (byte)0x15, (byte)0xB3, (byte)0xDF, (byte)0x62, (byte)0x93, (byte)0xD5, (byte)0x3D, (byte)0x55, (byte)0xC3, (byte)0x25};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
+        ClientAuthConfig clientAuthConfigWrongPrivKeyEcc384Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem",
+                    privKeyEcc
         );
-        */
 
-        /*
-        // ec_secp521r1_rsa_cert with wrong private key => invalid Client CertififcateVerify
+        // ec_secp521r1_ecdsa_cert with wrong private key => invalid Client CertififcateVerify
         // cert is from certGen and key is from certGen2
-        byte[] derEncdoedPrivKey = new byte[]{(byte)0x01, (byte)0xC6, (byte)0x1F, (byte)0xB1, (byte)0xF1, (byte)0x34, (byte)0x6E, (byte)0xA8, (byte)0x05, (byte)0x2B, (byte)0x55, (byte)0x77, (byte)0x4C, (byte)0x01, (byte)0x12, (byte)0xE6, (byte)0xC8, (byte)0x79, (byte)0xBD, (byte)0xF4, (byte)0x3A, (byte)0x59, (byte)0xF3, (byte)0x11, (byte)0x71, (byte)0xDA, (byte)0x68, (byte)0xAA, (byte)0x96, (byte)0x05, (byte)0xBF, (byte)0xBD, (byte)0xBA, (byte)0x32, (byte)0x2B, (byte)0x58, (byte)0xDA, (byte)0x7E, (byte)0xAC, (byte)0x03, (byte)0x4D, (byte)0x72, (byte)0xB6, (byte)0xC8, (byte)0x55, (byte)0x6B, (byte)0xCD, (byte)0x96, (byte)0x0D, (byte)0xAB, (byte)0xF9, (byte)0x46, (byte)0xFC, (byte)0xE4, (byte)0x1C, (byte)0x7C, (byte)0xD1, (byte)0x6A, (byte)0x7D, (byte)0xFC, (byte)0xEB, (byte)0x13, (byte)0x7D, (byte)0x86, (byte)0x19, (byte)0xCE};
-        CustomECPrivateKey privKey = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP521R1);
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_rsa_cert.pem",
-                    privKey
+        derEncdoedPrivKey = new byte[]{(byte)0x01, (byte)0xC6, (byte)0x1F, (byte)0xB1, (byte)0xF1, (byte)0x34, (byte)0x6E, (byte)0xA8, (byte)0x05, (byte)0x2B, (byte)0x55, (byte)0x77, (byte)0x4C, (byte)0x01, (byte)0x12, (byte)0xE6, (byte)0xC8, (byte)0x79, (byte)0xBD, (byte)0xF4, (byte)0x3A, (byte)0x59, (byte)0xF3, (byte)0x11, (byte)0x71, (byte)0xDA, (byte)0x68, (byte)0xAA, (byte)0x96, (byte)0x05, (byte)0xBF, (byte)0xBD, (byte)0xBA, (byte)0x32, (byte)0x2B, (byte)0x58, (byte)0xDA, (byte)0x7E, (byte)0xAC, (byte)0x03, (byte)0x4D, (byte)0x72, (byte)0xB6, (byte)0xC8, (byte)0x55, (byte)0x6B, (byte)0xCD, (byte)0x96, (byte)0x0D, (byte)0xAB, (byte)0xF9, (byte)0x46, (byte)0xFC, (byte)0xE4, (byte)0x1C, (byte)0x7C, (byte)0xD1, (byte)0x6A, (byte)0x7D, (byte)0xFC, (byte)0xEB, (byte)0x13, (byte)0x7D, (byte)0x86, (byte)0x19, (byte)0xCE};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP521R1);
+        ClientAuthConfig clientAuthConfigWrongPrivKeyEcc521Ecdsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_ecdsa_cert.pem",
+                    privKeyEcc
         );
-        */
 
-        /*
+        // rsa1024_rsa with wrong private key => invalid Client CertififcateVerify
+        // cert is from certGen and key is from keyGen
+        privKeyRsa = new CustomRSAPrivateKey(
+            new BigInteger("133036613583584766722627167895543666110945441784531293248300263347963447119309012052760220970493727434013797551014869938386844577478628069777522631156036187092247169041998724400223126943591133649867396637464779454981617768022717766287673892927747602238188750383200972105764151545835578062231965849418058778591"),
+            new BigInteger("79977868052850393275627321786418739049775538411412613068797504854454916353413427008662281551131152893368778090428839597517483093642987431850170348733031246855672667348828452871804203691995026680444196025725410630143919461115833538688793433501354179966585900463421886750881507166476154670233626201523579376217"));
+        
+        ClientAuthConfig clientAuthConfigWrongPrivKeyRsa1024Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa1024_rsa_cert.pem",
+                    privKeyRsa
+        );
+
         // rsa2048_rsa with wrong private key => invalid Client CertififcateVerify
         // cert is from certGen and key is from keyGen
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("22680894355213276814068604237379515326692913667424423179105887452289906651381282343803736135056197131595363416117766447222033440405148554595150495098954618784791409846721078014631997901600818192748951260294724453863786822963457535714201456929910107294028887630816463336166663178044202436591458723765695469483323295740091515251848862253753967572511917223940594872506608243732478287780716299338656301737923256700355562820768458403307832462075060029877854803131864443444034500618089480396072963994147799521776599695622459322293973138939514112920721100797951815691387710738229293066991665386400046197146008454129381303013"),
             new BigInteger("1081220900519306994054118481314527476163106719322647452617727838882406914114781299588271417902671126167388106236144671423388446493562843049877263993876061364494202266642979463380542895308994686679330955004731190982136777534172265998708970859053814947427221608823239751002807226391716969448091277902763492530629102587274894712676589402812658549391491035698540223575850258784236700772902034492790099278379171982874885903225435518252664651224422790750083966520867503120878596752239393242686207324374684442156551897779979099846701806053546967178413553042480432389633260063913612546788291398650159971518641894650833502207"));
 
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa2048_rsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigWrongPrivKeyRsa2048Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa2048_rsa_cert.pem",
+                    privKeyRsa
         );
-        */
 
-        /*
         // rsa4096_rsa with wrong private key => invalid Client CertififcateVerify
         // cert is from certGen and key is from keyGen
-        CustomRSAPrivateKey privKey = new CustomRSAPrivateKey(
+        privKeyRsa = new CustomRSAPrivateKey(
             new BigInteger("852132952999414671099393774063293127652446994401189119421778379168763568043379670708471991524655228814701344581274528081403175923386878171967361033694154938616783557688566672039179514804765609518929683335595281254519270047663421125343709225234669085217306299571274759959162059668104189511586225943039219932340462394299053682489982195395639437761454677198321813593904478672671449606083893106350647952529586648606880915748519989502395256150259506923713154934561779327954016513764188071670555495592131239774035954362571978638516232272261117609930046763573235620536696850462564389597996659991003040488476977737519286797121927476934067129408078121957643589377122375762650442144224746270268334696422882363982552114017780503525610862417495788240739164803583339913792546571896354035563856896218251684603638041262552554074228343877103241350822274789745544678909598063226914089069194485608502583728419091742683270569302031970636745849243936946023041339422014506215218029019424724078299164996084386919025721118941802149996845914387105786189120258431416100116464407067763342245716815608015819546071727625353311562478815977708270046794107314497991174282134976358701147683795429748566478595182281497596614681411095968542119055993559227298617273393"),
             new BigInteger("1577838426571467966290102129843367652987564170064483260120666863529939056087185646990491669057029871989757111356527801111487206165430605517790250980100183910955780344777789059799842554613873022287395357348656619915627939449674685806195522097677673337967950373700054638712893517277931980964408177488948428589232369780753323226431465485634362466510507569224315422787351465587871078346171877620503655320497421924573203298973731780587619645071973067350116958488464422828875064411638668876583489710038413613293665659738896947777102819141923676415888125025329617284988170939080659462621750708909961199278316579666265471284411308168742592228759856431809971179832819882743656355732122736613548282080973448224211242752079381333161400996671559205400690357862701837063694983072364763737559523404684122926698232880076443995159940503316336698151537502251178314909302197360154782312532737602951492886767268762805369324666410493219324150566001927968176553085110837673401663709474656617042012317394134616182316613248980524815149898195861929122139751689668051463561645904915604651867914643315171577543881284507500727447305357892836962990874770785977904358137196505125663058851326109036893589703717951682846186960995516981782343062101664347647417409"));
         
-        ClientAuthConfig clientAuthConfig = new ClientAuthConfig(
-                    "/Users/lth/Library/Mobile Documents/com~apple~CloudDocs/Zweitstudium/Module/00_Masterarbeit/Netzwerk/Bearbeitung/TLS-Attacker/TLS-Attacker/Zusatzzeug/certGen/rsa4096_rsa_cert.pem",
-                    privKey
+        ClientAuthConfig clientAuthConfigWrongPrivKeyRsa4096Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/rsa4096_rsa_cert.pem",
+                    privKeyRsa
         );
-        */
+
+        // ec_secp256r1_rsa_cert with wrong private key => invalid Client CertififcateVerify
+        // cert is from certGen and key is from certGen2
+        derEncdoedPrivKey = new byte[]{(byte)0xEA, (byte)0x42, (byte)0x71, (byte)0xE2, (byte)0xC6, (byte)0x7D, (byte)0x5F, (byte)0x7D, (byte)0xD6, (byte)0x3D, (byte)0x76, (byte)0x74, (byte)0x79, (byte)0x92, (byte)0xFB, (byte)0x9C, (byte)0xED, (byte)0xA8, (byte)0x19, (byte)0x57, (byte)0xF6, (byte)0x52, (byte)0x95, (byte)0xCF, (byte)0x4F, (byte)0x33, (byte)0xE5, (byte)0x11, (byte)0xE6, (byte)0xB7, (byte)0x9C, (byte)0xB0};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP256R1);
+        ClientAuthConfig clientAuthConfigWrongPrivKeyEcc256Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_rsa_cert.pem",
+                    privKeyEcc
+        );
+
+        // ec_secp384r1_rsa_cert with wrong private key => invalid Client CertififcateVerify
+        // cert is from certGen and key is from keyGen
+        derEncdoedPrivKey = new byte[]{(byte)0x04, (byte)0x30, (byte)0xE3, (byte)0x17, (byte)0x0C, (byte)0x60, (byte)0xC7, (byte)0x2E, (byte)0x6F, (byte)0xDD, (byte)0x09, (byte)0x89, (byte)0x5F, (byte)0xAA, (byte)0x26, (byte)0xED, (byte)0x2F, (byte)0x58, (byte)0x72, (byte)0x99, (byte)0xA7, (byte)0xA8, (byte)0x17, (byte)0x0A, (byte)0x2A, (byte)0x6D, (byte)0xED, (byte)0x23, (byte)0x89, (byte)0x84, (byte)0x8A, (byte)0xF7, (byte)0xCB, (byte)0xBF, (byte)0xA8, (byte)0x2C, (byte)0xED, (byte)0x84, (byte)0xBE, (byte)0x99, (byte)0x15, (byte)0xB3, (byte)0xDF, (byte)0x62, (byte)0x93, (byte)0xD5, (byte)0x3D, (byte)0x55, (byte)0xC3, (byte)0x25};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP384R1);
+        ClientAuthConfig clientAuthConfigWrongPrivKeyEcc384Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_rsa_cert.pem",
+                    privKeyEcc
+        );
+
+        // ec_secp521r1_rsa_cert with wrong private key => invalid Client CertififcateVerify
+        // cert is from certGen and key is from certGen2
+        derEncdoedPrivKey = new byte[]{(byte)0x01, (byte)0xC6, (byte)0x1F, (byte)0xB1, (byte)0xF1, (byte)0x34, (byte)0x6E, (byte)0xA8, (byte)0x05, (byte)0x2B, (byte)0x55, (byte)0x77, (byte)0x4C, (byte)0x01, (byte)0x12, (byte)0xE6, (byte)0xC8, (byte)0x79, (byte)0xBD, (byte)0xF4, (byte)0x3A, (byte)0x59, (byte)0xF3, (byte)0x11, (byte)0x71, (byte)0xDA, (byte)0x68, (byte)0xAA, (byte)0x96, (byte)0x05, (byte)0xBF, (byte)0xBD, (byte)0xBA, (byte)0x32, (byte)0x2B, (byte)0x58, (byte)0xDA, (byte)0x7E, (byte)0xAC, (byte)0x03, (byte)0x4D, (byte)0x72, (byte)0xB6, (byte)0xC8, (byte)0x55, (byte)0x6B, (byte)0xCD, (byte)0x96, (byte)0x0D, (byte)0xAB, (byte)0xF9, (byte)0x46, (byte)0xFC, (byte)0xE4, (byte)0x1C, (byte)0x7C, (byte)0xD1, (byte)0x6A, (byte)0x7D, (byte)0xFC, (byte)0xEB, (byte)0x13, (byte)0x7D, (byte)0x86, (byte)0x19, (byte)0xCE};
+        privKeyEcc = new CustomECPrivateKey(new BigInteger(derEncdoedPrivKey), NamedGroup.SECP521R1);
+        ClientAuthConfig clientAuthConfigWrongPrivKeyEcc521Rsa = new ClientAuthConfig(
+                    "/root/Masterthesis/tls_servers/TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_rsa_cert.pem",
+                    privKeyEcc
+        );
         
-        Config myConfig = 
+
+        // ####### Connection Config
+        // Supports: OpenSSL 1.1.1w (open111_ecc, open111_rsa)
+        //  - TLS1.2 without any extras
+        //  - TLS1.2 Resumption with tickets
+        //  - TLS1.3 without any extras
+        //  - TLS1.3 Resumption
+        //  - TLS1.3 Early Data
+        OutboundConnection outboundConOpenssl111Ecc = new OutboundConnection();
+        outboundConOpenssl111Ecc.setHostname("localhost");
+        outboundConOpenssl111Ecc.setPort(1111);
+        outboundConOpenssl111Ecc.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem -key ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_key.pem -port 1111
+
+        OutboundConnection outboundConOpenssl111Rsa = new OutboundConnection();
+        outboundConOpenssl111Rsa.setHostname("localhost");
+        outboundConOpenssl111Rsa.setPort(1155);
+        outboundConOpenssl111Rsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem -key ../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_key.pem -port 1155
+
+        // Supports: OpenSSL 1.1.1w (open_ecc_ca-ecdsa)
+        //  - TLS1.2 with Client Auth using ECDSA signed certificate
+        //  - TLS1.3 with Client Auth using ECDSA signed certificate
+        OutboundConnection outboundConOpenssl111CaEcdsa = new OutboundConnection();
+        outboundConOpenssl111CaEcdsa.setHostname("localhost");
+        outboundConOpenssl111CaEcdsa.setPort(1115);
+        outboundConOpenssl111CaEcdsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 1.1.1w (open_ecc_ca-rsa)
+        //  - TLS1.2 with Client Auth using RSA signed certificate
+        //  - TLS1.3 with Client Auth using RSA signed certificate
+        OutboundConnection outboundConOpenssl111CaRsa = new OutboundConnection();
+        outboundConOpenssl111CaRsa.setHostname("localhost");
+        outboundConOpenssl111CaRsa.setPort(1123);
+        outboundConOpenssl111CaRsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 1.1.1w (open_ecc_wrong-ca-ecdsa)
+        //  - TLS1.2 with Client Auth using ECDSA signed certificate but simulating wrong CA
+        //  - TLS1.3 with Client Auth using ECDSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConOpenssl111WrongCaEcdsa = new OutboundConnection();
+        outboundConOpenssl111WrongCaEcdsa.setHostname("localhost");
+        outboundConOpenssl111WrongCaEcdsa.setPort(1124);
+        outboundConOpenssl111WrongCaEcdsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 1.1.1w (open_ecc_wrong-ca-rsa)
+        //  - TLS1.2 with Client Auth using RSA signed certificate but simulating wrong CA
+        //  - TLS1.3 with Client Auth using RSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConOpenssl111WrongCaRsa = new OutboundConnection();
+        outboundConOpenssl111WrongCaRsa.setHostname("localhost");
+        outboundConOpenssl111WrongCaRsa.setPort(1126);
+        outboundConOpenssl111WrongCaRsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 1.1.1w (open111_ecc_id, open111_rsa_id)
+        //  - TLS1.2 Resumption with ID
+        OutboundConnection outboundConOpenssl111EccTls12ResumptionID = new OutboundConnection();
+        outboundConOpenssl111EccTls12ResumptionID.setHostname("localhost");
+        outboundConOpenssl111EccTls12ResumptionID.setPort(11112);
+        outboundConOpenssl111EccTls12ResumptionID.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem -key ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_key.pem -stateless -port 11112
+
+        OutboundConnection outboundConOpenssl111RsaTls12ResumptionID = new OutboundConnection();
+        outboundConOpenssl111RsaTls12ResumptionID.setHostname("localhost");
+        outboundConOpenssl111RsaTls12ResumptionID.setPort(11116);
+        outboundConOpenssl111RsaTls12ResumptionID.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem -key ../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_key.pem -stateless -port 11116
+
+        // Supports: OpenSSL 1.1.1w (openssl111_ocsp-ecc256)
+        //  - OCSP with ecc256 cert
+        OutboundConnection outboundConOpenssl111OcspEcc256 = new OutboundConnection();
+        outboundConOpenssl111OcspEcc256.setHostname("localhost");
+        outboundConOpenssl111OcspEcc256.setPort(1433);
+        outboundConOpenssl111OcspEcc256.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_ecdsa_cert.pem -key ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp256r1_key.pem -port 1433 -early_data -no_anti_replay -num_tickets 1 -status_file ../../../TLS-Attacker/Zusatzzeug/certGen/OCSP/ocsp_resp_ec_secp256r1_ecdsa_cert.der
+
+        // Supports: OpenSSL 1.1.1w (openssl111_ocsp-ecc384)
+        //  - OCSP with ecc384 cert
+        OutboundConnection outboundConOpenssl111OcspEcc384 = new OutboundConnection();
+        outboundConOpenssl111OcspEcc384.setHostname("localhost");
+        outboundConOpenssl111OcspEcc384.setPort(1444);
+        outboundConOpenssl111OcspEcc384.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem -key ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_key.pem -port 1444 -early_data -no_anti_replay -num_tickets 1 -status_file ../../../TLS-Attacker/Zusatzzeug/certGen/OCSP/ocsp_resp_ec_secp384r1_ecdsa_cert.der
+
+        // Supports: OpenSSL 1.1.1w (openssl111_ocsp-ecc521)
+        //  - OCSP with ecc521 cert
+        OutboundConnection outboundConOpenssl111OcspEcc521 = new OutboundConnection();
+        outboundConOpenssl111OcspEcc521.setHostname("localhost");
+        outboundConOpenssl111OcspEcc521.setPort(1445);
+        outboundConOpenssl111OcspEcc521.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_ecdsa_cert.pem -key ../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp521r1_key.pem -port 1445 -early_data -no_anti_replay -num_tickets 1 -status_file ../../../TLS-Attacker/Zusatzzeug/certGen/OCSP/ocsp_resp_ec_secp521r1_ecdsa_cert.der
+
+        // Supports: OpenSSL 1.1.1w (openssl111_ocsp-rsa2048)
+        //  - OCSP with rsa2048 cert
+        OutboundConnection outboundConOpenssl111OcspRsa2048 = new OutboundConnection();
+        outboundConOpenssl111OcspRsa2048.setHostname("localhost");
+        outboundConOpenssl111OcspRsa2048.setPort(1555);
+        outboundConOpenssl111OcspRsa2048.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem -key ../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_key.pem -port 1555 -early_data -no_anti_replay -num_tickets 1 -status_file ../../../TLS-Attacker/Zusatzzeug/certGen/OCSP/ocsp_resp_rsa2048_ecdsa_cert.der
+
+        // Supports: OpenSSL 1.1.1w (openssl111_ocsp-rsa2048)
+        //  - OCSP with rsa4096 cert
+        OutboundConnection outboundConOpenssl111OcspRsa4096 = new OutboundConnection();
+        outboundConOpenssl111OcspRsa4096.setHostname("localhost");
+        outboundConOpenssl111OcspRsa4096.setPort(1556);
+        outboundConOpenssl111OcspRsa4096.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../TLS-Attacker/Zusatzzeug/certGen/rsa4096_ecdsa_cert.pem -key ../../../TLS-Attacker/Zusatzzeug/certGen/rsa4096_key.pem -port 1556 -early_data -no_anti_replay -num_tickets 1 -status_file ../../../TLS-Attacker/Zusatzzeug/certGen/OCSP/ocsp_resp_rsa4096_ecdsa_cert.der
+        
+        // Supports: OpenSSL 1.1.1w (open111_ecc_renegotiation)
+        //  - TLS1.2 with renegotiation
+        OutboundConnection outboundConOpenssl111EccRenegotiation = new OutboundConnection();
+        outboundConOpenssl111EccRenegotiation.setHostname("localhost");
+        outboundConOpenssl111EccRenegotiation.setPort(3232);
+        outboundConOpenssl111EccRenegotiation.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 3.3.1 (opn333_ecc opn333_rsa)
+        //  - TLS1.2 without any extras
+        //  - TLS1.2 Resumption with tickets
+        //  - TLS1.3 without any extras
+        //  - TLS1.3 Resumption
+        //  - TLS1.3 Early Data
+        OutboundConnection outboundConOpenssl333Ecc = new OutboundConnection();
+        outboundConOpenssl333Ecc.setHostname("localhost");
+        outboundConOpenssl333Ecc.setPort(6666);
+        outboundConOpenssl333Ecc.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem -key ../../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_key.pem -port 6666
+
+        OutboundConnection outboundConOpenssl333Rsa = new OutboundConnection();
+        outboundConOpenssl333Rsa.setHostname("localhost");
+        outboundConOpenssl333Rsa.setPort(6655);
+        outboundConOpenssl333Rsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem -key ../../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_key.pem -port 6655
+
+        // Supports: OpenSSL 3.3.1 (open_ecc_ca-ecdsa)
+        //  - TLS1.2 with Client Auth using ECDSA signed certificate
+        //  - TLS1.3 with Client Auth using ECDSA signed certificate
+        OutboundConnection outboundConOpenssl333CaEcdsa = new OutboundConnection();
+        outboundConOpenssl333CaEcdsa.setHostname("localhost");
+        outboundConOpenssl333CaEcdsa.setPort(6677);
+        outboundConOpenssl333CaEcdsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 3.3.1 (open_ecc_ca-rsa)
+        //  - TLS1.2 with Client Auth using RSA signed certificate
+        //  - TLS1.3 with Client Auth using RSA signed certificate
+        OutboundConnection outboundConOpenssl333CaRsa = new OutboundConnection();
+        outboundConOpenssl333CaRsa.setHostname("localhost");
+        outboundConOpenssl333CaRsa.setPort(6678);
+        outboundConOpenssl333CaRsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 3.3.1 (open_ecc_wrong-ca-ecdsa)
+        //  - TLS1.2 with Client Auth using ECDSA signed certificate but simulating wrong CA
+        //  - TLS1.3 with Client Auth using ECDSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConOpenssl333WrongCaEcdsa = new OutboundConnection();
+        outboundConOpenssl333WrongCaEcdsa.setHostname("localhost");
+        outboundConOpenssl333WrongCaEcdsa.setPort(6688);
+        outboundConOpenssl333WrongCaEcdsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 3.3.1 (open_ecc_wrong-ca-rsa)
+        //  - TLS1.2 with Client Auth using RSA signed certificate but simulating wrong CA
+        //  - TLS1.3 with Client Auth using RSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConOpenssl333WrongCaRsa = new OutboundConnection();
+        outboundConOpenssl333WrongCaRsa.setHostname("localhost");
+        outboundConOpenssl333WrongCaRsa.setPort(6689);
+        outboundConOpenssl333WrongCaRsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 3.3.1 (opn333_ecc_id, opn333_rsa_id)
+        //  - TLS1.2 Resumption with ID
+        OutboundConnection outboundConOpenssl333EccTls12ResumptionID = new OutboundConnection();
+        outboundConOpenssl333EccTls12ResumptionID.setHostname("localhost");
+        outboundConOpenssl333EccTls12ResumptionID.setPort(6662);
+        outboundConOpenssl333EccTls12ResumptionID.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_ecdsa_cert.pem -key ../../../../TLS-Attacker/Zusatzzeug/certGen/ec_secp384r1_key.pem -stateless -port 6662
+
+        OutboundConnection outboundConOpenssl333RsaTls12ResumptionID = new OutboundConnection();
+        outboundConOpenssl333RsaTls12ResumptionID.setHostname("localhost");
+        outboundConOpenssl333RsaTls12ResumptionID.setPort(6552);
+        outboundConOpenssl333RsaTls12ResumptionID.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        //./openssl s_server -cert ../../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_ecdsa_cert.pem -key ../../../../TLS-Attacker/Zusatzzeug/certGen/rsa2048_key.pem -stateless -port 6552
+
+        // Supports: OpenSSL 3.3.1 (openssl333_ocsp-ecc256)
+        //  - OCSP with ecc256 cert
+        OutboundConnection outboundConOpenssl333OcspEcc256 = new OutboundConnection();
+        outboundConOpenssl333OcspEcc256.setHostname("localhost");
+        outboundConOpenssl333OcspEcc256.setPort(6433);
+        outboundConOpenssl333OcspEcc256.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 3.3.1 (openssl333_ocsp-ecc384)
+        //  - OCSP with ecc384 cert
+        OutboundConnection outboundConOpenssl333OcspEcc384 = new OutboundConnection();
+        outboundConOpenssl333OcspEcc384.setHostname("localhost");
+        outboundConOpenssl333OcspEcc384.setPort(6444);
+        outboundConOpenssl333OcspEcc384.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 3.3.1 (openssl333_ocsp-ecc521)
+        //  - OCSP with ecc521 cert
+        OutboundConnection outboundConOpenssl333OcspEcc521 = new OutboundConnection();
+        outboundConOpenssl333OcspEcc521.setHostname("localhost");
+        outboundConOpenssl333OcspEcc521.setPort(6445);
+        outboundConOpenssl333OcspEcc521.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 3.3.1 (openssl333_ocsp-rsa2048)
+        //  - OCSP with rsa2048 cert
+        OutboundConnection outboundConOpenssl333OcspRsa2048 = new OutboundConnection();
+        outboundConOpenssl333OcspRsa2048.setHostname("localhost");
+        outboundConOpenssl333OcspRsa2048.setPort(6555);
+        outboundConOpenssl333OcspRsa2048.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: OpenSSL 3.3.1 (openssl333_ocsp-rsa2048)
+        //  - OCSP with rsa4096 cert
+        OutboundConnection outboundConOpenssl333OcspRsa4096 = new OutboundConnection();
+        outboundConOpenssl333OcspRsa4096.setHostname("localhost");
+        outboundConOpenssl333OcspRsa4096.setPort(6556);
+        outboundConOpenssl333OcspRsa4096.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ecc, rustls_rsa)
+        //  - TLS1.2 without any extras
+        //  - TLS1.3 without any extras
+        OutboundConnection outboundConRustEcc = new OutboundConnection();
+        outboundConRustEcc.setHostname("localhost");
+        outboundConRustEcc.setPort(2222);
+        outboundConRustEcc.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+                
+        OutboundConnection outboundConFastRustEcc = new OutboundConnection();
+        outboundConFastRustEcc.setHostname("localhost");
+        outboundConFastRustEcc.setPort(45677);
+        outboundConFastRustEcc.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConRustRsa = new OutboundConnection();
+        outboundConRustRsa.setHostname("localhost");
+        outboundConRustRsa.setPort(2255);
+        outboundConRustRsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConFastRustRsa = new OutboundConnection();
+        outboundConFastRustRsa.setHostname("localhost");
+        outboundConFastRustRsa.setPort(48996);
+        outboundConFastRustRsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ecc_ticket, rustls_rsa_ticket)
+        //  - TLS1.2 Resumption with tickets
+        //  - TLS1.3 Resumption with tickets
+        //  - TLS1.3 Early Data
+        OutboundConnection outboundConRustEccResumptionTickets = new OutboundConnection();
+        outboundConRustEccResumptionTickets.setHostname("localhost");
+        outboundConRustEccResumptionTickets.setPort(2221);
+        outboundConRustEccResumptionTickets.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConRustRsaResumptionTickets = new OutboundConnection();
+        outboundConRustRsaResumptionTickets.setHostname("localhost");
+        outboundConRustRsaResumptionTickets.setPort(2224);
+        outboundConRustRsaResumptionTickets.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ecc_ca-ecdsa)
+        //  - TLS1.2 with Client Auth using ECDSA signed certificate
+        //  - TLS1.3 with Client Auth using ECDSA signed certificate
+        OutboundConnection outboundConRustCaEcdsa = new OutboundConnection();
+        outboundConRustCaEcdsa.setHostname("localhost");
+        outboundConRustCaEcdsa.setPort(2332);
+        outboundConRustCaEcdsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ecc_ca-rsa)
+        //  - TLS1.2 with Client Auth using RSA signed certificate
+        //  - TLS1.3 with Client Auth using RSA signed certificate
+        OutboundConnection outboundConRustCaRsa = new OutboundConnection();
+        outboundConRustCaRsa.setHostname("localhost");
+        outboundConRustCaRsa.setPort(2334);
+        outboundConRustCaRsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ecc_wrong-ca-ecdsa)
+        //  - TLS1.2 with Client Auth using ECDSA signed certificate but simulating wrong CA
+        //  - TLS1.3 with Client Auth using ECDSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConRustWrongCaEcdsa = new OutboundConnection();
+        outboundConRustWrongCaEcdsa.setHostname("localhost");
+        outboundConRustWrongCaEcdsa.setPort(2336);
+        outboundConRustWrongCaEcdsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ecc_wrong-ca-rsa)
+        //  - TLS1.2 with Client Auth using RSA signed certificate but simulating wrong CA
+        //  - TLS1.3 with Client Auth using RSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConRustWrongCaRsa = new OutboundConnection();
+        outboundConRustWrongCaRsa.setHostname("localhost");
+        outboundConRustWrongCaRsa.setPort(2338);
+        outboundConRustWrongCaRsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls  (rustls_ecc_id, rustls_rsa_id)
+        //  - TLS1.2 Resumption with ID
+        OutboundConnection outboundConRustEccTls12ResumptionID = new OutboundConnection();
+        outboundConRustEccTls12ResumptionID.setHostname("localhost");
+        outboundConRustEccTls12ResumptionID.setPort(2227);
+        outboundConRustEccTls12ResumptionID.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConRustRsaTls12ResumptionID = new OutboundConnection();
+        outboundConRustRsaTls12ResumptionID.setHostname("localhost");
+        outboundConRustRsaTls12ResumptionID.setPort(2229);
+        outboundConRustRsaTls12ResumptionID.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ocsp-ecc256)
+        //  - OCSP with ecc256 cert
+        OutboundConnection outboundConRustOcspEcc256 = new OutboundConnection();
+        outboundConRustOcspEcc256.setHostname("localhost");
+        outboundConRustOcspEcc256.setPort(2355);
+        outboundConRustOcspEcc256.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ocsp-ecc384)
+        //  - OCSP with ecc384 cert
+        OutboundConnection outboundConRustOcspEcc384 = new OutboundConnection();
+        outboundConRustOcspEcc384.setHostname("localhost");
+        outboundConRustOcspEcc384.setPort(2356);
+        outboundConRustOcspEcc384.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ocsp-ecc521)
+        //  - OCSP with ecc521 cert
+        OutboundConnection outboundConRustOcspEcc521 = new OutboundConnection();
+        outboundConRustOcspEcc521.setHostname("localhost");
+        outboundConRustOcspEcc521.setPort(2357);
+        outboundConRustOcspEcc521.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ocsp-rsa2048)
+        //  - OCSP with rsa2048 cert
+        OutboundConnection outboundConRustOcspRsa2048 = new OutboundConnection();
+        outboundConRustOcspRsa2048.setHostname("localhost");
+        outboundConRustOcspRsa2048.setPort(2655);
+        outboundConRustOcspRsa2048.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: Rustls (rustls_ocsp-rsa2048)
+        //  - OCSP with rsa4096 cert
+        OutboundConnection outboundConRustOcspRsa4096 = new OutboundConnection();
+        outboundConRustOcspRsa4096.setHostname("localhost");
+        outboundConRustOcspRsa4096.setPort(2656);
+        outboundConRustOcspRsa4096.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+
+        // Supports: BoringSSL (boring_ecc, boring_rsa)
+        //  - TLS1.2 without any extras
+        //  - TLS1.3 without any extras
+        //  - TLS1.2 Resumption with ID
+        //  - TLS1.2 Resumption with tickets
+        OutboundConnection outboundConBoringsslEcc = new OutboundConnection();
+        outboundConBoringsslEcc.setHostname("localhost");
+        outboundConBoringsslEcc.setPort(3333);
+        outboundConBoringsslEcc.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConBoringsslRsa = new OutboundConnection();
+        outboundConBoringsslRsa.setHostname("localhost");
+        outboundConBoringsslRsa.setPort(3355);
+        outboundConBoringsslRsa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: BoringSSL (boring_ecc_ca)
+        //  - TLS1.2 with Client Auth using ECDSA signed certificate
+        //  - TLS1.3 with Client Auth using ECDSA signed certificate
+        //  - TLS1.2 with Client Auth using RSA signed certificate but simulating wrong CA
+        //  - TLS1.3 with Client Auth using RSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConBoringsslCa = new OutboundConnection();
+        outboundConBoringsslCa.setHostname("localhost");
+        outboundConBoringsslCa.setPort(3443);
+        outboundConBoringsslCa.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: BoringSSL (boring_ocsp-ecc256)
+        //  - OCSP with ecc256 cert
+        OutboundConnection outboundConBoringsslOcspEcc256 = new OutboundConnection();
+        outboundConBoringsslOcspEcc256.setHostname("localhost");
+        outboundConBoringsslOcspEcc256.setPort(3364);
+        outboundConBoringsslOcspEcc256.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: BoringSSL (boring_ocsp-ecc384)
+        //  - OCSP with ecc384 cert
+        OutboundConnection outboundConBoringsslOcspEcc384 = new OutboundConnection();
+        outboundConBoringsslOcspEcc384.setHostname("localhost");
+        outboundConBoringsslOcspEcc384.setPort(3366);
+        outboundConBoringsslOcspEcc384.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: BoringSSL (boring_ocsp-ecc521)
+        //  - OCSP with ecc521 cert
+        OutboundConnection outboundConBoringsslOcspEcc521 = new OutboundConnection();
+        outboundConBoringsslOcspEcc521.setHostname("localhost");
+        outboundConBoringsslOcspEcc521.setPort(3367);
+        outboundConBoringsslOcspEcc521.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: BoringSSL (boring_ocsp-rsa1024)
+        //  - OCSP with rsa1024 cert
+        OutboundConnection outboundConBoringsslOcspRsa1024 = new OutboundConnection();
+        outboundConBoringsslOcspRsa1024.setHostname("localhost");
+        outboundConBoringsslOcspRsa1024.setPort(3655);
+        outboundConBoringsslOcspRsa1024.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: BoringSSL (boring_ocsp-rsa2048)
+        //  - OCSP with rsa2048 cert
+        OutboundConnection outboundConBoringsslOcspRsa2048 = new OutboundConnection();
+        outboundConBoringsslOcspRsa2048.setHostname("localhost");
+        outboundConBoringsslOcspRsa2048.setPort(3656);
+        outboundConBoringsslOcspRsa2048.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: BoringSSL (boring_ocsp-rsa2048)
+        //  - OCSP with rssa4096 cert
+        OutboundConnection outboundConBoringsslOcspRsa4096 = new OutboundConnection();
+        outboundConBoringsslOcspRsa4096.setHostname("localhost");
+        outboundConBoringsslOcspRsa4096.setPort(3657);
+        outboundConBoringsslOcspRsa4096.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+
+        // Supports: WolfSSL (wlfssl_ecc_tls12, wlfssl_rsa_tls12)
+        //  - TLS1.2 without any extras
+        //  - TLS1.2 Resumption with ID
+        //  - TLS1.2 Resumption with tickets
+        OutboundConnection outboundConWolfsslEccTls12 = new OutboundConnection();
+        outboundConWolfsslEccTls12.setHostname("localhost");
+        outboundConWolfsslEccTls12.setPort(4444);
+        outboundConWolfsslEccTls12.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+        
+        OutboundConnection outboundConSlowWolfsslEccTls12 = new OutboundConnection();
+        outboundConSlowWolfsslEccTls12.setHostname("localhost");
+        outboundConSlowWolfsslEccTls12.setPort(4564);
+        outboundConSlowWolfsslEccTls12.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConWolfsslRsaTls12 = new OutboundConnection();
+        outboundConWolfsslRsaTls12.setHostname("localhost");
+        outboundConWolfsslRsaTls12.setPort(4455);
+        outboundConWolfsslRsaTls12.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConSlowWolfsslRsaTls12 = new OutboundConnection();
+        outboundConSlowWolfsslRsaTls12.setHostname("localhost");
+        outboundConSlowWolfsslRsaTls12.setPort(48556);
+        outboundConSlowWolfsslRsaTls12.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: WolfSSL (wolf_ecc256_tls12, wolf_ecc521_tls12, wolf_rsa1024_tls12, wolf_rsa4096_tls12)
+        //  - Server uses ECC256_ECDSA, ECC521_ECDSA, RSA1024_ECDSA, RSA4096_ECDSA certificate
+        //  - TLS1.2 without any extras
+        //  - TLS1.2 Resumption with ID
+        //  - TLS1.2 Resumption with tickets
+        OutboundConnection outboundConWolfsslEccTls12Ecc256 = new OutboundConnection();
+        outboundConWolfsslEccTls12Ecc256.setHostname("localhost");
+        outboundConWolfsslEccTls12Ecc256.setPort(44556);
+        outboundConWolfsslEccTls12Ecc256.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConWolfsslEccTls12Ecc521 = new OutboundConnection();
+        outboundConWolfsslEccTls12Ecc521.setHostname("localhost");
+        outboundConWolfsslEccTls12Ecc521.setPort(44566);
+        outboundConWolfsslEccTls12Ecc521.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConWolfsslEccTls12Rsa1024 = new OutboundConnection();
+        outboundConWolfsslEccTls12Rsa1024.setHostname("localhost");
+        outboundConWolfsslEccTls12Rsa1024.setPort(44567);
+        outboundConWolfsslEccTls12Rsa1024.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConWolfsslEccTls12Rsa4096 = new OutboundConnection();
+        outboundConWolfsslEccTls12Rsa4096.setHostname("localhost");
+        outboundConWolfsslEccTls12Rsa4096.setPort(44568);
+        outboundConWolfsslEccTls12Rsa4096.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: WolfSSL (wolf_ecc_tls13, wolf_rsa_tls13)
+        //  - TLS1.3 without any extras
+        //  - TLS1.3 Resumption with tickets
+        OutboundConnection outboundConWolfsslEccTls13 = new OutboundConnection();
+        outboundConWolfsslEccTls13.setHostname("localhost");
+        outboundConWolfsslEccTls13.setPort(44443);
+        outboundConWolfsslEccTls13.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConWolfsslRsaTls13 = new OutboundConnection();
+        outboundConWolfsslRsaTls13.setHostname("localhost");
+        outboundConWolfsslRsaTls13.setPort(44553);
+        outboundConWolfsslRsaTls13.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConSlowWolfsslRsaTls13 = new OutboundConnection();
+        outboundConSlowWolfsslRsaTls13.setHostname("localhost");
+        outboundConSlowWolfsslRsaTls13.setPort(48553);
+        outboundConSlowWolfsslRsaTls13.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: WolfSSL (wolf_ecc256_tls12, wolf_ecc521_tls12, wolf_rsa1024_tls12, wolf_rsa4096_tls12)
+        //  - Server uses ECC256_ECDSA, ECC521_ECDSA, RSA1024_ECDSA, RSA4096_ECDSA certificate
+        //  - TLS1.3 without any extras
+        //  - TLS1.3 Resumption with tickets
+        OutboundConnection outboundConWolfsslEccTls13Ecc256 = new OutboundConnection();
+        outboundConWolfsslEccTls13Ecc256.setHostname("localhost");
+        outboundConWolfsslEccTls13Ecc256.setPort(44551);
+        outboundConWolfsslEccTls13Ecc256.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConWolfsslEccTls13Ecc521 = new OutboundConnection();
+        outboundConWolfsslEccTls13Ecc521.setHostname("localhost");
+        outboundConWolfsslEccTls13Ecc521.setPort(44562);
+        outboundConWolfsslEccTls13Ecc521.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConWolfsslEccTls13Rsa1024 = new OutboundConnection();
+        outboundConWolfsslEccTls13Rsa1024.setHostname("localhost");
+        outboundConWolfsslEccTls13Rsa1024.setPort(4453);
+        outboundConWolfsslEccTls13Rsa1024.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConWolfsslEccTls13Rsa4096 = new OutboundConnection();
+        outboundConWolfsslEccTls13Rsa4096.setHostname("localhost");
+        outboundConWolfsslEccTls13Rsa4096.setPort(44563);
+        outboundConWolfsslEccTls13Rsa4096.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+
+        // Supports: WolfSSL (wolf_ecc_tls13_0rtt, wolf_rsa_tls13_0rtt)
+        //  - TLS1.3 Early Data
+        OutboundConnection outboundConWolfsslEccTls13Zero = new OutboundConnection();
+        outboundConWolfsslEccTls13Zero.setHostname("localhost");
+        outboundConWolfsslEccTls13Zero.setPort(44422);
+        outboundConWolfsslEccTls13Zero.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        OutboundConnection outboundConWolfsslRsaTls13Zero = new OutboundConnection();
+        outboundConWolfsslRsaTls13Zero.setHostname("localhost");
+        outboundConWolfsslRsaTls13Zero.setPort(44522);
+        outboundConWolfsslRsaTls13Zero.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: wolfSSL (wolf_ecc_ca_ecdsa_tls12)
+        //  - TLS1.2 with Client Auth using ECDSA signed certificate
+        OutboundConnection outboundConWolfsslCaEcdsaTls12 = new OutboundConnection();
+        outboundConWolfsslCaEcdsaTls12.setHostname("localhost");
+        outboundConWolfsslCaEcdsaTls12.setPort(4456);
+        outboundConWolfsslCaEcdsaTls12.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: wolfSSL (wolf_ecc_ca_rsa_tls12)
+        //  - TLS1.2 with Client Auth using RSA signed certificate
+        OutboundConnection outboundConWolfsslCaRsaTls12 = new OutboundConnection();
+        outboundConWolfsslCaRsaTls12.setHostname("localhost");
+        outboundConWolfsslCaRsaTls12.setPort(4457);
+        outboundConWolfsslCaRsaTls12.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: wolfSSL (wolf_ecc_wr-ca_ecdsa_tls12)
+        //  - TLS1.2 with Client Auth using ECDSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConWolfsslWrongCaEcdsaTls12 = new OutboundConnection();
+        outboundConWolfsslWrongCaEcdsaTls12.setHostname("localhost");
+        outboundConWolfsslWrongCaEcdsaTls12.setPort(4458);
+        outboundConWolfsslWrongCaEcdsaTls12.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: wolfSSL (wolf_ecc_wr-ca_rsa_tls12)
+        //  - TLS1.2 with Client Auth using RSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConWolfsslWrongCaRsaTls12 = new OutboundConnection();
+        outboundConWolfsslWrongCaRsaTls12.setHostname("localhost");
+        outboundConWolfsslWrongCaRsaTls12.setPort(4459);
+        outboundConWolfsslWrongCaRsaTls12.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: wolfSSL (wolf_ecc_ca_ecdsa_tls13)
+        //  - TLS1.3 with Client Auth using ECDSA signed certificate
+        OutboundConnection outboundConWolfsslCaEcdsaTls13 = new OutboundConnection();
+        outboundConWolfsslCaEcdsaTls13.setHostname("localhost");
+        outboundConWolfsslCaEcdsaTls13.setPort(44510);
+        outboundConWolfsslCaEcdsaTls13.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: wolfSSL (wolf_ecc_ca_rsa_tls13)
+        //  - TLS1.3 with Client Auth using RSA signed certificate
+        OutboundConnection outboundConWolfsslCaRsaTls13 = new OutboundConnection();
+        outboundConWolfsslCaRsaTls13.setHostname("localhost");
+        outboundConWolfsslCaRsaTls13.setPort(44511);
+        outboundConWolfsslCaRsaTls13.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: wolfSSL (wolf_ecc_wr-ca_ecdsa_tls13)
+        //  - TLS1.3 with Client Auth using ECDSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConWolfsslWrongCaEcdsaTls13 = new OutboundConnection();
+        outboundConWolfsslWrongCaEcdsaTls13.setHostname("localhost");
+        outboundConWolfsslWrongCaEcdsaTls13.setPort(44512);
+        outboundConWolfsslWrongCaEcdsaTls13.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        // Supports: wolfSSL (wolf_ecc_wr-ca_rsa_tls13)
+        //  - TLS1.3 with Client Auth using RSA signed certificate but simulating wrong CA
+        OutboundConnection outboundConWolfsslWrongCaRsaTls13 = new OutboundConnection();
+        outboundConWolfsslWrongCaRsaTls13.setHostname("localhost");
+        outboundConWolfsslWrongCaRsaTls13.setPort(44513);
+        outboundConWolfsslWrongCaRsaTls13.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
+
+        HandshakeActions handshakeActions;
+
+        int cnt_rep = 15000;
+
+        // ########## General Tests
+        /*
+        // ######## Config for D1
+        Config myConfigD1 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_128_CBC_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run openssl111 ECC TLS1.2
+        myConfigD1.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD1, outboundConOpenssl111Ecc);
+        System.out.println("Start D1 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D1", cnt_rep, myConfigD1, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // configure and run openssl333 ECC TLS1.2
+        myConfigD1.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD1, outboundConOpenssl333Ecc);
+        System.out.println("Start D1 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D1", cnt_rep, myConfigD1, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2
+        myConfigD1.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD1, outboundConWolfsslEccTls12);
+        System.out.println("Start D1 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D1", cnt_rep, myConfigD1, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D2
+        Config myConfigD2 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_CBC_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run openssl111 ECC TLS1.2
+        myConfigD2.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD2, outboundConOpenssl111Ecc);
+        System.out.println("Start D2 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D2", cnt_rep, myConfigD2, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2
+        myConfigD2.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD2, outboundConOpenssl333Ecc);
+        System.out.println("Start D2 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D2", cnt_rep, myConfigD2, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2
+        myConfigD2.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD2, outboundConWolfsslEccTls12);
+        System.out.println("Start D2 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D2", cnt_rep, myConfigD2, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D3
+        Config myConfigD3 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run boringssl ECC TLS1.2
+        myConfigD3.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD3, outboundConBoringsslEcc);
+        System.out.println("Start D3 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D3", cnt_rep, myConfigD3, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.2
+        myConfigD3.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD3, outboundConOpenssl111Ecc);
+        System.out.println("Start D3 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D3", cnt_rep, myConfigD3, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2
+        myConfigD3.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD3, outboundConOpenssl333Ecc);
+        System.out.println("Start D3 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D3", cnt_rep, myConfigD3, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.2
+        myConfigD3.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD3, outboundConRustEcc);
+        System.out.println("Start D3 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D3", cnt_rep, myConfigD3, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2
+        myConfigD3.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD3, outboundConWolfsslEccTls12);
+        System.out.println("Start D3 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D3", cnt_rep, myConfigD3, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D4
+        Config myConfigD4 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run boringssl ECC TLS1.2
+        myConfigD4.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD4, outboundConBoringsslEcc);
+        System.out.println("Start D4 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D4", cnt_rep, myConfigD4, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.2
+        myConfigD4.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD4, outboundConOpenssl111Ecc);
+        System.out.println("Start D4 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D4", cnt_rep, myConfigD4, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2
+        myConfigD4.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD4, outboundConOpenssl333Ecc);
+        System.out.println("Start D4 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D4", cnt_rep, myConfigD4, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.2
+        myConfigD4.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD4, outboundConRustEcc);
+        System.out.println("Start D4 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D4", cnt_rep, myConfigD4, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2
+        myConfigD4.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD4, outboundConWolfsslEccTls12);
+        System.out.println("Start D4 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D4", cnt_rep, myConfigD4, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D5
+        // NOT SUPPORTED BY ANY LIBRARY
+
+        // ######## Config for D6
+        // NOT SUPPORTED BY ANY LIBRARY
+
+
+        // ######## Config for D7
+        Config myConfigD7 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_CBC_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD7.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD7, outboundConOpenssl111Rsa);
+        System.out.println("Start D7 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D7", cnt_rep, myConfigD7, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD7.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD7, outboundConOpenssl333Rsa);
+        System.out.println("Start D7 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D7", cnt_rep, myConfigD7, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD7.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD7, outboundConWolfsslRsaTls12);
+        System.out.println("Start D7 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D7", cnt_rep, myConfigD7, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D8
+        Config myConfigD8 =
+        ConfigFactory.getConfig(
+            TlsVersion.TLS12,
+            KeyExchange.ECDHE,
+            KeyExchangeGroup.SECP384R1,
+            ServerAuth.RSA,
+            null,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+            BulkAlgo.AES_256_CBC_SHA384,
+            //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+            new Vector<>());
+        
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD8.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD8, outboundConOpenssl111Rsa);
+        System.out.println("Start D8 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D8", cnt_rep, myConfigD8, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD8.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD8, outboundConOpenssl333Rsa);
+        System.out.println("Start D8 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D8", cnt_rep, myConfigD8, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD8.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD8, outboundConWolfsslRsaTls12);
+        System.out.println("Start D8 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D8", cnt_rep, myConfigD8, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D9
+        Config myConfigD9 =
+        ConfigFactory.getConfig(
+            TlsVersion.TLS12,
+            KeyExchange.ECDHE,
+            KeyExchangeGroup.SECP384R1,
+            ServerAuth.RSA,
+            null,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+            BulkAlgo.AES_128_GCM_SHA256,
+            //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+            new Vector<>());
+
+        // configure and run boringssl RSA TLS1.2
+        myConfigD9.setDefaultClientConnection(outboundConBoringsslRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD9, outboundConBoringsslRsa);
+        System.out.println("Start D9 with outboundConBoringsslRsa");
+        TimeMeasurement.startTimeMeasurement("D9", cnt_rep, myConfigD9, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD9.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD9, outboundConOpenssl111Rsa);
+        System.out.println("Start D9 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D9", cnt_rep, myConfigD9, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD9.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD9, outboundConOpenssl333Rsa);
+        System.out.println("Start D9 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D9", cnt_rep, myConfigD9, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls RSA TLS1.2
+        myConfigD9.setDefaultClientConnection(outboundConRustRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD9, outboundConRustRsa);
+        System.out.println("Start D9 with outboundConRustRsa");
+        TimeMeasurement.startTimeMeasurement("D9", cnt_rep, myConfigD9, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD9.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD9, outboundConWolfsslRsaTls12);
+        System.out.println("Start D9 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D9", cnt_rep, myConfigD9, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D10
+        Config myConfigD10 =
+        ConfigFactory.getConfig(
+            TlsVersion.TLS12,
+            KeyExchange.ECDHE,
+            KeyExchangeGroup.SECP384R1,
+            ServerAuth.RSA,
+            null,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+            BulkAlgo.AES_256_GCM_SHA384,
+            //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+            new Vector<>());
+
+        // configure and run boringssl RSA TLS1.2
+        myConfigD10.setDefaultClientConnection(outboundConBoringsslRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD10, outboundConBoringsslRsa);
+        System.out.println("Start D10 with outboundConBoringsslRsa");
+        TimeMeasurement.startTimeMeasurement("D10", cnt_rep, myConfigD10, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD10.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD10, outboundConOpenssl111Rsa);
+        System.out.println("Start D10 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D10", cnt_rep, myConfigD10, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD10.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD10, outboundConOpenssl333Rsa);
+        System.out.println("Start D10 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D10", cnt_rep, myConfigD10, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls RSA TLS1.2
+        myConfigD10.setDefaultClientConnection(outboundConRustRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD10, outboundConRustRsa);
+        System.out.println("Start D10 with outboundConRustRsa");
+        TimeMeasurement.startTimeMeasurement("D10", cnt_rep, myConfigD10, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD10.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD10, outboundConWolfsslRsaTls12);
+        System.out.println("Start D10 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D10", cnt_rep, myConfigD10, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D11
+        // NOT SUPPORTED BY ANY LIBRARY
+
+        // ######## Config for D12
+        // NOT SUPPORTED BY ANY LIBRARY
+
+        // ######## Config for D13
+        // NOT SUPPORTED BY ANY LIBRARY
+
+        // ######## Config for D14
+        // NOT SUPPORTED BY ANY LIBRARY
+
+
+        // ######## Config for D15
+        Config myConfigD15 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_CBC_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD15.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD15, outboundConOpenssl111Rsa);
+        System.out.println("Start D15 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D15", cnt_rep, myConfigD15, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD15.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD15, outboundConOpenssl333Rsa);
+        System.out.println("Start D15 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D15", cnt_rep, myConfigD15, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD15.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD15, outboundConWolfsslRsaTls12);
+        System.out.println("Start D15 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D15", cnt_rep, myConfigD15, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D16
+        Config myConfigD16 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_CBC_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD16.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD16, outboundConOpenssl111Rsa);
+        System.out.println("Start D16 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D16", cnt_rep, myConfigD16, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD16.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD16, outboundConOpenssl333Rsa);
+        System.out.println("Start D16 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D16", cnt_rep, myConfigD16, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD16.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD16, outboundConWolfsslRsaTls12);
+        System.out.println("Start D16 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D16", cnt_rep, myConfigD16, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D17
+        Config myConfigD17 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD17.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD17, outboundConOpenssl111Rsa);
+        System.out.println("Start D17 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D17", cnt_rep, myConfigD17, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD17.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD17, outboundConOpenssl333Rsa);
+        System.out.println("Start D17 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D17", cnt_rep, myConfigD17, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD17.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD17, outboundConWolfsslRsaTls12);
+        System.out.println("Start D17 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D17", cnt_rep, myConfigD17, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D18
+        Config myConfigD18 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD18.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD18, outboundConOpenssl111Rsa);
+        System.out.println("Start D18 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D18", cnt_rep, myConfigD18, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD18.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD18, outboundConOpenssl333Rsa);
+        System.out.println("Start D18 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D18", cnt_rep, myConfigD18, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD18.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD18, outboundConWolfsslRsaTls12);
+        System.out.println("Start D18 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D18", cnt_rep, myConfigD18, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+
+        // ######## Config for D21
+        Config myConfigD21 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDH,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_CBC_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run WolfSSL ECC TLS1.2
+        myConfigD21.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH, myConfigD21, outboundConWolfsslEccTls12);
+        System.out.println("Start D21 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D21", cnt_rep, myConfigD21, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D22
+        Config myConfigD22 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDH,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run WolfSSL ECC TLS1.2
+        myConfigD22.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH, myConfigD22, outboundConWolfsslEccTls12);
+        System.out.println("Start D22 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D22", cnt_rep, myConfigD22, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D23
+        Config myConfigD23 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.RSA,
+                KeyExchangeGroup.NONE,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_CBC_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run WolfSSL ECC TLS1.2
+        myConfigD23.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH, myConfigD23, outboundConWolfsslRsaTls12);
+        System.out.println("Start D23 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D23", cnt_rep, myConfigD23, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D24
+        Config myConfigD24 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.RSA,
+                KeyExchangeGroup.NONE,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run WolfSSL ECC TLS1.2
+        myConfigD24.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_STATIC_WITHOUT_CLIENTAUTH, myConfigD24, outboundConWolfsslRsaTls12);
+        System.out.println("Start D24 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D24", cnt_rep, myConfigD24, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D27
+        Config myConfigD27 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run boringssl ECC TLS1.3
+        myConfigD27.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD27, outboundConBoringsslEcc);
+        System.out.println("Start D27 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D27", cnt_rep, myConfigD27, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.3
+        myConfigD27.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD27, outboundConOpenssl111Ecc);
+        System.out.println("Start D27 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D27", cnt_rep, myConfigD27, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD27.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD27, outboundConOpenssl333Ecc);
+        System.out.println("Start D27 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D27", cnt_rep, myConfigD27, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.3
+        myConfigD27.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD27, outboundConRustEcc);
+        System.out.println("Start D27 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D27", cnt_rep, myConfigD27, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3
+        myConfigD27.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD27, outboundConWolfsslEccTls13);
+        System.out.println("Start D27 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D27", cnt_rep, myConfigD27, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D28
+        Config myConfigD28 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl RSA TLS1.3
+        myConfigD28.setDefaultClientConnection(outboundConBoringsslRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD28, outboundConBoringsslRsa);
+        System.out.println("Start D28 with outboundConBoringsslRsa");
+        TimeMeasurement.startTimeMeasurement("D28", cnt_rep, myConfigD28, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 RSA TLS1.3
+        myConfigD28.setDefaultClientConnection(outboundConOpenssl111Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD28, outboundConOpenssl111Rsa);
+        System.out.println("Start D28 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D28", cnt_rep, myConfigD28, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.3
+        myConfigD28.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD28, outboundConOpenssl333Rsa);
+        System.out.println("Start D28 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D28", cnt_rep, myConfigD28, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls RSA TLS1.3
+        myConfigD28.setDefaultClientConnection(outboundConRustRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD28, outboundConRustRsa);
+        System.out.println("Start D28 with outboundConRustRsa");
+        TimeMeasurement.startTimeMeasurement("D28", cnt_rep, myConfigD28, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.3
+        myConfigD28.setDefaultClientConnection(outboundConWolfsslRsaTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD28, outboundConWolfsslRsaTls13);
+        System.out.println("Start D28 with outboundConWolfsslRsaTls13");
+        TimeMeasurement.startTimeMeasurement("D28", cnt_rep, myConfigD28, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D29
+        Config myConfigD29 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD29.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD29, outboundConOpenssl333Ecc);
+        System.out.println("Start D29 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D29", cnt_rep, myConfigD29, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3
+        myConfigD29.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD29, outboundConWolfsslEccTls13);
+        System.out.println("Start D29 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D29", cnt_rep, myConfigD29, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D30
+        Config myConfigD30 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl333 RSA TLS1.3
+        myConfigD30.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD30, outboundConOpenssl333Rsa);
+        System.out.println("Start D30 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D30", cnt_rep, myConfigD30, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.3
+        myConfigD30.setDefaultClientConnection(outboundConWolfsslRsaTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD30, outboundConWolfsslRsaTls13);
+        System.out.println("Start D30 with outboundConWolfsslRsaTls13");
+        TimeMeasurement.startTimeMeasurement("D30", cnt_rep, myConfigD30, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D31
+        Config myConfigD31 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.CHACHA20_POLY1305_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run boringssl ECC TLS1.3
+        myConfigD31.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD31, outboundConBoringsslEcc);
+        System.out.println("Start D31 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D31", cnt_rep, myConfigD31, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.3
+        myConfigD31.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD31, outboundConOpenssl111Ecc);
+        System.out.println("Start D31 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D31", cnt_rep, myConfigD31, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD31.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD31, outboundConOpenssl333Ecc);
+        System.out.println("Start D31 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D31", cnt_rep, myConfigD31, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.3
+        myConfigD31.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD31, outboundConRustEcc);
+        System.out.println("Start D31 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D31", cnt_rep, myConfigD31, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3
+        myConfigD31.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD31, outboundConWolfsslEccTls13);
+        System.out.println("Start D31 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D31", cnt_rep, myConfigD31, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D32
+        Config myConfigD32 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.CHACHA20_POLY1305_SHA256,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl RSA TLS1.3
+        myConfigD32.setDefaultClientConnection(outboundConBoringsslRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD32, outboundConBoringsslRsa);
+        System.out.println("Start D32 with outboundConBoringsslRsa");
+        TimeMeasurement.startTimeMeasurement("D32", cnt_rep, myConfigD32, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 RSA TLS1.3
+        myConfigD32.setDefaultClientConnection(outboundConOpenssl111Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD32, outboundConOpenssl111Rsa);
+        System.out.println("Start D32 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D32", cnt_rep, myConfigD32, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.3
+        myConfigD32.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD32, outboundConOpenssl333Rsa);
+        System.out.println("Start D32 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D32", cnt_rep, myConfigD32, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls RSA TLS1.3
+        myConfigD32.setDefaultClientConnection(outboundConRustRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD32, outboundConRustRsa);
+        System.out.println("Start D32 with outboundConRustRsa");
+        TimeMeasurement.startTimeMeasurement("D32", cnt_rep, myConfigD32, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.3
+        myConfigD32.setDefaultClientConnection(outboundConWolfsslRsaTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD32, outboundConWolfsslRsaTls13);
+        System.out.println("Start D32 with outboundConWolfsslRsaTls13");
+        TimeMeasurement.startTimeMeasurement("D32", cnt_rep, myConfigD32, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D33
+        Config myConfigD33 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.CHACHA20_POLY1305_SHA256,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl333 RSA TLS1.3
+        myConfigD33.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD33, outboundConOpenssl333Rsa);
+        System.out.println("Start D33 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D33", cnt_rep, myConfigD33, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.3
+        myConfigD33.setDefaultClientConnection(outboundConWolfsslRsaTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD33, outboundConWolfsslRsaTls13);
+        System.out.println("Start D33 with outboundConWolfsslRsaTls13");
+        TimeMeasurement.startTimeMeasurement("D33", cnt_rep, myConfigD33, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D34
+        Config myConfigD34 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.CHACHA20_POLY1305_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run boringssl ECC TLS1.2
+        myConfigD34.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD34, outboundConBoringsslEcc);
+        System.out.println("Start D34 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D34", cnt_rep, myConfigD34, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.2
+        myConfigD34.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD34, outboundConOpenssl111Ecc);
+        System.out.println("Start D34 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D34", cnt_rep, myConfigD34, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2
+        myConfigD34.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD34, outboundConOpenssl333Ecc);
+        System.out.println("Start D34 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D34", cnt_rep, myConfigD34, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.2
+        myConfigD34.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD34, outboundConRustEcc);
+        System.out.println("Start D34 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D34", cnt_rep, myConfigD34, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2
+        myConfigD34.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD34, outboundConWolfsslEccTls12);
+        System.out.println("Start D34 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D34", cnt_rep, myConfigD34, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D35
+        Config myConfigD35 =
+        ConfigFactory.getConfig(
+            TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.CHACHA20_POLY1305_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run boringssl RSA TLS1.2
+        myConfigD35.setDefaultClientConnection(outboundConBoringsslRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD35, outboundConBoringsslRsa);
+        System.out.println("Start D35 with outboundConBoringsslRsa");
+        TimeMeasurement.startTimeMeasurement("D35", cnt_rep, myConfigD35, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD35.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD35, outboundConOpenssl111Rsa);
+        System.out.println("Start D35 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D35", cnt_rep, myConfigD35, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD35.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD35, outboundConOpenssl333Rsa);
+        System.out.println("Start D35 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D35", cnt_rep, myConfigD35, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls RSA TLS1.2
+        myConfigD35.setDefaultClientConnection(outboundConRustRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD35, outboundConRustRsa);
+        System.out.println("Start D35 with outboundConRustRsa");
+        TimeMeasurement.startTimeMeasurement("D35", cnt_rep, myConfigD35, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD35.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD35, outboundConWolfsslRsaTls12);
+        System.out.println("Start D35 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D35", cnt_rep, myConfigD35, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D36
+        Config myConfigD36 =
+        ConfigFactory.getConfig(
+            TlsVersion.TLS12,
+            KeyExchange.DHE,
+            KeyExchangeGroup.FFDHE3072,
+            ServerAuth.RSA,
+            null,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+            BulkAlgo.CHACHA20_POLY1305_SHA256,
+            //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+            new Vector<>());
+        
+        // configure and run openssl111 RSA TLS1.2
+        myConfigD36.setDefaultClientConnection(outboundConOpenssl111Rsa );
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD36, outboundConOpenssl111Rsa);
+        System.out.println("Start D36 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D36", cnt_rep, myConfigD36, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2
+        myConfigD36.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD36, outboundConOpenssl333Rsa);
+        System.out.println("Start D36 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D36", cnt_rep, myConfigD36, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2
+        myConfigD36.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD36, outboundConWolfsslRsaTls12);
+        System.out.println("Start D36 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D36", cnt_rep, myConfigD36, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D37
+        Config myConfigD37 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run boringssl ECC TLS1.3
+        myConfigD37.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD37, outboundConBoringsslEcc);
+        System.out.println("Start D37 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D37", cnt_rep, myConfigD37, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.3
+        myConfigD37.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD37, outboundConOpenssl111Ecc);
+        System.out.println("Start D37 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D37", cnt_rep, myConfigD37, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD37.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD37, outboundConOpenssl333Ecc);
+        System.out.println("Start D37 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D37", cnt_rep, myConfigD37, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.3
+        myConfigD37.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD37, outboundConRustEcc);
+        System.out.println("Start D37 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D37", cnt_rep, myConfigD37, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3
+        myConfigD37.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD37, outboundConWolfsslEccTls13);
+        System.out.println("Start D37 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D37", cnt_rep, myConfigD37, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D38
+        Config myConfigD38 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl RSA TLS1.3
+        myConfigD38.setDefaultClientConnection(outboundConBoringsslRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD38, outboundConBoringsslRsa);
+        System.out.println("Start D38 with outboundConBoringsslRsa");
+        TimeMeasurement.startTimeMeasurement("D38", cnt_rep, myConfigD38, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 RSA TLS1.3
+        myConfigD38.setDefaultClientConnection(outboundConOpenssl111Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD38, outboundConOpenssl111Rsa);
+        System.out.println("Start D38 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D38", cnt_rep, myConfigD38, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.3
+        myConfigD38.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD38, outboundConOpenssl333Rsa);
+        System.out.println("Start D38 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D38", cnt_rep, myConfigD38, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls RSA TLS1.3
+        myConfigD38.setDefaultClientConnection(outboundConRustRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD38, outboundConRustRsa);
+        System.out.println("Start D38 with outboundConRustRsa");
+        TimeMeasurement.startTimeMeasurement("D38", cnt_rep, myConfigD38, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.3
+        myConfigD38.setDefaultClientConnection(outboundConWolfsslRsaTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD38, outboundConWolfsslRsaTls13);
+        System.out.println("Start D38 with outboundConWolfsslRsaTls13");
+        TimeMeasurement.startTimeMeasurement("D38", cnt_rep, myConfigD38, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+
+        // ######## Config for D39
+        Config myConfigD39 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD39.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD39, outboundConOpenssl333Ecc);
+        System.out.println("Start D39 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D39", cnt_rep, myConfigD39, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3
+        myConfigD39.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD39, outboundConWolfsslEccTls13);
+        System.out.println("Start D39 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D39", cnt_rep, myConfigD39, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D40
+        Config myConfigD40 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl333 RSA TLS1.3
+        myConfigD40.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD40, outboundConOpenssl333Rsa);
+        System.out.println("Start D40 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D40", cnt_rep, myConfigD40, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.3
+        myConfigD40.setDefaultClientConnection(outboundConWolfsslRsaTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD40, outboundConWolfsslRsaTls13);
+        System.out.println("Start D40 with outboundConWolfsslRsaTls13");
+        TimeMeasurement.startTimeMeasurement("D40", cnt_rep, myConfigD40, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D41 - D46
+        // NOT SUPPORTED
+
+
+        // ######## Config for D47
+        Config myConfigD47 =
         ConfigFactory.getConfig(
             TlsVersion.TLS12,
             KeyExchange.ECDHE,
             KeyExchangeGroup.SECP384R1,
             ServerAuth.ECDSA,
-            clientAuthConfig,
-            new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+            null,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA256);}},
             BulkAlgo.AES_256_GCM_SHA384,
-            new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+            new Vector<Extension>(){{add(Extension.OCSP);}});
             //new Vector<>());
+    
+        // configure and run Rustls OCSP ECC256
+        myConfigD47.setDefaultClientConnection(outboundConRustOcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD47, outboundConRustOcspEcc256);
+        System.out.println("Start D47 with outboundConRustOcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D47", cnt_rep, myConfigD47, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-        OutboundConnection outboundCon = new OutboundConnection();
-        outboundCon.setHostname("localhost");
-        outboundCon.setPort(222);
-        outboundCon.setTransportHandlerType(TransportHandlerType.TCP_TIMING);
-        myConfig.setDefaultClientConnection(outboundCon);
+        // ######## Config for D48
+        Config myConfigD48 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //new Vector<>());
+
+        // configure and run boringssl OCSP ECC384
+        myConfigD48.setDefaultClientConnection(outboundConBoringsslOcspEcc384);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD48, outboundConBoringsslOcspEcc384);
+        System.out.println("Start D48 with outboundConBoringsslOcspEcc384");
+        TimeMeasurement.startTimeMeasurement("D48", cnt_rep, myConfigD48, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         
-        HandshakeActions handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_RESUMPTION, myConfig, outboundCon);
-        Long[][] resultsMeasurement = TimeMeasurement.startTimeMeasurement("singleFlight", 2, myConfig, handshakeActions, true, 3, 1.5, false, null); 
+        // configure and run openssl111 OCSP ECC384
+        myConfigD48.setDefaultClientConnection(outboundConOpenssl111OcspEcc384);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD48, outboundConOpenssl111OcspEcc384);
+        System.out.println("Start D48 with outboundConOpenssl111OcspEcc384");
+        TimeMeasurement.startTimeMeasurement("D48", cnt_rep, myConfigD48, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP ECC384
+        myConfigD48.setDefaultClientConnection(outboundConOpenssl333OcspEcc384);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD48, outboundConOpenssl333OcspEcc384);
+        System.out.println("Start D48 with outboundConOpenssl333OcspEcc384");
+        TimeMeasurement.startTimeMeasurement("D48", cnt_rep, myConfigD48, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP ECC384
+        myConfigD48.setDefaultClientConnection(outboundConRustOcspEcc384);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD48, outboundConRustOcspEcc384);
+        System.out.println("Start D48 with outboundConRustOcspEcc384");
+        TimeMeasurement.startTimeMeasurement("D48", cnt_rep, myConfigD48, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
+        // ######## Config for D49
+        Config myConfigD49 =
+        ConfigFactory.getConfig(
+            TlsVersion.TLS12,
+            KeyExchange.ECDHE,
+            KeyExchangeGroup.SECP384R1,
+            ServerAuth.ECDSA,
+            null,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA512);}},
+            BulkAlgo.AES_256_GCM_SHA384,
+            new Vector<Extension>(){{add(Extension.OCSP);}});
+            //new Vector<>());
+    
+        // configure and run Rustls OCSP ECC256
+        myConfigD49.setDefaultClientConnection(outboundConRustOcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD49, outboundConRustOcspEcc521);
+        System.out.println("Start D49 with outboundConRustOcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D49", cnt_rep, myConfigD49, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D50
+        Config myConfigD50 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //new Vector<>());
+
+        // configure and run boringssl OCSP RSA1024
+        myConfigD50.setDefaultClientConnection(outboundConBoringsslOcspRsa1024);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD50, outboundConBoringsslOcspRsa1024);
+        System.out.println("Start D50 with outboundConBoringsslOcspRsa1024");
+        TimeMeasurement.startTimeMeasurement("D50", cnt_rep, myConfigD50, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D51
+        Config myConfigD51 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //new Vector<>());
+
+        // configure and run boringssl OCSP RSA2048
+        myConfigD51.setDefaultClientConnection(outboundConBoringsslOcspRsa2048);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD51, outboundConBoringsslOcspRsa2048);
+        System.out.println("Start D51 with outboundConBoringsslOcspRsa2048");
+        TimeMeasurement.startTimeMeasurement("D51", cnt_rep, myConfigD51, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP RSA2048
+        myConfigD51.setDefaultClientConnection(outboundConOpenssl111OcspRsa2048);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD51, outboundConOpenssl111OcspRsa2048);
+        System.out.println("Start D51 with outboundConOpenssl111OcspRsa2048");
+        TimeMeasurement.startTimeMeasurement("D51", cnt_rep, myConfigD51, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP RSA2048
+        myConfigD51.setDefaultClientConnection(outboundConOpenssl333OcspRsa2048);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD51, outboundConOpenssl333OcspRsa2048);
+        System.out.println("Start D51 with outboundConOpenssl333OcspRsa2048");
+        TimeMeasurement.startTimeMeasurement("D51", cnt_rep, myConfigD51, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP RSA2048
+        myConfigD51.setDefaultClientConnection(outboundConRustOcspRsa2048);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD51, outboundConRustOcspRsa2048);
+        System.out.println("Start D51 with outboundConRustOcspRsa2048");
+        TimeMeasurement.startTimeMeasurement("D51", cnt_rep, myConfigD51, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D52
+        Config myConfigD52 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //new Vector<>());
+
+        // configure and run boringssl OCSP RSA4096
+        myConfigD52.setDefaultClientConnection(outboundConBoringsslOcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD52, outboundConBoringsslOcspRsa4096);
+        System.out.println("Start D52 with outboundConBoringsslOcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D52", cnt_rep, myConfigD52, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP RSA4096
+        myConfigD52.setDefaultClientConnection(outboundConOpenssl111OcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD52, outboundConOpenssl111OcspRsa4096);
+        System.out.println("Start D52 with outboundConOpenssl111OcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D52", cnt_rep, myConfigD52, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP RSA4096
+        myConfigD52.setDefaultClientConnection(outboundConOpenssl333OcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD52, outboundConOpenssl333OcspRsa4096);
+        System.out.println("Start D52 with outboundConOpenssl333OcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D52", cnt_rep, myConfigD52, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP RSA4096
+        myConfigD52.setDefaultClientConnection(outboundConRustOcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD52, outboundConRustOcspRsa4096);
+        System.out.println("Start D52 with outboundConRustOcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D52", cnt_rep, myConfigD52, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D53
+        Config myConfigD53 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA256);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //new Vector<>());
+
+        // configure and run boringssl OCSP ECC 256
+        myConfigD53.setDefaultClientConnection(outboundConBoringsslOcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD53, outboundConBoringsslOcspEcc256);
+        System.out.println("Start D53 with outboundConBoringsslOcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D53", cnt_rep, myConfigD53, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP ECC 256
+        myConfigD53.setDefaultClientConnection(outboundConOpenssl111OcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD53, outboundConOpenssl111OcspEcc256);
+        System.out.println("Start D53 with outboundConOpenssl111OcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D53", cnt_rep, myConfigD53, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP ECC 256
+        myConfigD53.setDefaultClientConnection(outboundConOpenssl333OcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD53, outboundConOpenssl333OcspEcc256);
+        System.out.println("Start D53 with outboundConOpenssl333OcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D53", cnt_rep, myConfigD53, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP ECC 256
+        myConfigD53.setDefaultClientConnection(outboundConRustOcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD53, outboundConRustOcspEcc256);
+        System.out.println("Start D53 with outboundConRustOcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D53", cnt_rep, myConfigD53, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D54
+        Config myConfigD54 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //new Vector<>());
+
+        // configure and run boringssl OCSP ECC 384
+        myConfigD54.setDefaultClientConnection(outboundConBoringsslOcspEcc384);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD54, outboundConBoringsslOcspEcc384);
+        System.out.println("Start D54 with outboundConBoringsslOcspEcc384");
+        TimeMeasurement.startTimeMeasurement("D54", cnt_rep, myConfigD54, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP ECC 384
+        myConfigD54.setDefaultClientConnection(outboundConOpenssl111OcspEcc384);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD54, outboundConOpenssl111OcspEcc384);
+        System.out.println("Start D54 with outboundConOpenssl111OcspEcc384");
+        TimeMeasurement.startTimeMeasurement("D54", cnt_rep, myConfigD54, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP ECC 384
+        myConfigD54.setDefaultClientConnection(outboundConOpenssl333OcspEcc384);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD54, outboundConOpenssl333OcspEcc384);
+        System.out.println("Start D54 with outboundConOpenssl333OcspEcc384");
+        TimeMeasurement.startTimeMeasurement("D54", cnt_rep, myConfigD54, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP ECC 384
+        myConfigD54.setDefaultClientConnection(outboundConRustOcspEcc384);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD54, outboundConRustOcspEcc384);
+        System.out.println("Start D54 with outboundConRustOcspEcc384");
+        TimeMeasurement.startTimeMeasurement("D54", cnt_rep, myConfigD54, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D55
+        Config myConfigD55 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA512);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //new Vector<>());
+
+        // configure and run boringssl OCSP ECC 521
+        myConfigD55.setDefaultClientConnection(outboundConBoringsslOcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD55, outboundConBoringsslOcspEcc521);
+        System.out.println("Start D55 with outboundConBoringsslOcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D55", cnt_rep, myConfigD55, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP ECC 521
+        myConfigD55.setDefaultClientConnection(outboundConOpenssl111OcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD55, outboundConOpenssl111OcspEcc521);
+        System.out.println("Start D55 with outboundConOpenssl111OcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D55", cnt_rep, myConfigD55, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP ECC 521
+        myConfigD55.setDefaultClientConnection(outboundConOpenssl333OcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD55, outboundConOpenssl333OcspEcc521);
+        System.out.println("Start D55 with outboundConOpenssl333OcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D55", cnt_rep, myConfigD55, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP ECC 521
+        myConfigD55.setDefaultClientConnection(outboundConRustOcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD55, outboundConRustOcspEcc521);
+        System.out.println("Start D55 with outboundConRustOcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D55", cnt_rep, myConfigD55, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D56
+        Config myConfigD56 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //new Vector<>());
+
+        // configure and run boringssl OCSP RSA1024
+        myConfigD56.setDefaultClientConnection(outboundConBoringsslOcspRsa1024);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD56, outboundConBoringsslOcspRsa1024);
+        System.out.println("Start D56 with outboundConBoringsslOcspRsa1024");
+        TimeMeasurement.startTimeMeasurement("D56", cnt_rep, myConfigD56, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D57
+        Config myConfigD57 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //ew Vector<>());
+
+        // configure and run boringssl OCSP RSA 2048
+        myConfigD57.setDefaultClientConnection(outboundConBoringsslOcspRsa2048);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD57, outboundConBoringsslOcspRsa2048);
+        System.out.println("Start D57 with outboundConBoringsslOcspRsa2048");
+        TimeMeasurement.startTimeMeasurement("D57", cnt_rep, myConfigD57, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP RSA 2048
+        myConfigD57.setDefaultClientConnection(outboundConOpenssl111OcspRsa2048);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD57, outboundConOpenssl111OcspRsa2048);
+        System.out.println("Start D57 with outboundConOpenssl111OcspRsa2048");
+        TimeMeasurement.startTimeMeasurement("D57", cnt_rep, myConfigD57, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP RSA 2048
+        myConfigD57.setDefaultClientConnection(outboundConOpenssl333OcspRsa2048);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD57, outboundConOpenssl333OcspRsa2048);
+        System.out.println("Start D57 with outboundConOpenssl333OcspRsa2048");
+        TimeMeasurement.startTimeMeasurement("D57", cnt_rep, myConfigD57, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP RSA 2048
+        myConfigD57.setDefaultClientConnection(outboundConRustOcspRsa2048);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD57, outboundConRustOcspRsa2048);
+        System.out.println("Start D57 with outboundConRustOcspRsa2048");
+        TimeMeasurement.startTimeMeasurement("D57", cnt_rep, myConfigD57, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D58
+        Config myConfigD58 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.OCSP);}});
+                //ew Vector<>());
+
+        // configure and run boringssl OCSP RSA 4096
+        myConfigD58.setDefaultClientConnection(outboundConBoringsslOcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD58, outboundConBoringsslOcspRsa4096);
+        System.out.println("Start D58 with outboundConBoringsslOcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D58", cnt_rep, myConfigD58, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP RSA 4096
+        myConfigD58.setDefaultClientConnection(outboundConOpenssl111OcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD58, outboundConOpenssl111OcspRsa4096);
+        System.out.println("Start D58 with outboundConOpenssl111OcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D58", cnt_rep, myConfigD58, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP RSA 4096
+        myConfigD58.setDefaultClientConnection(outboundConOpenssl333OcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD58, outboundConOpenssl333OcspRsa4096);
+        System.out.println("Start D58 with outboundConOpenssl333OcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D58", cnt_rep, myConfigD58, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP RSA 4096
+        myConfigD58.setDefaultClientConnection(outboundConRustOcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD58, outboundConRustOcspRsa4096);
+        System.out.println("Start D58 with outboundConRustOcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D58", cnt_rep, myConfigD58, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+
+        // ######## Config for D59
+        Config myConfigD59 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP256R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run Rustls ECC TLS1.2
+        myConfigD59.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD59, outboundConRustEcc);
+        System.out.println("Start D59 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D59", cnt_rep, myConfigD59, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D60
+        // NOT SUPPORTED
+
+
+        // ######## Config for D61
+        Config myConfigD61 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.X25519,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run Rustls ECC TLS1.2
+        myConfigD61.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD61, outboundConRustEcc);
+        System.out.println("Start D61 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D61", cnt_rep, myConfigD61, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D62
+        // NOT SUPPORTED
+
+        // ######## Config for D63 - D66
+        // NOT SUPPORTED
+
+
+
+        // ######## Config for D67
+        Config myConfigD67 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP256R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run boringssl ECC TLS1.3
+        myConfigD67.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD67, outboundConBoringsslEcc);
+        System.out.println("Start D67 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D67", cnt_rep, myConfigD67, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.3
+        myConfigD67.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD67, outboundConOpenssl111Ecc);
+        System.out.println("Start D67 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D67", cnt_rep, myConfigD67, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD67.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD67, outboundConOpenssl333Ecc);
+        System.out.println("Start D67 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D67", cnt_rep, myConfigD67, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.3
+        myConfigD67.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD67, outboundConRustEcc);
+        System.out.println("Start D67 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D67", cnt_rep, myConfigD67, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3
+        myConfigD67.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD67, outboundConWolfsslEccTls13);
+        System.out.println("Start D67 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D67", cnt_rep, myConfigD67, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D68
+        Config myConfigD68 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP521R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run openssl111 ECC TLS1.3
+        myConfigD68.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD68, outboundConOpenssl111Ecc);
+        System.out.println("Start D68 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D68", cnt_rep, myConfigD68, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD68.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD68, outboundConOpenssl333Ecc);
+        System.out.println("Start D68 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D68", cnt_rep, myConfigD68, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3
+        myConfigD68.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD68, outboundConWolfsslEccTls13);
+        System.out.println("Start D68 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D68", cnt_rep, myConfigD68, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D69
+        Config myConfigD69 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.X25519,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+
+        // configure and run boringssl ECC TLS1.3
+        myConfigD69.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD69, outboundConBoringsslEcc);
+        System.out.println("Start D69 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D69", cnt_rep, myConfigD69, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.3
+        myConfigD69.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD69, outboundConOpenssl111Ecc);
+        System.out.println("Start D69 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D69", cnt_rep, myConfigD69, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD69.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD69, outboundConOpenssl333Ecc);
+        System.out.println("Start D69 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D69", cnt_rep, myConfigD69, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.3
+        myConfigD69.setDefaultClientConnection(outboundConRustEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD69, outboundConRustEcc);
+        System.out.println("Start D69 with outboundConRustEcc");
+        TimeMeasurement.startTimeMeasurement("D69", cnt_rep, myConfigD69, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D70
+        Config myConfigD70 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.X448,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run openssl111 ECC TLS1.3
+        myConfigD70.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD70, outboundConOpenssl111Ecc);
+        System.out.println("Start D70 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D70", cnt_rep, myConfigD70, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD70.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD70, outboundConOpenssl333Ecc);
+        System.out.println("Start D70 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D70", cnt_rep, myConfigD70, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D71
+        Config myConfigD71 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE2048,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD71.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD71, outboundConOpenssl333Ecc);
+        System.out.println("Start D71 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D71", cnt_rep, myConfigD71, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3
+        myConfigD71.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD71, outboundConWolfsslEccTls13);
+        System.out.println("Start D71 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D71", cnt_rep, myConfigD71, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D72
+        Config myConfigD72 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE2048,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD72.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD72, outboundConOpenssl333Ecc);
+        System.out.println("Start D72 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D72", cnt_rep, myConfigD72, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D73
+        Config myConfigD73 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE6144,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD73.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD73, outboundConOpenssl333Ecc);
+        System.out.println("Start D73 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D73", cnt_rep, myConfigD73, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D74
+        Config myConfigD74 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE8192,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                new Vector<>());
+        
+        // configure and run openssl333 ECC TLS1.3
+        myConfigD74.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD74, outboundConOpenssl333Ecc);
+        System.out.println("Start D74 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D74", cnt_rep, myConfigD74, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+
+        // ######## Config for D75
+        Config myConfigD75 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_ID);}});
+                //new Vector<>());
+
+        // configure and run boringssl ECC TLS1.2 Resumption ID
+        myConfigD75.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD75, outboundConBoringsslEcc);
+        System.out.println("Start D75 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D75", cnt_rep, myConfigD75, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.2 Resumption ID
+        myConfigD75.setDefaultClientConnection(outboundConOpenssl111EccTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD75, outboundConOpenssl111EccTls12ResumptionID);
+        System.out.println("Start D75 with outboundConOpenssl111EccTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D75", cnt_rep, myConfigD75, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2 Resumption ID
+        myConfigD75.setDefaultClientConnection(outboundConOpenssl333EccTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD75, outboundConOpenssl333EccTls12ResumptionID);
+        System.out.println("Start D75 with outboundConOpenssl333EccTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D75", cnt_rep, myConfigD75, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.2 Resumption ID
+        myConfigD75.setDefaultClientConnection(outboundConRustEccTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD75, outboundConRustEccTls12ResumptionID);
+        System.out.println("Start D75 with outboundConRustEccTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D75", cnt_rep, myConfigD75, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2 Resumption ID
+        myConfigD75.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD75, outboundConWolfsslEccTls12);
+        System.out.println("Start D75 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D75", cnt_rep, myConfigD75, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         
 
-        //System.out.println(resultsMeasurement);
+        // ######## Config for D76
+        Config myConfigD76 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+
+        // configure and run boringssl ECC TLS1.2 Resumption Ticket
+        myConfigD76.setDefaultClientConnection(outboundConBoringsslEcc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD76, outboundConBoringsslEcc);
+        System.out.println("Start D76 with outboundConBoringsslEcc");
+        TimeMeasurement.startTimeMeasurement("D76", cnt_rep, myConfigD76, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 ECC TLS1.2 Resumption Ticket
+        myConfigD76.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD76, outboundConOpenssl111Ecc);
+        System.out.println("Start D76 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D76", cnt_rep, myConfigD76, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2 Resumption Tickets
+        myConfigD76.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD76, outboundConOpenssl333Ecc);
+        System.out.println("Start D76 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D76", cnt_rep, myConfigD76, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.2 Resumption Tickets
+        myConfigD76.setDefaultClientConnection(outboundConRustEccResumptionTickets);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD76, outboundConRustEccResumptionTickets);
+        System.out.println("Start D76 with outboundConRustEccResumptionTickets");
+        TimeMeasurement.startTimeMeasurement("D76", cnt_rep, myConfigD76, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2 Resumption ID
+        myConfigD76.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD76, outboundConWolfsslEccTls12);
+        System.out.println("Start D76 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D76", cnt_rep, myConfigD76, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D77
+        Config myConfigD77 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_CBC_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_ID);}});
+                //new Vector<>());
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption ID
+        myConfigD77.setDefaultClientConnection(outboundConOpenssl111RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD77, outboundConOpenssl111RsaTls12ResumptionID);
+        System.out.println("Start D77 with outboundConOpenssl111RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D77", cnt_rep, myConfigD77, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption ID
+        myConfigD77.setDefaultClientConnection(outboundConOpenssl333RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD77, outboundConOpenssl333RsaTls12ResumptionID);
+        System.out.println("Start D77 with outboundConOpenssl333RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D77", cnt_rep, myConfigD77, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD77.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD77, outboundConWolfsslRsaTls12);
+        System.out.println("Start D77 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D77", cnt_rep, myConfigD77, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D78
+        Config myConfigD78 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_CBC_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption Ticket
+        myConfigD78.setDefaultClientConnection(outboundConOpenssl111Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD78, outboundConOpenssl111Rsa);
+        System.out.println("Start D78 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D78", cnt_rep, myConfigD78, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption Tickets
+        myConfigD78.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD78, outboundConOpenssl333Rsa);
+        System.out.println("Start D78 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D78", cnt_rep, myConfigD78, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD78.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD78, outboundConWolfsslRsaTls12);
+        System.out.println("Start D78 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D78", cnt_rep, myConfigD78, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D79
+        Config myConfigD79 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_CBC_SHA384,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_ID);}});
+                //new Vector<>());
+        
+        // configure and run openssl111 ECC TLS1.2 Resumption ID
+        myConfigD79.setDefaultClientConnection(outboundConOpenssl111EccTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD79, outboundConOpenssl111EccTls12ResumptionID);
+        System.out.println("Start D79 with outboundConOpenssl111EccTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D79", cnt_rep, myConfigD79, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2 Resumption ID
+        myConfigD79.setDefaultClientConnection(outboundConOpenssl333EccTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD79, outboundConOpenssl333EccTls12ResumptionID);
+        System.out.println("Start D79 with outboundConOpenssl333EccTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D79", cnt_rep, myConfigD79, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2 Resumption ID
+        myConfigD79.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD79, outboundConWolfsslEccTls12);
+        System.out.println("Start D79 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D79", cnt_rep, myConfigD79, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+
+        // ######## Config for D80
+        Config myConfigD80 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_CBC_SHA384,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+        
+        // configure and run openssl111 ECC TLS1.2 Resumption Ticket
+        myConfigD80.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD80, outboundConOpenssl111Ecc);
+        System.out.println("Start D80 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D80", cnt_rep, myConfigD80, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2 Resumption Tickets
+        myConfigD80.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD80, outboundConOpenssl333Ecc);
+        System.out.println("Start D80 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D80", cnt_rep, myConfigD80, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2 Resumption ID
+        myConfigD80.setDefaultClientConnection(outboundConWolfsslEccTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD80, outboundConWolfsslEccTls12);
+        System.out.println("Start D80 with outboundConWolfsslEccTls12");
+        TimeMeasurement.startTimeMeasurement("D80", cnt_rep, myConfigD80, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+
+        // ######## Config for D81
+        // RESERVED - NOT EXECUTED
+
+
+        // ######## Config for D82
+        Config myConfigD82 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_ID);}});
+                //new Vector<>());
+
+        // configure and run boringssl RSA TLS1.2 Resumption ID
+        myConfigD82.setDefaultClientConnection(outboundConBoringsslRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD82, outboundConBoringsslRsa);
+        System.out.println("Start D82 with outboundConBoringsslRsa");
+        TimeMeasurement.startTimeMeasurement("D82", cnt_rep, myConfigD82, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption ID
+        myConfigD82.setDefaultClientConnection(outboundConOpenssl111RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD82, outboundConOpenssl111RsaTls12ResumptionID);
+        System.out.println("Start D82 with outboundConOpenssl111RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D82", cnt_rep, myConfigD82, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption ID
+        myConfigD82.setDefaultClientConnection(outboundConOpenssl333RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD82, outboundConOpenssl333RsaTls12ResumptionID);
+        System.out.println("Start D82 with outboundConOpenssl333RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D82", cnt_rep, myConfigD82, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls RSA TLS1.2 Resumption ID
+        myConfigD82.setDefaultClientConnection(outboundConRustRsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD82, outboundConRustRsaTls12ResumptionID);
+        System.out.println("Start D82 with outboundConRustRsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D82", cnt_rep, myConfigD82, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD82.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD82, outboundConWolfsslRsaTls12);
+        System.out.println("Start D82 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D82", cnt_rep, myConfigD82, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D83
+        Config myConfigD83 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+
+        // configure and run boringssl RSA TLS1.2 Resumption Ticket
+        myConfigD83.setDefaultClientConnection(outboundConBoringsslRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD83, outboundConBoringsslRsa);
+        System.out.println("Start D83 with outboundConBoringsslRsa");
+        TimeMeasurement.startTimeMeasurement("D83", cnt_rep, myConfigD83, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption Ticket
+        myConfigD83.setDefaultClientConnection(outboundConOpenssl111Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD83, outboundConOpenssl111Rsa);
+        System.out.println("Start D83 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D83", cnt_rep, myConfigD83, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption Tickets
+        myConfigD83.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD83, outboundConOpenssl333Rsa);
+        System.out.println("Start D83 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D83", cnt_rep, myConfigD83, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls RSA TLS1.2 Resumption Tickets
+        myConfigD83.setDefaultClientConnection(outboundConRustRsaResumptionTickets);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD83, outboundConRustRsaResumptionTickets);
+        System.out.println("Start D83 with outboundConRustRsaResumptionTickets");
+        TimeMeasurement.startTimeMeasurement("D83", cnt_rep, myConfigD83, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD83.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD83, outboundConWolfsslRsaTls12);
+        System.out.println("Start D83 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D83", cnt_rep, myConfigD83, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D84
+        Config myConfigD84 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_ID);}});
+                //new Vector<>());
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption ID
+        myConfigD84.setDefaultClientConnection(outboundConOpenssl111RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD84, outboundConOpenssl111RsaTls12ResumptionID);
+        System.out.println("Start D84 with outboundConOpenssl111RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D84", cnt_rep, myConfigD84, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption ID
+        myConfigD84.setDefaultClientConnection(outboundConOpenssl333RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD84, outboundConOpenssl333RsaTls12ResumptionID);
+        System.out.println("Start D84 with outboundConOpenssl333RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D84", cnt_rep, myConfigD84, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD84.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD84, outboundConWolfsslRsaTls12);
+        System.out.println("Start D84 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D84", cnt_rep, myConfigD84, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D85
+        Config myConfigD85 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption Ticket
+        myConfigD85.setDefaultClientConnection(outboundConOpenssl111Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD85, outboundConOpenssl111Rsa);
+        System.out.println("Start D85 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D85", cnt_rep, myConfigD85, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption Tickets
+        myConfigD85.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD85, outboundConOpenssl333Rsa);
+        System.out.println("Start D85 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D85", cnt_rep, myConfigD85, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD85.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD85, outboundConWolfsslRsaTls12);
+        System.out.println("Start D85 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D85", cnt_rep, myConfigD85, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D86
+        Config myConfigD86 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_CBC_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption ID
+        myConfigD86.setDefaultClientConnection(outboundConOpenssl111RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD86, outboundConOpenssl111RsaTls12ResumptionID);
+        System.out.println("Start D86 with outboundConOpenssl111RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D86", cnt_rep, myConfigD86, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption ID
+        myConfigD86.setDefaultClientConnection(outboundConOpenssl333RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD86, outboundConOpenssl333RsaTls12ResumptionID);
+        System.out.println("Start D86 with outboundConOpenssl333RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D86", cnt_rep, myConfigD86, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD86.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD86, outboundConWolfsslRsaTls12);
+        System.out.println("Start D86 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D86", cnt_rep, myConfigD86, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D87
+        Config myConfigD87 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_CBC_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption Ticket
+        myConfigD87.setDefaultClientConnection(outboundConOpenssl111Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD87, outboundConOpenssl111Rsa);
+        System.out.println("Start D87 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D87", cnt_rep, myConfigD87, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption Tickets
+        myConfigD87.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD87, outboundConOpenssl333Rsa);
+        System.out.println("Start D87 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D87", cnt_rep, myConfigD87, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+  
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD87.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD87, outboundConWolfsslRsaTls12);
+        System.out.println("Start D87 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D87", cnt_rep, myConfigD87, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D88
+        Config myConfigD88 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_ID);}});
+                //new Vector<>());
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption ID
+        myConfigD88.setDefaultClientConnection(outboundConOpenssl111RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD88, outboundConOpenssl111RsaTls12ResumptionID);
+        System.out.println("Start D88 with outboundConOpenssl111RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D88", cnt_rep, myConfigD88, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption ID
+        myConfigD88.setDefaultClientConnection(outboundConOpenssl333RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD88, outboundConOpenssl333RsaTls12ResumptionID);
+        System.out.println("Start D88 with outboundConOpenssl333RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D88", cnt_rep, myConfigD88, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD88.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD88, outboundConWolfsslRsaTls12);
+        System.out.println("Start D88 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D88", cnt_rep, myConfigD88, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D89
+        Config myConfigD89 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption Ticket
+        myConfigD89.setDefaultClientConnection(outboundConOpenssl111Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD89, outboundConOpenssl111Rsa);
+        System.out.println("Start D89 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D89", cnt_rep, myConfigD89, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption Tickets
+        myConfigD89.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD89, outboundConOpenssl333Rsa);
+        System.out.println("Start D89 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D89", cnt_rep, myConfigD89, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD89.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD89, outboundConWolfsslRsaTls12);
+        System.out.println("Start D89 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D89", cnt_rep, myConfigD89, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+
+        // ######## Config for D91
+        Config myConfigD91 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_CBC_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_ID);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption ID
+        myConfigD91.setDefaultClientConnection(outboundConOpenssl111RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD91, outboundConOpenssl111RsaTls12ResumptionID);
+        System.out.println("Start D91 with outboundConOpenssl111RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D91", cnt_rep, myConfigD91, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption ID
+        myConfigD91.setDefaultClientConnection(outboundConOpenssl333RsaTls12ResumptionID);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD91, outboundConOpenssl333RsaTls12ResumptionID);
+        System.out.println("Start D91 with outboundConOpenssl333RsaTls12ResumptionID");
+        TimeMeasurement.startTimeMeasurement("D91", cnt_rep, myConfigD91, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD91.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD91, outboundConWolfsslRsaTls12);
+        System.out.println("Start D91 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D91", cnt_rep, myConfigD91, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D92
+        Config myConfigD92 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_CBC_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl111 RSA TLS1.2 Resumption Ticket
+        myConfigD92.setDefaultClientConnection(outboundConOpenssl111Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD92, outboundConOpenssl111Rsa);
+        System.out.println("Start D92 with outboundConOpenssl111Rsa");
+        TimeMeasurement.startTimeMeasurement("D92", cnt_rep, myConfigD92, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 RSA TLS1.2 Resumption Tickets
+        myConfigD92.setDefaultClientConnection(outboundConOpenssl333Rsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD92, outboundConOpenssl333Rsa);
+        System.out.println("Start D92 with outboundConOpenssl333Rsa");
+        TimeMeasurement.startTimeMeasurement("D92", cnt_rep, myConfigD92, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        
+        // configure and run WolfSSL RSA TLS1.2 Resumption ID
+        myConfigD92.setDefaultClientConnection(outboundConWolfsslRsaTls12);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD92, outboundConWolfsslRsaTls12);
+        System.out.println("Start D92 with outboundConWolfsslRsaTls12");
+        TimeMeasurement.startTimeMeasurement("D92", cnt_rep, myConfigD92, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D93
+        Config myConfigD93 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl111 ECC TLS1.2 Resumption Ticket
+        myConfigD93.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD93, outboundConOpenssl111Ecc);
+        System.out.println("Start D93 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D93", cnt_rep, myConfigD93, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2 Resumption Tickets
+        myConfigD93.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD93, outboundConOpenssl333Ecc);
+        System.out.println("Start D93 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D93", cnt_rep, myConfigD93, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.2 Resumption Tickets
+        myConfigD93.setDefaultClientConnection(outboundConRustEccResumptionTickets);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD93, outboundConRustEccResumptionTickets);
+        System.out.println("Start D93 with outboundConRustEccResumptionTickets");
+        TimeMeasurement.startTimeMeasurement("D93", cnt_rep, myConfigD93, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2 Resumption ID
+        myConfigD93.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD93, outboundConWolfsslEccTls13);
+        System.out.println("Start D93 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D93", cnt_rep, myConfigD93, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D94
+        Config myConfigD94 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl111 ECC TLS1.2 Resumption Ticket
+        myConfigD94.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD94, outboundConOpenssl111Ecc);
+        System.out.println("Start D94 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D94", cnt_rep, myConfigD94, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.2 Resumption Tickets
+        myConfigD94.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD94, outboundConOpenssl333Ecc);
+        System.out.println("Start D94 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D94", cnt_rep, myConfigD94, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.2 Resumption Tickets
+        myConfigD94.setDefaultClientConnection(outboundConRustEccResumptionTickets);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD94, outboundConRustEccResumptionTickets);
+        System.out.println("Start D94 with outboundConRustEccResumptionTickets");
+        TimeMeasurement.startTimeMeasurement("D94", cnt_rep, myConfigD94, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.2 Resumption ID
+        myConfigD94.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD94, outboundConWolfsslEccTls13);
+        System.out.println("Start D94 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D94", cnt_rep, myConfigD94, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D95
+        Config myConfigD95 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl333 ECC TLS1.2 Resumption Tickets
+        myConfigD95.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD95, outboundConOpenssl333Ecc);
+        System.out.println("Start D95 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D95", cnt_rep, myConfigD95, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    
+        
+        // configure and run WolfSSL ECC TLS1.2 Resumption ID
+        myConfigD95.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD95, outboundConWolfsslEccTls13);
+        System.out.println("Start D95 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D95", cnt_rep, myConfigD95, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D96
+        Config myConfigD96 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.RESUMPTION_SESSION_TICKET);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl333 ECC TLS1.2 Resumption Tickets
+        myConfigD96.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD96, outboundConOpenssl333Ecc);
+        System.out.println("Start D96 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D96", cnt_rep, myConfigD96, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        
+        // configure and run WolfSSL ECC TLS1.2 Resumption ID
+        myConfigD96.setDefaultClientConnection(outboundConWolfsslEccTls13);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_RESUMPTION, myConfigD96, outboundConWolfsslEccTls13);
+        System.out.println("Start D96 with outboundConWolfsslEccTls13");
+        TimeMeasurement.startTimeMeasurement("D96", cnt_rep, myConfigD96, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D97
+        Config myConfigD97 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.ZERO_RTT);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl111 ECC TLS1.3 Early Data
+        myConfigD97.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD97, outboundConOpenssl111Ecc);
+        System.out.println("Start D97 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D97", cnt_rep, myConfigD97, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.3 Early Data
+        myConfigD97.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD97, outboundConOpenssl333Ecc);
+        System.out.println("Start D97 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D97", cnt_rep, myConfigD97, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.3 Early Data
+        myConfigD97.setDefaultClientConnection(outboundConRustEccResumptionTickets);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD97, outboundConRustEccResumptionTickets);
+        System.out.println("Start D97 with outboundConRustEccResumptionTickets");
+        TimeMeasurement.startTimeMeasurement("D97", cnt_rep, myConfigD97, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3 Early Data
+        myConfigD97.setDefaultClientConnection(outboundConWolfsslEccTls13Zero);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD97, outboundConWolfsslEccTls13Zero);
+        System.out.println("Start D97 with outboundConWolfsslEccTls13Zero");
+        TimeMeasurement.startTimeMeasurement("D97", cnt_rep, myConfigD97, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D98
+        Config myConfigD98 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                new Vector<Extension>(){{add(Extension.ZERO_RTT);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl111 ECC TLS1.3 Early Data
+        myConfigD98.setDefaultClientConnection(outboundConOpenssl111Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD98, outboundConOpenssl111Ecc);
+        System.out.println("Start D98 with outboundConOpenssl111Ecc");
+        TimeMeasurement.startTimeMeasurement("D98", cnt_rep, myConfigD98, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 ECC TLS1.3 Early Data
+        myConfigD98.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD98, outboundConOpenssl333Ecc);
+        System.out.println("Start D98 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D98", cnt_rep, myConfigD98, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls ECC TLS1.3 Early Data
+        myConfigD98.setDefaultClientConnection(outboundConRustEccResumptionTickets);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD98, outboundConRustEccResumptionTickets);
+        System.out.println("Start D98 with outboundConRustEccResumptionTickets");
+        TimeMeasurement.startTimeMeasurement("D98", cnt_rep, myConfigD98, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run WolfSSL ECC TLS1.3 Early Data
+        myConfigD98.setDefaultClientConnection(outboundConWolfsslEccTls13Zero);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD98, outboundConWolfsslEccTls13Zero);
+        System.out.println("Start D98 with outboundConWolfsslEccTls13Zero");
+        TimeMeasurement.startTimeMeasurement("D98", cnt_rep, myConfigD98, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D99
+        Config myConfigD99 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_128_GCM_SHA256,
+                new Vector<Extension>(){{add(Extension.ZERO_RTT);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl333 ECC TLS1.3 Early Data
+        myConfigD99.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD99, outboundConOpenssl333Ecc);
+        System.out.println("Start D99 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D99", cnt_rep, myConfigD99, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
+        // configure and run WolfSSL ECC TLS1.3 Early Data
+        myConfigD99.setDefaultClientConnection(outboundConWolfsslEccTls13Zero);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD99, outboundConWolfsslEccTls13Zero);
+        System.out.println("Start D99 with outboundConWolfsslEccTls13Zero");
+        TimeMeasurement.startTimeMeasurement("D99", cnt_rep, myConfigD99, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D100
+        Config myConfigD100 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.DHE,
+                KeyExchangeGroup.FFDHE3072,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                new Vector<Extension>(){{add(Extension.ZERO_RTT);}});
+                //new Vector<>());
+
+        
+        // configure and run openssl333 ECC TLS1.3 Early Data
+        myConfigD100.setDefaultClientConnection(outboundConOpenssl333Ecc);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD100, outboundConOpenssl333Ecc);
+        System.out.println("Start D100 with outboundConOpenssl333Ecc");
+        TimeMeasurement.startTimeMeasurement("D100", cnt_rep, myConfigD100, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
+        // configure and run WolfSSL ECC TLS1.3 Early Data
+        myConfigD100.setDefaultClientConnection(outboundConWolfsslEccTls13Zero);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH_WITH_ZERO_RTT, myConfigD100, outboundConWolfsslEccTls13Zero);
+        System.out.println("Start D100 with outboundConWolfsslEccTls13Zero");
+        TimeMeasurement.startTimeMeasurement("D100", cnt_rep, myConfigD100, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D101
+        Config myConfigD101 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc256Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD101.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD101, outboundConBoringsslCa);
+        System.out.println("Start D101 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D101", cnt_rep, myConfigD101, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD101.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD101, outboundConRustCaEcdsa);
+        System.out.println("Start D101 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D101", cnt_rep, myConfigD101, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D102
+        Config myConfigD102 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc384Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD102.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD102, outboundConBoringsslCa);
+        System.out.println("Start D102 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D102", cnt_rep, myConfigD102, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD102.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD102, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D102 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D102", cnt_rep, myConfigD102, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD102.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD102, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D102 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D102", cnt_rep, myConfigD102, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD102.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD102, outboundConRustCaEcdsa);
+        System.out.println("Start D102 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D102", cnt_rep, myConfigD102, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D103
+        Config myConfigD103 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc521Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD103.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD103, outboundConBoringsslCa);
+        System.out.println("Start D103 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D103", cnt_rep, myConfigD103, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // ######## Config for D104
+        Config myConfigD104 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa1024Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD104.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD104, outboundConBoringsslCa);
+        System.out.println("Start D104 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D104", cnt_rep, myConfigD104, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D105
+        Config myConfigD105 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa2048Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD105.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD105, outboundConBoringsslCa);
+        System.out.println("Start D105 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D105", cnt_rep, myConfigD105, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD105.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD105, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D105 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D105", cnt_rep, myConfigD105, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD105.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD105, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D105 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D105", cnt_rep, myConfigD105, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD105.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD105, outboundConRustCaEcdsa);
+        System.out.println("Start D105 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D105", cnt_rep, myConfigD105, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D106
+        Config myConfigD106 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa4096Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD106.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD106, outboundConBoringsslCa);
+        System.out.println("Start D106 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D106", cnt_rep, myConfigD106, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD106.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD106, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D106 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D106", cnt_rep, myConfigD106, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD106.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD106, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D106 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D106", cnt_rep, myConfigD106, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD106.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD106, outboundConRustCaEcdsa);
+        System.out.println("Start D106 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D106", cnt_rep, myConfigD106, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D107
+        Config myConfigD107 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc256Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);add(SignatureScheme.ECDSA_SHA256);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD107.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD107, outboundConBoringsslCa);
+        System.out.println("Start D107 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D107", cnt_rep, myConfigD107, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD107.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD107, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D107 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D107", cnt_rep, myConfigD107, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD107.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD107, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D107 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D107", cnt_rep, myConfigD107, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD107.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD107, outboundConRustCaEcdsa);
+        System.out.println("Start D107 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D107", cnt_rep, myConfigD107, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D108
+        Config myConfigD108 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc384Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD108.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD108, outboundConBoringsslCa);
+        System.out.println("Start D108 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D108", cnt_rep, myConfigD108, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD108.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD108, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D108 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D108", cnt_rep, myConfigD108, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD108.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD108, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D108 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D108", cnt_rep, myConfigD108, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD108.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD108, outboundConRustCaEcdsa);
+        System.out.println("Start D108 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D108", cnt_rep, myConfigD108, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D109
+        Config myConfigD109 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc521Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD109.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD109, outboundConBoringsslCa);
+        System.out.println("Start D109 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D109", cnt_rep, myConfigD109, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD109.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD109, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D109 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D109", cnt_rep, myConfigD109, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD109.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD109, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D109 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D109", cnt_rep, myConfigD109, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD109.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD109, outboundConRustCaEcdsa);
+        System.out.println("Start D109 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D109", cnt_rep, myConfigD109, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D110
+        Config myConfigD110 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa1024Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD110.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD110, outboundConBoringsslCa);
+        System.out.println("Start D110 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D110", cnt_rep, myConfigD110, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D111
+        Config myConfigD111 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa2048Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD111.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD111, outboundConBoringsslCa);
+        System.out.println("Start D111 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D111", cnt_rep, myConfigD111, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD111.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD111, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D111 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D111", cnt_rep, myConfigD111, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD111.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD111, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D111 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D111", cnt_rep, myConfigD111, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD111.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD111, outboundConRustCaEcdsa);
+        System.out.println("Start D111 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D111", cnt_rep, myConfigD111, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D112
+        Config myConfigD112 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa4096Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD112.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD112, outboundConBoringsslCa);
+        System.out.println("Start D112 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D112", cnt_rep, myConfigD112, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD112.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD112, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D112 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D112", cnt_rep, myConfigD112, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD112.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD112, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D112 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D112", cnt_rep, myConfigD112, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD112.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD112, outboundConRustCaEcdsa);
+        System.out.println("Start D112 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D112", cnt_rep, myConfigD112, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D113
+        Config myConfigD113 =
+        ConfigFactory.getConfig(
+            TlsVersion.TLS12,
+            KeyExchange.ECDHE,
+            KeyExchangeGroup.SECP384R1,
+            ServerAuth.ECDSA,
+            null,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA256);}},
+            BulkAlgo.AES_256_GCM_SHA384,
+            //new Vector<Extension>(){{add(Extension.OCSP);}});
+            new Vector<>());
+    
+        // configure and run Rustls OCSP ECC256
+        myConfigD113.setDefaultClientConnection(outboundConRustOcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD113, outboundConRustOcspEcc256);
+        System.out.println("Start D113 with outboundConRustOcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D113", cnt_rep, myConfigD113, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // configure and run WolfSSL ECC256
+        myConfigD113.setDefaultClientConnection(outboundConWolfsslEccTls12Ecc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD113, outboundConWolfsslEccTls12Ecc256);
+        System.out.println("Start D113 with outboundConWolfsslEccTls12Ecc256");
+        TimeMeasurement.startTimeMeasurement("D113", cnt_rep, myConfigD113, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D114
+        Config myConfigD114 =
+        ConfigFactory.getConfig(
+            TlsVersion.TLS12,
+            KeyExchange.ECDHE,
+            KeyExchangeGroup.SECP384R1,
+            ServerAuth.ECDSA,
+            null,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA512);}},
+            BulkAlgo.AES_256_GCM_SHA384,
+            //new Vector<Extension>(){{add(Extension.OCSP);}});
+            new Vector<>());
+    
+        // configure and run Rustls OCSP ECC521
+        myConfigD114.setDefaultClientConnection(outboundConRustOcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD114, outboundConRustOcspEcc521);
+        System.out.println("Start D114 with outboundConRustOcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D114", cnt_rep, myConfigD114, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D115
+        Config myConfigD115 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl OCSP RSA4096
+        myConfigD115.setDefaultClientConnection(outboundConBoringsslOcspRsa1024);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD115, outboundConBoringsslOcspRsa1024);
+        System.out.println("Start D115 with outboundConBoringsslOcspRsa1024");
+        TimeMeasurement.startTimeMeasurement("D115", cnt_rep, myConfigD115, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // configure and run WolfSSL RSA4096
+        myConfigD115.setDefaultClientConnection(outboundConWolfsslEccTls12Rsa1024);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD115, outboundConWolfsslEccTls12Rsa1024);
+        System.out.println("Start D115 with outboundConWolfsslEccTls12Rsa1024");
+        TimeMeasurement.startTimeMeasurement("D115", cnt_rep, myConfigD115, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D116
+        Config myConfigD116 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl OCSP RSA4096
+        myConfigD116.setDefaultClientConnection(outboundConBoringsslOcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD116, outboundConBoringsslOcspRsa4096);
+        System.out.println("Start D116 with outboundConBoringsslOcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D116", cnt_rep, myConfigD116, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP RSA4096
+        myConfigD116.setDefaultClientConnection(outboundConOpenssl111OcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD116, outboundConOpenssl111OcspRsa4096);
+        System.out.println("Start D116 with outboundConOpenssl111OcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D116", cnt_rep, myConfigD116, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP RSA4096
+        myConfigD116.setDefaultClientConnection(outboundConOpenssl333OcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD116, outboundConOpenssl333OcspRsa4096);
+        System.out.println("Start D116 with outboundConOpenssl333OcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D116", cnt_rep, myConfigD116, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP RSA4096
+        myConfigD116.setDefaultClientConnection(outboundConRustOcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD116, outboundConRustOcspRsa4096);
+        System.out.println("Start D116 with outboundConRustOcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D116", cnt_rep, myConfigD116, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // configure and run WolfSSL RSA4096
+        myConfigD114.setDefaultClientConnection(outboundConWolfsslEccTls12Rsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITHOUT_CLIENTAUTH, myConfigD116, outboundConWolfsslEccTls12Rsa4096);
+        System.out.println("Start D116 with outboundConWolfsslEccTls12Rsa4096");
+        TimeMeasurement.startTimeMeasurement("D116", cnt_rep, myConfigD116, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D117
+        Config myConfigD117 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA256);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl OCSP ECC 256
+        myConfigD117.setDefaultClientConnection(outboundConBoringsslOcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD117, outboundConBoringsslOcspEcc256);
+        System.out.println("Start D117 with outboundConBoringsslOcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D117", cnt_rep, myConfigD117, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP ECC 256
+        myConfigD117.setDefaultClientConnection(outboundConOpenssl111OcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD117, outboundConOpenssl111OcspEcc256);
+        System.out.println("Start D117 with outboundConOpenssl111OcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D117", cnt_rep, myConfigD117, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP ECC 256
+        myConfigD117.setDefaultClientConnection(outboundConOpenssl333OcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD117, outboundConOpenssl333OcspEcc256);
+        System.out.println("Start D117 with outboundConOpenssl333OcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D117", cnt_rep, myConfigD117, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP ECC 256
+        myConfigD117.setDefaultClientConnection(outboundConRustOcspEcc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD117, outboundConRustOcspEcc256);
+        System.out.println("Start D117 with outboundConRustOcspEcc256");
+        TimeMeasurement.startTimeMeasurement("D117", cnt_rep, myConfigD117, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // configure and run WolfSSL ECC 256
+        myConfigD117.setDefaultClientConnection(outboundConWolfsslEccTls13Ecc256);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD117, outboundConWolfsslEccTls13Ecc256);
+        System.out.println("Start D117 with outboundConWolfsslEccTls13Ecc256");
+        TimeMeasurement.startTimeMeasurement("D117", cnt_rep, myConfigD117, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D118
+        Config myConfigD118 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA512);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl OCSP ECC 521
+        myConfigD118.setDefaultClientConnection(outboundConBoringsslOcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD118, outboundConBoringsslOcspEcc521);
+        System.out.println("Start D118 with outboundConBoringsslOcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D118", cnt_rep, myConfigD118, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP ECC 521
+        myConfigD118.setDefaultClientConnection(outboundConOpenssl111OcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD118, outboundConOpenssl111OcspEcc521);
+        System.out.println("Start D118 with outboundConOpenssl111OcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D118", cnt_rep, myConfigD118, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP ECC 521
+        myConfigD118.setDefaultClientConnection(outboundConOpenssl333OcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD118, outboundConOpenssl333OcspEcc521);
+        System.out.println("Start D118 with outboundConOpenssl333OcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D118", cnt_rep, myConfigD118, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP ECC 521
+        myConfigD118.setDefaultClientConnection(outboundConRustOcspEcc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD118, outboundConRustOcspEcc521);
+        System.out.println("Start D118 with outboundConRustOcspEcc521");
+        TimeMeasurement.startTimeMeasurement("D118", cnt_rep, myConfigD118, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // configure and run WolfSSL ECC 521
+        myConfigD118.setDefaultClientConnection(outboundConWolfsslEccTls13Ecc521);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD118, outboundConWolfsslEccTls13Ecc521);
+        System.out.println("Start D118 with outboundConWolfsslEccTls13Ecc521");
+        TimeMeasurement.startTimeMeasurement("D118", cnt_rep, myConfigD118, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D119
+        Config myConfigD119 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl OCSP RSA 1024
+        myConfigD119.setDefaultClientConnection(outboundConBoringsslOcspRsa1024);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD119, outboundConBoringsslOcspRsa1024);
+        System.out.println("Start D119 with outboundConBoringsslOcspRsa1024");
+        TimeMeasurement.startTimeMeasurement("D119", cnt_rep, myConfigD119, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D120
+        Config myConfigD120 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.RSA,
+                null,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl OCSP RSA 4096
+        myConfigD120.setDefaultClientConnection(outboundConBoringsslOcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD120, outboundConBoringsslOcspRsa4096);
+        System.out.println("Start D120 with outboundConBoringsslOcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D120", cnt_rep, myConfigD120, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 OCSP RSA 4096
+        myConfigD120.setDefaultClientConnection(outboundConOpenssl111OcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD120, outboundConOpenssl111OcspRsa4096);
+        System.out.println("Start D120 with outboundConOpenssl111OcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D120", cnt_rep, myConfigD120, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 OCSP RSA 4096
+        myConfigD120.setDefaultClientConnection(outboundConOpenssl333OcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD120, outboundConOpenssl333OcspRsa4096);
+        System.out.println("Start D120 with outboundConOpenssl333OcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D120", cnt_rep, myConfigD120, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls OCSP RSA 4096
+        myConfigD120.setDefaultClientConnection(outboundConRustOcspRsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD120, outboundConRustOcspRsa4096);
+        System.out.println("Start D120 with outboundConRustOcspRsa4096");
+        TimeMeasurement.startTimeMeasurement("D120", cnt_rep, myConfigD120, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // configure and run WolfSSL RSA 1024
+        myConfigD120.setDefaultClientConnection(outboundConWolfsslEccTls13Rsa4096);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITHOUT_CLIENTAUTH, myConfigD120, outboundConWolfsslEccTls13Rsa4096);
+        System.out.println("Start D120 with outboundConWolfsslEccTls13Rsa4096");
+        TimeMeasurement.startTimeMeasurement("D120", cnt_rep, myConfigD120, handshakeActions, true, 3, 1.5, true, "WolfSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D121
+        Config myConfigD121 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc256Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD121.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD121, outboundConBoringsslCa);
+        System.out.println("Start D121 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D121", cnt_rep, myConfigD121, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD121.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD121, outboundConRustCaRsa);
+        System.out.println("Start D121 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D121", cnt_rep, myConfigD121, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D122
+        Config myConfigD122 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc384Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD122.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD122, outboundConBoringsslCa);
+        System.out.println("Start D122 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D122", cnt_rep, myConfigD122, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD122.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD122, outboundConOpenssl111CaRsa);
+        System.out.println("Start D122 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D122", cnt_rep, myConfigD122, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD122.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD122, outboundConOpenssl333CaRsa);
+        System.out.println("Start D122 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D122", cnt_rep, myConfigD122, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD122.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD122, outboundConRustCaRsa);
+        System.out.println("Start D122 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D122", cnt_rep, myConfigD122, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D123
+        Config myConfigD123 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc521Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD123.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD123, outboundConBoringsslCa);
+        System.out.println("Start D123 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D123", cnt_rep, myConfigD123, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD123.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD123, outboundConRustCaRsa);
+        System.out.println("Start D123 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D123", cnt_rep, myConfigD123, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // ######## Config for D124
+        Config myConfigD124 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa1024Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD124.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD124, outboundConBoringsslCa);
+        System.out.println("Start D124 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D124", cnt_rep, myConfigD124, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D125
+        Config myConfigD125 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa2048Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD125.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD125, outboundConBoringsslCa);
+        System.out.println("Start D125 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D125", cnt_rep, myConfigD125, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD125.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD125, outboundConOpenssl111CaRsa);
+        System.out.println("Start D125 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D125", cnt_rep, myConfigD125, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD125.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD125, outboundConOpenssl333CaRsa);
+        System.out.println("Start D125 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D125", cnt_rep, myConfigD125, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD125.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD125, outboundConRustCaRsa);
+        System.out.println("Start D125 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D125", cnt_rep, myConfigD125, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D126
+        Config myConfigD126 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa4096Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.2 Client Auth
+        myConfigD126.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD126, outboundConBoringsslCa);
+        System.out.println("Start D126 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D126", cnt_rep, myConfigD126, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD126.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD126, outboundConOpenssl111CaRsa);
+        System.out.println("Start D126 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D126", cnt_rep, myConfigD126, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD126.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD126, outboundConOpenssl333CaRsa);
+        System.out.println("Start D126 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D126", cnt_rep, myConfigD126, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD126.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH, myConfigD126, outboundConRustCaRsa);
+        System.out.println("Start D126 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D126", cnt_rep, myConfigD126, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D127
+        Config myConfigD127 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc256Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);add(SignatureScheme.ECDSA_SHA256);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD127.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD127, outboundConBoringsslCa);
+        System.out.println("Start D127 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D127", cnt_rep, myConfigD127, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD127.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD127, outboundConOpenssl111CaRsa);
+        System.out.println("Start D127 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D127", cnt_rep, myConfigD127, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD127.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD127, outboundConOpenssl333CaRsa);
+        System.out.println("Start D127 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D127", cnt_rep, myConfigD127, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD127.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD127, outboundConRustCaRsa);
+        System.out.println("Start D127 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D127", cnt_rep, myConfigD127, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // ######## Config for D128
+        Config myConfigD128 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc384Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD128.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD128, outboundConBoringsslCa);
+        System.out.println("Start D128 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D128", cnt_rep, myConfigD128, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD128.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD128, outboundConOpenssl111CaRsa);
+        System.out.println("Start D128 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D128", cnt_rep, myConfigD128, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD128.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD128, outboundConOpenssl333CaRsa);
+        System.out.println("Start D128 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D128", cnt_rep, myConfigD128, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD128.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD128, outboundConRustCaRsa);
+        System.out.println("Start D128 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D128", cnt_rep, myConfigD128, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D129
+        Config myConfigD129 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc521Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);add(SignatureScheme.ECDSA_SHA512);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD129.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD129, outboundConBoringsslCa);
+        System.out.println("Start D129 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D129", cnt_rep, myConfigD129, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD129.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD129, outboundConOpenssl111CaRsa);
+        System.out.println("Start D129 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D129", cnt_rep, myConfigD129, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD129.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD129, outboundConOpenssl333CaRsa);
+        System.out.println("Start D129 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D129", cnt_rep, myConfigD129, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD129.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD129, outboundConRustCaRsa);
+        System.out.println("Start D129 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D129", cnt_rep, myConfigD129, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D130
+        Config myConfigD130 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa1024Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD130.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD130, outboundConBoringsslCa);
+        System.out.println("Start D130 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D130", cnt_rep, myConfigD130, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D131
+        Config myConfigD131 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa2048Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD131.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD131, outboundConBoringsslCa);
+        System.out.println("Start D131 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D131", cnt_rep, myConfigD131, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD131.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD131, outboundConOpenssl111CaRsa);
+        System.out.println("Start D131 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D131", cnt_rep, myConfigD131, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD131.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD131, outboundConOpenssl333CaRsa);
+        System.out.println("Start D131 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D131", cnt_rep, myConfigD131, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD131.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD131, outboundConRustCaRsa);
+        System.out.println("Start D131 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D131", cnt_rep, myConfigD131, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D132
+        Config myConfigD132 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa4096Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD132.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD132, outboundConBoringsslCa);
+        System.out.println("Start D132 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D132", cnt_rep, myConfigD132, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD132.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD132, outboundConOpenssl111CaRsa);
+        System.out.println("Start D132 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D132", cnt_rep, myConfigD132, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD132.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD132, outboundConOpenssl333CaRsa);
+        System.out.println("Start D132 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D132", cnt_rep, myConfigD132, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD132.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH, myConfigD132, outboundConRustCaRsa);
+        System.out.println("Start D132 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D132", cnt_rep, myConfigD132, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D133
+        // RESERVED / NOT TESTED
+
+
+        // ######## Config for D134
+        Config myConfigD134 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc256Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD134.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD134, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D134 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D134", cnt_rep, myConfigD134, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D135
+        Config myConfigD135 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc384Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD135.setDefaultClientConnection(outboundConOpenssl111WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD135, outboundConOpenssl111WrongCaEcdsa);
+        System.out.println("Start D135 with outboundConOpenssl111WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D135", cnt_rep, myConfigD135, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD135.setDefaultClientConnection(outboundConOpenssl333WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD135, outboundConOpenssl333WrongCaEcdsa);
+        System.out.println("Start D135 with outboundConOpenssl333WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D135", cnt_rep, myConfigD135, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD135.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD135, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D135 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D135", cnt_rep, myConfigD135, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D136
+        Config myConfigD136 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc521Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD136.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD136, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D136 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D136", cnt_rep, myConfigD136, handshakeActions, true, 3, 1.5, true, "Rustls");
+
+
+        // ######## Config for D137
+        // NOT SUPPORTED BY ANY LIBRARY
+        
+
+        // ######## Config for D138
+        Config myConfigD138 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa2048Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run openssl111 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD138.setDefaultClientConnection(outboundConOpenssl111WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD138, outboundConOpenssl111WrongCaEcdsa);
+        System.out.println("Start D138 with outboundConOpenssl111WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D138", cnt_rep, myConfigD138, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD138.setDefaultClientConnection(outboundConOpenssl333WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD138, outboundConOpenssl333WrongCaEcdsa);
+        System.out.println("Start D138 with outboundConOpenssl333WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D138", cnt_rep, myConfigD138, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD138.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD138, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D138 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D138", cnt_rep, myConfigD138, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D139
+        Config myConfigD139 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa4096Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD139.setDefaultClientConnection(outboundConOpenssl111WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD139, outboundConOpenssl111WrongCaEcdsa);
+        System.out.println("Start D139 with outboundConOpenssl111WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D139", cnt_rep, myConfigD139, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD139.setDefaultClientConnection(outboundConOpenssl333WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD139, outboundConOpenssl333WrongCaEcdsa);
+        System.out.println("Start D139 with outboundConOpenssl333WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D139", cnt_rep, myConfigD139, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD139.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD139, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D139 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D139", cnt_rep, myConfigD139, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D140
+        Config myConfigD140 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc256Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD140.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD140, outboundConRustWrongCaRsa);
+        System.out.println("Start D140 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D140", cnt_rep, myConfigD140, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D141
+        Config myConfigD141 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc384Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD141.setDefaultClientConnection(outboundConOpenssl111WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD141, outboundConOpenssl111WrongCaRsa);
+        System.out.println("Start D141 with outboundConOpenssl111WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D141", cnt_rep, myConfigD141, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD141.setDefaultClientConnection(outboundConOpenssl333WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD141, outboundConOpenssl333WrongCaRsa);
+        System.out.println("Start D141 with outboundConOpenssl333WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D141", cnt_rep, myConfigD141, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD141.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD141, outboundConRustWrongCaRsa);
+        System.out.println("Start D141 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D141", cnt_rep, myConfigD141, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D142
+        Config myConfigD142 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc521Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD142.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD142, outboundConRustWrongCaRsa);
+        System.out.println("Start D142 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D142", cnt_rep, myConfigD142, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D143
+        // NOT SUPPORTED BY ANY LIBRARY
+
+
+        // ######## Config for D144
+        Config myConfigD144 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa2048Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD144.setDefaultClientConnection(outboundConOpenssl111WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD144, outboundConOpenssl111WrongCaRsa);
+        System.out.println("Start D144 with outboundConOpenssl111WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D144", cnt_rep, myConfigD144, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD144.setDefaultClientConnection(outboundConOpenssl333WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD144, outboundConOpenssl333WrongCaRsa);
+        System.out.println("Start D144 with outboundConOpenssl333WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D144", cnt_rep, myConfigD144, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD144.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD144, outboundConRustWrongCaRsa);
+        System.out.println("Start D144 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D144", cnt_rep, myConfigD144, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D145
+        Config myConfigD145 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa4096Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD145.setDefaultClientConnection(outboundConOpenssl111WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD145, outboundConOpenssl111WrongCaRsa);
+        System.out.println("Start D145 with outboundConOpenssl111WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D145", cnt_rep, myConfigD145, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD145.setDefaultClientConnection(outboundConOpenssl333WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD145, outboundConOpenssl333WrongCaRsa);
+        System.out.println("Start D145 with outboundConOpenssl333WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D145", cnt_rep, myConfigD145, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth with wrong CA
+        myConfigD145.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT, myConfigD145, outboundConRustWrongCaRsa);
+        System.out.println("Start D145 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D145", cnt_rep, myConfigD145, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D146
+        Config myConfigD146 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc256Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD146.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD146, outboundConRustCaEcdsa);
+        System.out.println("Start D146 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D146", cnt_rep, myConfigD146, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D147
+        Config myConfigD147 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc384Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD147.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD147, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D147 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D147", cnt_rep, myConfigD147, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD147.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD147, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D147 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D147", cnt_rep, myConfigD147, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD147.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD147, outboundConRustCaEcdsa);
+        System.out.println("Start D147 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D147", cnt_rep, myConfigD147, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D148
+        Config myConfigD148 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc521Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // ######## Config for D149
+        // NOT SUPPORTED BY ANY LIBRARY
+        
+
+        // ######## Config for D150
+        Config myConfigD150 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyRsa2048Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD150.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD150, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D150 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D150", cnt_rep, myConfigD150, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD150.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD150, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D150 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D150", cnt_rep, myConfigD150, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD150.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD150, outboundConRustCaEcdsa);
+        System.out.println("Start D150 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D150", cnt_rep, myConfigD150, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D151
+        Config myConfigD151 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyRsa4096Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD151.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD151, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D151 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D151", cnt_rep, myConfigD151, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD151.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD151, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D151 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D151", cnt_rep, myConfigD151, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD151.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD151, outboundConRustCaEcdsa);
+        System.out.println("Start D151 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D151", cnt_rep, myConfigD151, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // ######## Config for D152
+        Config myConfigD152 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc256Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD152.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD152, outboundConRustCaRsa);
+        System.out.println("Start D152 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D152", cnt_rep, myConfigD152, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D153
+        Config myConfigD153 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc384Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD153.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD153, outboundConOpenssl111CaRsa);
+        System.out.println("Start D153 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D153", cnt_rep, myConfigD153, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD153.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD153, outboundConOpenssl333CaRsa);
+        System.out.println("Start D153 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D153", cnt_rep, myConfigD153, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD153.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD153, outboundConRustCaRsa);
+        System.out.println("Start D153 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D153", cnt_rep, myConfigD153, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D154
+        Config myConfigD154 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc521Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD154.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD154, outboundConRustCaRsa);
+        System.out.println("Start D154 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D154", cnt_rep, myConfigD154, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D155
+        // NOT SUPPORTED BY ANY LIBRARY
+
+        // ######## Config for D156
+        Config myConfigD156 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyRsa2048Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD156.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD156, outboundConOpenssl111CaRsa);
+        System.out.println("Start D156 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D156", cnt_rep, myConfigD156, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD156.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD156, outboundConOpenssl333CaRsa);
+        System.out.println("Start D156 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D156", cnt_rep, myConfigD156, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD156.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD156, outboundConRustCaRsa);
+        System.out.println("Start D156 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D156", cnt_rep, myConfigD156, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D157
+        Config myConfigD157 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS12,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyRsa4096Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.2 Client Auth
+        myConfigD157.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD157, outboundConOpenssl111CaRsa);
+        System.out.println("Start D157 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D157", cnt_rep, myConfigD157, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.2 Client Auth
+        myConfigD157.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD157, outboundConOpenssl333CaRsa);
+        System.out.println("Start D157 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D157", cnt_rep, myConfigD157, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.2 Client Auth
+        myConfigD157.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS12_EPHEMERAL_WITH_CLIENTAUTH_WITH_ALERT_CERT_VERIFY, myConfigD157, outboundConRustCaRsa);
+        System.out.println("Start D157 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D157", cnt_rep, myConfigD157, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        
+        // ######## Config for D158
+        Config myConfigD158 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc256Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);add(SignatureScheme.ECDSA_SHA256);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD158.setDefaultClientConnection(outboundConOpenssl111WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD158, outboundConOpenssl111WrongCaEcdsa);
+        System.out.println("Start D158 with outboundConOpenssl111WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D158", cnt_rep, myConfigD158, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD158.setDefaultClientConnection(outboundConOpenssl333WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD158, outboundConOpenssl333WrongCaEcdsa);
+        System.out.println("Start D158 with outboundConOpenssl333WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D158", cnt_rep, myConfigD158, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD158.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD158, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D158 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D158", cnt_rep, myConfigD158, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D159
+        Config myConfigD159 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc384Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD159.setDefaultClientConnection(outboundConOpenssl111WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD159, outboundConOpenssl111WrongCaEcdsa);
+        System.out.println("Start D159 with outboundConOpenssl111WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D159", cnt_rep, myConfigD159, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD159.setDefaultClientConnection(outboundConOpenssl333WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD159, outboundConOpenssl333WrongCaEcdsa);
+        System.out.println("Start D159 with outboundConOpenssl333WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D159", cnt_rep, myConfigD159, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD159.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD159, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D159 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D159", cnt_rep, myConfigD159, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D160
+        Config myConfigD160 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc521Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD160.setDefaultClientConnection(outboundConOpenssl111WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD160, outboundConOpenssl111WrongCaEcdsa);
+        System.out.println("Start D160 with outboundConOpenssl111WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D160", cnt_rep, myConfigD160, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD160.setDefaultClientConnection(outboundConOpenssl333WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD160, outboundConOpenssl333WrongCaEcdsa);
+        System.out.println("Start D160 with outboundConOpenssl333WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D160", cnt_rep, myConfigD160, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD160.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD160, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D160 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D160", cnt_rep, myConfigD160, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D161
+        // NOT SUPPORTED BY ANY LIBRARY
+
+        // ######## Config for D162
+        Config myConfigD162 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa2048Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD162.setDefaultClientConnection(outboundConOpenssl111WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD162, outboundConOpenssl111WrongCaEcdsa);
+        System.out.println("Start D162 with outboundConOpenssl111WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D162", cnt_rep, myConfigD162, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD162.setDefaultClientConnection(outboundConOpenssl333WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD162, outboundConOpenssl333WrongCaEcdsa);
+        System.out.println("Start D162 with outboundConOpenssl333WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D162", cnt_rep, myConfigD162, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD162.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD162, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D162 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D162", cnt_rep, myConfigD162, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D163
+        Config myConfigD163 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa4096Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD163.setDefaultClientConnection(outboundConOpenssl111WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD163, outboundConOpenssl111WrongCaEcdsa);
+        System.out.println("Start D163 with outboundConOpenssl111WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D163", cnt_rep, myConfigD163, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD163.setDefaultClientConnection(outboundConOpenssl333WrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD163, outboundConOpenssl333WrongCaEcdsa);
+        System.out.println("Start D163 with outboundConOpenssl333WrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D163", cnt_rep, myConfigD163, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD163.setDefaultClientConnection(outboundConRustWrongCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD163, outboundConRustWrongCaEcdsa);
+        System.out.println("Start D163 with outboundConRustWrongCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D163", cnt_rep, myConfigD163, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D164
+        Config myConfigD164 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc256Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);add(SignatureScheme.ECDSA_SHA256);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD164.setDefaultClientConnection(outboundConOpenssl111WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD164, outboundConOpenssl111WrongCaRsa);
+        System.out.println("Start D164 with outboundConOpenssl111WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D164", cnt_rep, myConfigD164, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD164.setDefaultClientConnection(outboundConOpenssl333WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD164, outboundConOpenssl333WrongCaRsa);
+        System.out.println("Start D164 with outboundConOpenssl333WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D164", cnt_rep, myConfigD164, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD164.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD164, outboundConRustWrongCaRsa);
+        System.out.println("Start D164 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D164", cnt_rep, myConfigD164, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D165
+        Config myConfigD165 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc384Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD165.setDefaultClientConnection(outboundConOpenssl111WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD165, outboundConOpenssl111WrongCaRsa);
+        System.out.println("Start D165 with outboundConOpenssl111WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D165", cnt_rep, myConfigD165, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD165.setDefaultClientConnection(outboundConOpenssl333WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD165, outboundConOpenssl333WrongCaRsa);
+        System.out.println("Start D165 with outboundConOpenssl333WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D165", cnt_rep, myConfigD165, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD165.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD165, outboundConRustWrongCaRsa);
+        System.out.println("Start D165 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D165", cnt_rep, myConfigD165, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D166
+        Config myConfigD166 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigEcc521Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);add(SignatureScheme.ECDSA_SHA512);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD166.setDefaultClientConnection(outboundConOpenssl111WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD166, outboundConOpenssl111WrongCaRsa);
+        System.out.println("Start D166 with outboundConOpenssl111WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D166", cnt_rep, myConfigD166, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD166.setDefaultClientConnection(outboundConOpenssl333WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD166, outboundConOpenssl333WrongCaRsa);
+        System.out.println("Start D166 with outboundConOpenssl333WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D166", cnt_rep, myConfigD166, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD166.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD166, outboundConRustWrongCaRsa);
+        System.out.println("Start D166 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D166", cnt_rep, myConfigD166, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D167
+        Config myConfigD167 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa2048Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD167.setDefaultClientConnection(outboundConOpenssl111WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD167, outboundConOpenssl111WrongCaRsa);
+        System.out.println("Start D167 with outboundConOpenssl111WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D167", cnt_rep, myConfigD167, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD167.setDefaultClientConnection(outboundConOpenssl333WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD167, outboundConOpenssl333WrongCaRsa);
+        System.out.println("Start D167 with outboundConOpenssl333WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D167", cnt_rep, myConfigD167, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD167.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD167, outboundConRustWrongCaRsa);
+        System.out.println("Start D167 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D167", cnt_rep, myConfigD167, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D168
+        Config myConfigD168 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigRsa4096Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD168.setDefaultClientConnection(outboundConOpenssl111WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD168, outboundConOpenssl111WrongCaRsa);
+        System.out.println("Start D168 with outboundConOpenssl111WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D168", cnt_rep, myConfigD168, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD168.setDefaultClientConnection(outboundConOpenssl333WrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD168, outboundConOpenssl333WrongCaRsa);
+        System.out.println("Start D168 with outboundConOpenssl333WrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D168", cnt_rep, myConfigD168, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth with wrong CA
+        myConfigD168.setDefaultClientConnection(outboundConRustWrongCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD168, outboundConRustWrongCaRsa);
+        System.out.println("Start D168 with outboundConRustWrongCaRsa");
+        TimeMeasurement.startTimeMeasurement("D168", cnt_rep, myConfigD168, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+      // ######## Config for D169
+        Config myConfigD169 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc256Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);add(SignatureScheme.ECDSA_SHA256);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());  
+        
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD169.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD169, outboundConBoringsslCa);
+        System.out.println("Start D169 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D169", cnt_rep, myConfigD169, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD169.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD169, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D169 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D169", cnt_rep, myConfigD169, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD169.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD169, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D169 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D169", cnt_rep, myConfigD169, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD169.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD169, outboundConRustCaEcdsa);
+        System.out.println("Start D169 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D169", cnt_rep, myConfigD169, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D170
+        Config myConfigD170 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc384Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD170.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD170, outboundConBoringsslCa);
+        System.out.println("Start D170 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D170", cnt_rep, myConfigD170, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD170.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD170, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D170 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D170", cnt_rep, myConfigD170, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD170.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD170, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D170 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D170", cnt_rep, myConfigD170, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD170.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD170, outboundConRustCaEcdsa);
+        System.out.println("Start D170 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D170", cnt_rep, myConfigD170, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D171
+        Config myConfigD171 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc521Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD171.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD171, outboundConBoringsslCa);
+        System.out.println("Start D171 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D171", cnt_rep, myConfigD171, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD171.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD171, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D171 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D171", cnt_rep, myConfigD171, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD171.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD171, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D171 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D171", cnt_rep, myConfigD171, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD171.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD171, outboundConRustCaEcdsa);
+        System.out.println("Start D171 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D171", cnt_rep, myConfigD171, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D172
+        Config myConfigD172 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyRsa1024Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD172.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD172, outboundConBoringsslCa);
+        System.out.println("Start D172 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D172", cnt_rep, myConfigD172, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D173
+        Config myConfigD173 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyRsa2048Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD173.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD173, outboundConBoringsslCa);
+        System.out.println("Start D173 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D173", cnt_rep, myConfigD173, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD173.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD173, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D173 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D173", cnt_rep, myConfigD173, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD173.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD173, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D173 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D173", cnt_rep, myConfigD173, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD173.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD173, outboundConRustCaEcdsa);
+        System.out.println("Start D173 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D173", cnt_rep, myConfigD173, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D174
+        Config myConfigD174 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyRsa4096Ecdsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD174.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD174, outboundConBoringsslCa);
+        System.out.println("Start D174 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D174", cnt_rep, myConfigD174, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD174.setDefaultClientConnection(outboundConOpenssl111CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD174, outboundConOpenssl111CaEcdsa);
+        System.out.println("Start D174 with outboundConOpenssl111CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D174", cnt_rep, myConfigD174, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD174.setDefaultClientConnection(outboundConOpenssl333CaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD174, outboundConOpenssl333CaEcdsa);
+        System.out.println("Start D174 with outboundConOpenssl333CaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D174", cnt_rep, myConfigD174, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD174.setDefaultClientConnection(outboundConRustCaEcdsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD174, outboundConRustCaEcdsa);
+        System.out.println("Start D174 with outboundConRustCaEcdsa");
+        TimeMeasurement.startTimeMeasurement("D174", cnt_rep, myConfigD174, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D175
+        Config myConfigD175 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc256Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);add(SignatureScheme.ECDSA_SHA256);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD175.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD175, outboundConBoringsslCa);
+        System.out.println("Start D175 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D175", cnt_rep, myConfigD175, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD175.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD175, outboundConOpenssl111CaRsa);
+        System.out.println("Start D175 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D175", cnt_rep, myConfigD175, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD175.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD175, outboundConOpenssl333CaRsa);
+        System.out.println("Start D175 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D175", cnt_rep, myConfigD175, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD175.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD175, outboundConRustCaRsa);
+        System.out.println("Start D175 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D175", cnt_rep, myConfigD175, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D176
+        Config myConfigD176 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc384Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD176.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD176, outboundConBoringsslCa);
+        System.out.println("Start D176 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D176", cnt_rep, myConfigD176, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD176.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD176, outboundConOpenssl111CaRsa);
+        System.out.println("Start D176 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D176", cnt_rep, myConfigD176, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD176.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD176, outboundConOpenssl333CaRsa);
+        System.out.println("Start D176 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D176", cnt_rep, myConfigD176, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD176.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD176, outboundConRustCaRsa);
+        System.out.println("Start D176 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D176", cnt_rep, myConfigD176, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D177
+        Config myConfigD177 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyEcc521Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.ECDSA_SHA384);add(SignatureScheme.ECDSA_SHA512);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD177.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD177, outboundConBoringsslCa);
+        System.out.println("Start D177 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D177", cnt_rep, myConfigD177, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD177.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD177, outboundConOpenssl111CaRsa);
+        System.out.println("Start D177 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D177", cnt_rep, myConfigD177, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD177.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD177, outboundConOpenssl333CaRsa);
+        System.out.println("Start D177 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D177", cnt_rep, myConfigD177, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD177.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD177, outboundConRustCaRsa);
+        System.out.println("Start D177 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D177", cnt_rep, myConfigD177, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D178
+        Config myConfigD178 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyRsa2048Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+        
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD178.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD178, outboundConBoringsslCa);
+        System.out.println("Start D178 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D178", cnt_rep, myConfigD178, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD178.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD178, outboundConOpenssl111CaRsa);
+        System.out.println("Start D178 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D178", cnt_rep, myConfigD178, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD178.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD178, outboundConOpenssl333CaRsa);
+        System.out.println("Start D178 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D178", cnt_rep, myConfigD178, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD178.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD178, outboundConRustCaRsa);
+        System.out.println("Start D178 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D178", cnt_rep, myConfigD178, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // ######## Config for D179
+        Config myConfigD179 =
+        ConfigFactory.getConfig(
+            TlsVersion.TLS13,
+            KeyExchange.ECDHE,
+            KeyExchangeGroup.SECP384R1,
+            ServerAuth.ECDSA,
+            clientAuthConfigWrongPrivKeyRsa4096Rsa,
+            new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+            BulkAlgo.AES_256_GCM_SHA384,
+            //new Vector<Extension>(){{add(Extension.OCSP);}});
+            new Vector<>());
+        
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD179.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD179, outboundConBoringsslCa);
+        System.out.println("Start D179 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D179", cnt_rep, myConfigD179, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl111 Ecc Tls1.3 Client Auth
+        myConfigD179.setDefaultClientConnection(outboundConOpenssl111CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD179, outboundConOpenssl111CaRsa);
+        System.out.println("Start D179 with outboundConOpenssl111CaRsa");
+        TimeMeasurement.startTimeMeasurement("D179", cnt_rep, myConfigD179, handshakeActions, true, 3, 1.5, true, "OpenSSL 1.1.1w");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run openssl333 Ecc Tls1.3 Client Auth
+        myConfigD179.setDefaultClientConnection(outboundConOpenssl333CaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD179, outboundConOpenssl333CaRsa);
+        System.out.println("Start D179 with outboundConOpenssl333CaRsa");
+        TimeMeasurement.startTimeMeasurement("D179", cnt_rep, myConfigD179, handshakeActions, true, 3, 1.5, true, "OpenSSL 3.3.1");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        // configure and run Rustls Ecc Tls1.3 Client Auth
+        myConfigD179.setDefaultClientConnection(outboundConRustCaRsa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD179, outboundConRustCaRsa);
+        System.out.println("Start D179 with outboundConRustCaRsa");
+        TimeMeasurement.startTimeMeasurement("D179", cnt_rep, myConfigD179, handshakeActions, true, 3, 1.5, true, "Rustls");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        
+        // ######## Config for 180
+        // NOT SUPPORTED BY ANY LIBRARY
+
+
+
+        // ######## Config for D181
+        Config myConfigD181 =
+            ConfigFactory.getConfig(
+                TlsVersion.TLS13,
+                KeyExchange.ECDHE,
+                KeyExchangeGroup.SECP384R1,
+                ServerAuth.ECDSA,
+                clientAuthConfigWrongPrivKeyRsa1024Rsa,
+                new Vector<SignatureScheme>(){{add(SignatureScheme.RSA_PSS_RSAE_SHA384);add(SignatureScheme.ECDSA_SHA384);}},
+                BulkAlgo.AES_256_GCM_SHA384,
+                //new Vector<Extension>(){{add(Extension.OCSP);}});
+                new Vector<>());
+
+        // configure and run boringssl Ecc Tls1.3 Client Auth
+        myConfigD181.setDefaultClientConnection(outboundConBoringsslCa);
+        handshakeActions = new HandshakeActions(HandshakeType.TLS13_WITH_CLIENTAUTH_WITH_ALERT_END, myConfigD181, outboundConBoringsslCa);
+        System.out.println("Start D181 with outboundConBoringsslCa");
+        TimeMeasurement.startTimeMeasurement("D181", cnt_rep, myConfigD181, handshakeActions, true, 3, 1.5, true, "BoringSSL");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        */
 
         System.out.println("Reached End");
     }
