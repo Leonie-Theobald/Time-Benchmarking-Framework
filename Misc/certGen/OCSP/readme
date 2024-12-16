@@ -1,0 +1,33 @@
+Generate Key Pair for OCSP Responder (with EC)
+openssl ecparam -out ocsp_responder.key -name secp384r1 -genkey
+
+Creates OCSP Responder CSR
+openssl req -new -key ./ocsp_responder.key -out ocsp_responder.csr -config ./openssl.cnf
+- give at least a common name
+
+Add ./serial
+vim serial
+- enter any number (e.g. 10) => if there is an error later "Unable to load number from ./serial" increase number
+
+Add ./index.txt
+vim indext.txt
+- empty file
+
+Add certificate to index
+- copy an existing line
+- change serial number (number is hex number without prefix 0x)
+- change subject information
+
+CA signs OCSP Responder CSR
+openssl ca -keyfile ../attacker_ecdsa_ca_key.pem -cert ../attacker_ecdsa_ca.pem -in ocsp_responder.csr -out ocsp_responder_cert.pem -config openssl.cnf
+(Index file also includes date field for revocation even if it is not used ==> double tab)
+
+Starts the OCSP responder
+openssl ocsp -index index.txt -port 999 -rsigner ocsp_responder_cert.pem -rkey ocsp_responder.key -CA ../attacker_ecdsa_ca.pem -text
+
+Request OCSP Response
+openssl ocsp -CAfile ../attacker_ecdsa_ca.pem -issuer ../attacker_ecdsa_ca.pem -cert ../ec_secp384r1_ecdsa_cert.pem -url localhost:999 -VAfile ocsp_responder_cert.pem -respout ocsp_response.der 
+
+Revoke Certificate
+openssl ca -keyfile ../attacker_ecdsa_ca_key.pem -cert ../attacker_ecdsa_ca.pem -revoke some-cert.pem -config ./openssl.cnf
+(This modifies index.txt ==> V becomes R and a revocation date is added)
